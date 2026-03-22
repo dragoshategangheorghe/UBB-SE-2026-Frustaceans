@@ -22,6 +22,7 @@ namespace PharmacyApp.Models
         public Dictionary<string, float> ActiveSubstances { get; private set; }
         public Dictionary<DateOnly, int> Batches { get; private set; }
 
+
         public Item(string id, string name, string producer,
                     float price, int nrOfPills, int quantity = 0,
                     string label = "", string description = "",
