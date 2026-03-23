@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PharmacyApp.Interfaces
+namespace PharmacyApp.Services
 {
-    public interface IUserService
+    internal class AdminService
     {
-
     }
 }

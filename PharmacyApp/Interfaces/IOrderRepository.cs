@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PharmacyApp.Models;
 
-namespace PharmacyApp.Repositories
+namespace PharmacyApp.Interfaces
 {
     internal interface IOrderRepository
     {
