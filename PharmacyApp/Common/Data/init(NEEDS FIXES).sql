@@ -14,9 +14,10 @@ create table Items(
 	name varchar(255) not null,
 	price decimal(10,2),
 	category varchar(255),
-	numberPills int,
+	numberOfPills int,
 	producer varchar(255),
 	--image somehow
+	imagePath varchar(255),
 	quantity int,
 	label varchar(255),
 	description varchar(255),
@@ -47,6 +48,7 @@ create table Users(
 	username varchar(255),
 	discountNotifications bit not null,
 	--loyalty points? do we have these? cannot find them in features
+	loyaltyPoints int
 )
 
 create table UserDiscounts(
@@ -60,6 +62,7 @@ create table UserNotifications(
 	userId int references Users(userId),
 	itemId int references Items(itemId),
 	--favouriteItem? noi mai avem astea macar?
+	favouriteItem bit not null,
 	stockAlert bit not null,
 	primary key(userId,itemId)
 )

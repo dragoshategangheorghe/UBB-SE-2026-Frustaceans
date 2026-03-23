@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PharmacyApp.Models
 {
 
-    internal class Item
+    public class Item
     {
 
-        public string Id { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; set; }
         public string Producer { get; set; }
         public float Price { get; set; }
+        public string Category { get; set; }
+        public string ImagePath { get; set; }
         public int NumberOfPills { get; set; }
         public int Quantity { get; set; }
         public string Label { get; set; }
@@ -23,9 +22,9 @@ namespace PharmacyApp.Models
         public Dictionary<DateOnly, int> Batches { get; private set; }
 
 
-        public Item(string id, string name, string producer,
+        public Item(int id, string name, string producer, string category,
                     float price, int nrOfPills, int quantity = 0,
-                    string label = "", string description = "",
+                    string label = "", string description = "", string imagePath = "..\\Data\\placeholder.png",
                     float discount = 0f)
         {
             Id = id;
@@ -33,6 +32,8 @@ namespace PharmacyApp.Models
             Producer = producer;
             Price = price;
             NumberOfPills = nrOfPills;
+            Category = category;
+            ImagePath = imagePath;
             Quantity = quantity;
             Label = label;
             Description = description;
@@ -41,47 +42,46 @@ namespace PharmacyApp.Models
             Batches = new Dictionary<DateOnly, int>();
         }
 
-        // TODO should we really use booleans instead of exceptions for error handling?
-        // TODO talk about whether putting an already existing substance into the dictionary
-        public bool addActiveSubstance(string newSubstanceName, float concentration)
+        public void addActiveSubstance(string newSubstanceName, float concentration)
+        {
+            if (ActiveSubstances.ContainsKey(newSubstanceName))
+                throw new ArgumentException(newSubstanceName + "is already inside the medication");
+            ActiveSubstances[newSubstanceName] = concentration;
+        }
+
+        public void changeActiveSubstanceConcentration(string newSubstanceName, float newConcentration)
         {
             if (!ActiveSubstances.ContainsKey(newSubstanceName))
-            {
-                ActiveSubstances[newSubstanceName] = concentration;
-                return true;
-            }
-            return false;
+                throw new ArgumentException(newSubstanceName + "is not inside the medication");
+            ActiveSubstances[newSubstanceName] = newConcentration;
         }
 
-        public bool removeActiveSubstance(string substanceName)
+        public void removeActiveSubstance(string substanceName)
         {
-            if (ActiveSubstances.ContainsKey(substanceName))
-            {
-                ActiveSubstances.Remove(substanceName);
-                return true;
-            }
-            return false;
+            if (!ActiveSubstances.ContainsKey(substanceName))
+                throw new ArgumentException(substanceName + "is not inside the medication");
+            ActiveSubstances.Remove(substanceName);
         }
 
-        // TODO talk about putting a batch with already existing date
-        public bool addNewBatch(DateOnly newExpirationDate, int nrOfPacks)
+        public void addNewBatch(DateOnly newExpirationDate, int nrOfPacks)
         {
-            if (!Batches.ContainsKey(newExpirationDate))
-            {
-                Batches[newExpirationDate] = nrOfPacks;
-                return true;
-            }
-            return false;
+            if (Batches.ContainsKey(newExpirationDate))
+                throw new ArgumentException("A batch with expiration date " + newExpirationDate.ToString() + " already exists");
+            Batches[newExpirationDate] = nrOfPacks;
         }
 
-        public bool removeBatch(DateOnly expirationDate)
+        public void changeBatchNrOfPacks(DateOnly expirationDate, int newNrOfPacks)
         {
-            if (Batches.ContainsKey(expirationDate))
-            {
-                Batches.Remove(expirationDate);
-                return true;
-            }
-            return false;
+            if (!Batches.ContainsKey(expirationDate))
+                throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
+            Batches[expirationDate] = newNrOfPacks;
+        }
+
+        public void removeBatch(DateOnly expirationDate)
+        {
+            if (!Batches.ContainsKey(expirationDate))
+                throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
+            Batches.Remove(expirationDate);
         }
     }
 }
