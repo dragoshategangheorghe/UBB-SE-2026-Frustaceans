@@ -26,6 +26,35 @@ namespace PharmacyApp.Features.Accounts.Logic
             string pattern = @"^.+@.+\..+";
             return Regex.IsMatch(email, pattern);
         }
+        public bool isCorrectPasswordFormat(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password)) return false;
+
+            //password should have:
+            //-min 8 chars, at least one capital letter, at least one small letter,at least one digit, at least one of {!,@,#,%,^,*}, no other char types   
+            string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#%^*])[A-Za-z\d!@#%^*]{8,}$";
+            return Regex.IsMatch(password,pattern);
+        }
+
+        public bool isCorrectPhoneNumberFormat(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber)) return false;
+            phoneNumber = phoneNumber.Trim();
+
+            string pattern = @"^[0-9]+$";
+            return Regex.IsMatch(phoneNumber,pattern);
+        }
+
+        public bool isCorrectUsernameFormat(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return false;
+            username = username.Trim();
+
+            string pattern = @"^[A-Za-z_]+$";
+            return Regex.IsMatch(username,pattern);
+        }
+
 
         public User Login(string email,string password)
         {
@@ -45,7 +74,22 @@ namespace PharmacyApp.Features.Accounts.Logic
             }
         }
 
-        
+        public void Register(string email, string password, string confirmPassword, string username = "", string phoneNumber = "")
+        {
+            if (!isCorrectEmailFormat(email))
+                throw new Exception("Not a valid email");
+            if (!isCorrectPasswordFormat(password))
+                throw new Exception("Incorrect format");
+            if (password != confirmPassword)
+                throw new Exception("Passwords don't match");
+
+            try
+            {
+                var user = users.GetByEmail(email);
+                throw new Exception("Email already linked to an account");
+            }
+            catch (Exception) { }
+        }
 
     }
 }
