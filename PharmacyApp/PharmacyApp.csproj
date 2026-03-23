@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -65,5 +65,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PRIResource Remove="Period Tracker\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Accounts\ViewModels\" />
+    <Folder Include="Features\Accounts\Views\" />
   </ItemGroup>
 </Project>
