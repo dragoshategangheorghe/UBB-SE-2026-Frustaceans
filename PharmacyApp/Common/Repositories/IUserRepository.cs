@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PharmacyApp.Interfaces
+namespace PharmacyApp.Common.Repositories
 {
     public interface IUserRepository
     {

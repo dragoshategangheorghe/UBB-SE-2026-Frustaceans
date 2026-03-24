@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PharmacyApp.Interfaces
+namespace PharmacyApp.Common.Services
 {
     public interface IUserService
     {
