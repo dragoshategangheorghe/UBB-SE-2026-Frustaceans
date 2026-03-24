@@ -68,48 +68,48 @@ namespace PharmacyApp.Common.Repositories
             string selectActiveSubstances = $"SELECT name, concentration FROM ItemSubstances WHERE itemId={id}";
             string selectBatches = $"SELECT expirationDate, numberOfPacks FROM ItemExpirationDates WHERE itemId={id}";
 
-            using (SqlConnection conn = new SqlConnection(connString))
+            using SqlConnection conn = new SqlConnection(connString);
+            
+            SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
+            SqlDataAdapter activeSubstancesAdapter = new SqlDataAdapter(selectActiveSubstances, conn);
+            SqlDataAdapter batchesAdapter = new SqlDataAdapter(selectBatches, conn);
+            DataSet itemDataFromDb = new DataSet();
+
+            conn.Open();
+            itemAdapter.Fill(itemDataFromDb, "Items");
+            activeSubstancesAdapter.Fill(itemDataFromDb, "ActiveSubstances");
+            batchesAdapter.Fill(itemDataFromDb, "Batches");
+
+            // we should expect only one row as result (cuz id is unique for all)
+
+            DataRow resultRow = itemDataFromDb.Tables["Items"].Rows[0];
+
+
+            // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
+
+            Item resultItem = new Item((int)resultRow["itemId"], (string)resultRow["name"],
+                (string)resultRow["producer"],
+                (string)resultRow["category"], (float)(decimal)resultRow["price"], (int)resultRow["numberOfPills"],
+                (int)resultRow["quantity"], (string)resultRow["label"], (string)resultRow["description"],
+                (string)resultRow["imagePath"], (float)(decimal)resultRow["discountPercentage"]);
+
+
+            // inserting the active substances and batches for the particular item one by one
+
+            foreach (DataRow substanceRow in itemDataFromDb.Tables["ActiveSubstances"].Rows)
             {
-                SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
-                SqlDataAdapter activeSubstancesAdapter = new SqlDataAdapter(selectActiveSubstances, conn);
-                SqlDataAdapter batchesAdapter = new SqlDataAdapter(selectBatches, conn);
-                DataSet itemDataFromDb = new DataSet();
-
-                conn.Open();
-                itemAdapter.Fill(itemDataFromDb, "Items");
-                activeSubstancesAdapter.Fill(itemDataFromDb, "ActiveSubstances");
-                batchesAdapter.Fill(itemDataFromDb, "Batches");
-
-                // we should expect only one row as result (cuz id is unique for all)
-
-                DataRow resultRow = itemDataFromDb.Tables["Items"].Rows[0];
-
-
-                // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
-
-                Item resultItem = new Item((int)resultRow["itemId"], (string)resultRow["name"],
-                    (string)resultRow["producer"],
-                    (string)resultRow["category"], (float)(decimal)resultRow["price"], (int)resultRow["numberOfPills"],
-                    (int)resultRow["quantity"], (string)resultRow["label"], (string)resultRow["description"],
-                    (string)resultRow["imagePath"], (float)(decimal)resultRow["discountPercentage"]);
-
-
-                // inserting the active substances and batches for the particular item one by one
-
-                foreach (DataRow substanceRow in itemDataFromDb.Tables["ActiveSubstances"].Rows)
-                {
-                    resultItem.addActiveSubstance((string)substanceRow["name"],
-                        (float)(decimal)substanceRow["concentration"]);
-                }
-
-                foreach (DataRow batchRow in itemDataFromDb.Tables["Batches"].Rows)
-                {
-                    DateOnly extractedExpirationDate = DateOnly.FromDateTime((DateTime)batchRow["expirationDate"]);
-                    resultItem.addNewBatch(extractedExpirationDate, (int)batchRow["numberOfPacks"]);
-                }
-
-                return resultItem;
+                resultItem.addActiveSubstance((string)substanceRow["name"],
+                    (float)(decimal)substanceRow["concentration"]);
             }
+
+            foreach (DataRow batchRow in itemDataFromDb.Tables["Batches"].Rows)
+            {
+                DateOnly extractedExpirationDate = DateOnly.FromDateTime((DateTime)batchRow["expirationDate"]);
+                resultItem.addNewBatch(extractedExpirationDate, (int)batchRow["numberOfPacks"]);
+            }
+
+            return resultItem;
+            
         }
 
         public List<Item> GetItemsByName(string name)
@@ -171,7 +171,7 @@ namespace PharmacyApp.Common.Repositories
             return resultItems;
         }
 
-        public void ChangeItemInfo(int id, Item newItem)
+        public void UpdateItem(Item newItem)
         {
             string connString = SQLUtility.GetConnectionString();
             string updateItemString = $"UPDATE Items " +

@@ -13,7 +13,7 @@ namespace PharmacyApp.Common.Repositories
         void RemoveOrder(string idToBeRemoved);
         Order GetOrder(string id);
         List<Order> GetOrdersOfClient(string clientId);
-        void ChangeOrderInfo(string id, Order newOrder);
+        void UpdateOrder(string id, Order newOrder);
         bool OrderExists(string id);
     }
 }

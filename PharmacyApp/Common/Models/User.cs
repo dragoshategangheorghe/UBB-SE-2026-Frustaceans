@@ -12,7 +12,7 @@ namespace PharmacyApp.Models
         public bool IsAdmin { get; set; }
         public string Username { get; set; }
         public bool IsDisabled { get; set; }
-        public bool GetDiscountNotifications { get; set; }
+        public bool DiscountNotifications { get; set; }
         public int LoyaltyPoints { get; set; }
 
         public DateOnly StartPeriodDate { get; set; }
@@ -20,7 +20,7 @@ namespace PharmacyApp.Models
         public int PeriodLasts { get; set; }
         public int PMSOption { get; set; }
         public bool WantsToBePregnant { get; set; }
-        public List<PeriodNote> PeriodNotes { get; private set; }
+        public Dictionary<int, Tuple<string, bool>> PeriodNotes { get; private set; }
 
         public List<int> StockAlerts { get; private set; }
         public List<int> FavoriteItems { get; private set; }
@@ -30,10 +30,10 @@ namespace PharmacyApp.Models
 
         public User(int id, string email, string phoneNumber,
                     string passwordHash, bool isAdmin, bool isDisabled,
-                    string userName, bool getDiscountNotifications,
-                    int loyaltyPoints, DateOnly startPeriodDate,
-                    int cycleDays, int periodLasts, int pmsOption,
-                    bool wantsToBePregnant)
+                    string userName, bool discountNotifications,
+                    int loyaltyPoints, DateOnly startPeriodDate= new DateOnly(),
+                    int cycleDays=0, int periodLasts=0, int pmsOption=0,
+                    bool wantsToBePregnant=false)
         {
             Id = id;
             Email = email;
@@ -42,14 +42,14 @@ namespace PharmacyApp.Models
             IsAdmin = isAdmin;
             IsDisabled = isDisabled;
             Username = userName;
-            GetDiscountNotifications = getDiscountNotifications;
+            DiscountNotifications = discountNotifications;
             LoyaltyPoints = loyaltyPoints;
             StartPeriodDate = startPeriodDate;
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
             WantsToBePregnant = wantsToBePregnant;
-            PeriodNotes = new List<PeriodNote>();
+            PeriodNotes = new Dictionary<int, Tuple<string, bool>>();
             StockAlerts = new List<int>();
             FavoriteItems = new List<int>();
             UserDiscounts = new Dictionary<int, float>();
@@ -135,18 +135,26 @@ namespace PharmacyApp.Models
         // I'll leave it to you, cuz these functions won't be used elsewhere
 
         public void setPeriodTracker(DateOnly startPeriodDate, int cycleDays,
-                                     int periodLasts, int pmsOption)
+                                     int periodLasts, int pmsOption, bool wantsToBePregnant)
         {
             StartPeriodDate = startPeriodDate;
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
+            WantsToBePregnant = wantsToBePregnant;
         }
 
-        public void addPeriodNote(string noteBody, bool isDone) { }
-        public void removePeriodNote(PeriodNote noteToRemove)
+        public void addPeriodNote(int noteId, string noteBody, bool isDone)
         {
-            PeriodNotes.Remove(noteToRemove);
+            if (PeriodNotes.ContainsKey(noteId))
+                throw new ArgumentException("Note #" + noteId + " is already exists");
+            PeriodNotes[noteId] = new Tuple<string, bool>(noteBody, isDone);
+        }
+        public void removePeriodNote(int noteIdToRemove)
+        {
+            if (!PeriodNotes.ContainsKey(noteIdToRemove))
+                throw new ArgumentException("Note #" + noteIdToRemove + " is not created");
+            PeriodNotes.Remove(noteIdToRemove);
         }
 
     }

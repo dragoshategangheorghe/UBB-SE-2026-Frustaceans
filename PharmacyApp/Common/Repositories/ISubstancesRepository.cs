@@ -12,7 +12,7 @@ namespace PharmacyApp.Common.Repositories
         void AddSubstances(Substance newSubstance);
         void RemoveSubstance(string name);
         Substance GetSubstance(string name);
-        void ChangeSubstanceInfo(string name, Substance newSubstance);
+        void UpdateOrder(string name, Substance newSubstance);
         bool SubstanceExists(string name);
     }
 }
