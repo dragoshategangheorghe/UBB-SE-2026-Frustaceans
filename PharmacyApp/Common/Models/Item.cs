@@ -12,6 +12,7 @@ namespace PharmacyApp.Models
         public string Producer { get; set; }
         public float Price { get; set; }
         public string Category { get; set; }
+        // should be a relative path to the Assets folder
         public string ImagePath { get; set; }
         public int NumberOfPills { get; set; }
         public int Quantity { get; set; }
@@ -24,7 +25,7 @@ namespace PharmacyApp.Models
 
         public Item(int id, string name, string producer, string category,
                     float price, int nrOfPills, int quantity = 0,
-                    string label = "", string description = "", string imagePath = "..\\Data\\placeholder.png",
+                    string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
                     float discount = 0f)
         {
             Id = id;

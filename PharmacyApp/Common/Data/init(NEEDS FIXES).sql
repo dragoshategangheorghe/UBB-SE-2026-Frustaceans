@@ -10,7 +10,8 @@ create table Substances(
 )
 
 create table Items(
-	itemId int primary key,
+	--ids will be autoincremented, I'm sry we didn't decide this sooner
+	itemId int identity(1,1) primary key,
 	name varchar(255) not null,
 	price decimal(10,2),
 	category varchar(255),
@@ -39,7 +40,7 @@ create table ItemExpirationDates(
 )
 
 create table Users(
-	userId int primary key,
+	userId int identity(1,1) primary key,
 	email varchar(255) unique,
 	phoneNumber varchar(255),
 	passwordHash varchar(255),
@@ -85,7 +86,7 @@ create table PeriodTrackers(
 )
 
 create table Orders(
-	orderId int primary key,
+	orderId int identity(1,1) primary key,
 	clientId int references Users(userId),
 	isCompleted bit not null,
 	isExpired bit not null,

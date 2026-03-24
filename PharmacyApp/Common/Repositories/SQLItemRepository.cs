@@ -1,0 +1,256 @@
+﻿using PharmacyApp.Models;
+using System;
+using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using System.Data;
+
+namespace PharmacyApp.Common.Repositories
+{
+    public class SQLItemRepository : IItemRepository
+    {
+
+        public SQLItemRepository() { }
+
+        public void addItem(string name, string producer, string category,
+                            float price, int nrOfPills, int quantity = 0,
+                            string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+                            float discount = 0f)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            string insertNewItemString = "INSERT INTO Items (name, price, category, numberOfPills, producer, imagePath, quantity, label, description, discountPercentage) " +
+                                         $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', {quantity}, '{label}', '{description}', {discount})";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlCommand insertNewItemCommand = new SqlCommand(insertNewItemString, conn);
+
+                conn.Open();
+                insertNewItemCommand.ExecuteNonQuery();
+                // from what I saw in the docs, the program leaving
+                // the using block automatically closes the open connection
+                // and disposes of it
+            }
+        }
+
+        public void removeItem(int idToBeRemoved)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            string deleteItemString = $"DELETE FROM Items WHERE itemId={idToBeRemoved}";
+            string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE itemId = {idToBeRemoved}";
+            string deleteBatchesCommandString = $"DELETE FROM ItemExpirationDates WHERE itemId = {idToBeRemoved}";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+
+                conn.Open();
+
+                // we have to delete the substances and batches from ItemSubstances and
+                // ItemExpirationDates for the item that is going to be removed before
+                // removing the item itself (cuz of foreign key constraints)
+
+                SqlCommand deleteActiveSubstancesCommand = new SqlCommand(deleteActiveSubstancesCommandString, conn);
+                deleteActiveSubstancesCommand.ExecuteNonQuery();
+                
+                SqlCommand deleteBatchesCommand = new SqlCommand(deleteBatchesCommandString, conn);
+                deleteBatchesCommand.ExecuteNonQuery();
+
+                SqlCommand deleteItemCommand = new SqlCommand(deleteItemString, conn);
+                deleteItemCommand.ExecuteNonQuery();
+
+            }
+        }
+
+        public Item getItem(int id)
+        {
+            // we have to get the active substances and the batches on the particular
+            // item as well to create the item fully
+
+            string connString = SQLUtility.GetConnectionString();
+            string selectItemString = $"SELECT * FROM Items WHERE itemId={id}";
+            string selectActiveSubstances = $"SELECT name, concentration FROM ItemSubstances WHERE itemId={id}";
+            string selectBatches = $"SELECT expirationDate, numberOfPacks FROM ItemExpirationDates WHERE itemId={id}";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
+                SqlDataAdapter activeSubstancesAdapter = new SqlDataAdapter(selectActiveSubstances, conn);
+                SqlDataAdapter batchesAdapter = new SqlDataAdapter(selectBatches, conn);
+                DataSet itemDataFromDb = new DataSet();
+
+                conn.Open();
+                itemAdapter.Fill(itemDataFromDb, "Items");
+                activeSubstancesAdapter.Fill(itemDataFromDb, "ActiveSubstances");
+                batchesAdapter.Fill(itemDataFromDb, "Batches");
+
+                // we should expect only one row as result (cuz id is unique for all)
+
+                DataRow resultRow = itemDataFromDb.Tables["Items"].Rows[0];
+
+
+                // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
+
+                Item resultItem = new Item((int)resultRow["itemId"], (string)resultRow["name"], (string)resultRow["producer"],
+                                      (string)resultRow["category"], (float)(decimal)resultRow["price"], (int)resultRow["numberOfPills"],
+                                      (int)resultRow["quantity"], (string)resultRow["label"], (string)resultRow["description"],
+                                      (string)resultRow["imagePath"], (float)(decimal)resultRow["discountPercentage"]);
+
+
+                // inserting the active substances and batches for the particular item one by one
+
+                foreach (DataRow substanceRow in itemDataFromDb.Tables["ActiveSubstances"].Rows)
+                {
+                    resultItem.addActiveSubstance((string)substanceRow["name"], (float)(decimal)substanceRow["concentration"]);
+                }
+
+                foreach (DataRow batchRow in itemDataFromDb.Tables["Batches"].Rows)
+                {
+                    DateOnly extractedExpirationDate = DateOnly.FromDateTime((DateTime)batchRow["expirationDate"]);
+                    resultItem.addNewBatch(extractedExpirationDate, (int)batchRow["numberOfPacks"]);
+                }
+
+                return resultItem;
+            }
+        }
+
+        public List<Item> getItemsByName(string name)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            List<Item> resultItems = new List<Item>();
+
+            string selectItemString = $"SELECT * FROM Items WHERE name='{name}'";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
+                DataSet itemDataFromDb = new DataSet();
+
+                conn.Open();
+                itemAdapter.Fill(itemDataFromDb, "Items");
+
+                // for each item that we get by name, we have repeat basically what happens in getItem(int id)
+
+                foreach (DataRow itemRow in itemDataFromDb.Tables["Items"].Rows)
+                {
+
+                    // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
+
+                    Item individualItem = new Item((int)itemRow["itemId"], (string)itemRow["name"], (string)itemRow["producer"],
+                                      (string)itemRow["category"], (float)(decimal)itemRow["price"], (int)itemRow["numberOfPills"],
+                                      (int)itemRow["quantity"], (string)itemRow["label"], (string)itemRow["description"],
+                                      (string)itemRow["imagePath"], (float)(decimal)itemRow["discountPercentage"]);
+
+                    
+                    // for every item we need to get its substances and batches
+
+                    string selectActiveSubstances = $"SELECT name, concentration FROM ItemSubstances WHERE itemId={individualItem.Id}";
+                    string selectBatches = $"SELECT expirationDate, numberOfPacks FROM ItemExpirationDates WHERE itemId={individualItem.Id}";
+                    SqlDataAdapter activeSubstancesAdapter = new SqlDataAdapter(selectActiveSubstances, conn);
+                    SqlDataAdapter batchesAdapter = new SqlDataAdapter(selectBatches, conn);
+
+                    DataSet individualItemDataFromDb = new DataSet();
+                    activeSubstancesAdapter.Fill(individualItemDataFromDb, "ActiveSubstances");
+                    batchesAdapter.Fill(individualItemDataFromDb, "Batches");
+
+                    foreach (DataRow substanceRow in individualItemDataFromDb.Tables["ActiveSubstances"].Rows)
+                    {
+                        individualItem.addActiveSubstance((string)substanceRow["name"], (float)(decimal)substanceRow["concentration"]);
+                    }
+
+                    foreach (DataRow batchRow in individualItemDataFromDb.Tables["Batches"].Rows)
+                    {
+                        DateOnly extractedExpirationDate = DateOnly.FromDateTime((DateTime)batchRow["expirationDate"]);
+                        individualItem.addNewBatch(extractedExpirationDate, (int)batchRow["numberOfPacks"]);
+                    }
+
+
+                    resultItems.Add(individualItem);
+
+                }
+
+                return resultItems;
+            }
+        }
+
+        public void changeItemInfo(int id, Item newItem)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            string updateItemString = $"UPDATE Items " +
+                                         $"SET name = '{newItem.Name}', " +
+                                         $"price = {newItem.Price}, " +
+                                         $"category = '{newItem.Category}', " +
+                                         $"numberOfPills = {newItem.NumberOfPills}, " +
+                                         $"producer = '{newItem.Producer}', " +
+                                         $"imagePath = '{newItem.ImagePath}', " +
+                                         $"quantity = {newItem.Quantity}, " +
+                                         $"label = '{newItem.Label}', " +
+                                         $"description = '{newItem.Description}', " +
+                                         $"discountPercentage = {newItem.DiscountPercentage} " +
+                                         $"WHERE itemId = {newItem.Id}";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // this command updates ONLY the Items table
+
+                conn.Open();
+                SqlCommand updateItemCommand = new SqlCommand(updateItemString, conn);
+                updateItemCommand.ExecuteNonQuery();
+
+
+                // we still have to update the ItemSubstances and ItemExpirationDates
+                // I thought about just deleting the old entries in both tables associated
+                // with the given item id, and putting the updated entries into the tables
+                // looks a bit janky ngl, might be changed later
+
+                // updating ItemSubstances for the specific item
+
+                string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE itemId = {newItem.Id}";
+                SqlCommand deleteActiveSubstancesCommand = new SqlCommand(deleteActiveSubstancesCommandString, conn);
+                deleteActiveSubstancesCommand.ExecuteNonQuery();
+
+                foreach (KeyValuePair<string, float> activeSubstance in newItem.ActiveSubstances)
+                {
+                    string insertActiveSubstanceCommandString = $"INSERT INTO ItemSubstances (itemId, name, concentration) " +
+                                                                $"VALUES ({newItem.Id}, '{activeSubstance.Key}', {activeSubstance.Value})";
+                    SqlCommand insertActiveSubstanceCommand = new SqlCommand(insertActiveSubstanceCommandString, conn);
+                    insertActiveSubstanceCommand.ExecuteNonQuery();
+                }
+
+
+                // updating ItemExpirationDates for the specific item
+
+                string deleteBatchesCommandString = $"DELETE FROM ItemExpirationDates WHERE itemId = {newItem.Id}";
+                SqlCommand deleteBatchesCommand = new SqlCommand(deleteBatchesCommandString, conn);
+                deleteBatchesCommand.ExecuteNonQuery();
+
+                foreach (KeyValuePair<DateOnly, int> batch in newItem.Batches)
+                {
+                    string insertBatchExpirationDate = $"{batch.Key.Year}-{batch.Key.Month}-{batch.Key.Day}";
+                    string insertBatchCommandString = $"INSERT INTO ItemExpirationDates (itemId, expirationDate, numberOfPacks) " +
+                                                      $"VALUES ({newItem.Id}, '{insertBatchExpirationDate}', {batch.Value})";
+                    SqlCommand insertBatchCommand = new SqlCommand(insertBatchCommandString, conn);
+                    insertBatchCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public bool checkItemExists(int id)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            string selectQueryString = $"SELECT * FROM Items WHERE itemId={id}";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlDataAdapter itemsAdapter = new SqlDataAdapter(selectQueryString, conn);
+                DataSet items = new DataSet();
+
+                conn.Open();
+                itemsAdapter.Fill(items, "Items");
+
+                if (items.Tables["Items"].Rows.Count > 0)
+                    return true;
+                return false;
+            }
+        }
+
+    }
+}
