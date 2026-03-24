@@ -1,4 +1,5 @@
-﻿using PharmacyApp.Common.Repositories;
+﻿using PharmacyApp.Common.Exceptions;
+using PharmacyApp.Common.Repositories;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,10 @@ namespace PharmacyApp.Features.Accounts.Logic
                 var user = users.GetByEmail(email);
                 throw new Exception("Email already linked to an account");
             }
-            catch (Exception) { }
+            catch (UserNotFoundException) { }
+            var passwordHash = SecurityService.HashPassword(password);
+            var discountNotificationsSetting = false;
+            users.Add(email,phoneNumber,passwordHash,username,discountNotificationsSetting);
         }
 
     }

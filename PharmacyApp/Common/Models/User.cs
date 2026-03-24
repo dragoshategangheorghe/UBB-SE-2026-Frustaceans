@@ -16,6 +16,10 @@ namespace PharmacyApp.Models
         public string Username { get; set; }
         public bool IsDisabled { get; set; }
 
+        public bool DiscountNotifications { get; set; }
+        public int LoyaltyPoints { get; set; }
+
+
 
 
     }

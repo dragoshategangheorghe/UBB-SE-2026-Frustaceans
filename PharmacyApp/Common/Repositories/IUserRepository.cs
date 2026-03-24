@@ -13,7 +13,7 @@ namespace PharmacyApp.Common.Repositories
         public User GetById(int id);
         public User GetByEmail(string email);
 
-        public void Add(User user);
+        public void Add(string email, string phoneNumber, string passwordHash, string username, bool discountNotifications, bool isDisabled=false, bool isAdmin=false, int loyaltyPoints=0);
         public void Update(User user);
 
         public void Delete(int id);
