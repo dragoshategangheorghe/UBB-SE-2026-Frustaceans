@@ -15,7 +15,7 @@ namespace PharmacyApp.Models
         // should be a relative path to the Assets folder
         public string ImagePath { get; set; }
         public int NumberOfPills { get; set; }
-        public int Quantity { get; set; }
+        public int Quantity { get; private set; }
         public string Label { get; set; }
         public string Description { get; set; }
         public float DiscountPercentage { get; set; }
@@ -66,8 +66,11 @@ namespace PharmacyApp.Models
 
         public void addNewBatch(DateOnly newExpirationDate, int nrOfPacks)
         {
-            if (Batches.ContainsKey(newExpirationDate))
-                throw new ArgumentException("A batch with expiration date " + newExpirationDate.ToString() + " already exists");
+            if (Batches.ContainsKey(newExpirationDate)) {
+                Batches[newExpirationDate] += nrOfPacks;
+                return;
+            }
+
             Batches[newExpirationDate] = nrOfPacks;
         }
 

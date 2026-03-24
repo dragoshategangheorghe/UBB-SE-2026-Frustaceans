@@ -14,7 +14,7 @@ namespace PharmacyApp.Common.Repositories
         // change the string inside this function for yourself
         public static string GetConnectionString()
         {
-            return "Data Source=JUAN\\SQLEXPRESS;Initial Catalog=Pharmacy;Integrated Security=true;TrustServerCertificate=true;";
+            return "Data Source=" + Environment.MachineName + "\\SQLEXPRESS;Initial Catalog=Pharmacy;Integrated Security=true;TrustServerCertificate=true;";
         }
     }
 }

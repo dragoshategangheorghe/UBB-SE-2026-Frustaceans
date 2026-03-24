@@ -10,7 +10,7 @@ create table Substances(
 )
 
 create table Items(
-	--ids will be autoincremented, I'm sry we didn't decide this sooner
+	--ids will be autoincremented
 	itemId int identity(1,1) primary key,
 	name varchar(255) not null,
 	price decimal(10,2),
