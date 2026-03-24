@@ -6,13 +6,13 @@ using System.Data;
 
 namespace PharmacyApp.Common.Repositories
 {
-    public class SQLItemRepository : IItemRepository
+    public class SQLItemsRepository : IItemsRepository
     {
-        public SQLItemRepository()
+        public SQLItemsRepository()
         {
         }
 
-        public void addItem(string name, string producer, string category,
+        public void AddItem(string name, string producer, string category,
             float price, int nrOfPills, int quantity = 0,
             string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
             float discount = 0f)
@@ -33,7 +33,7 @@ namespace PharmacyApp.Common.Repositories
             // and disposes of it
         }
 
-        public void removeItem(int idToBeRemoved)
+        public void RemoveItem(int idToBeRemoved)
         {
             string connString = SQLUtility.GetConnectionString();
             string deleteItemString = $"DELETE FROM Items WHERE itemId={idToBeRemoved}";
@@ -58,7 +58,7 @@ namespace PharmacyApp.Common.Repositories
             deleteItemCommand.ExecuteNonQuery();
         }
 
-        public Item getItem(int id)
+        public Item GetItem(int id)
         {
             // we have to get the active substances and the batches on the particular
             // item as well to create the item fully
@@ -112,7 +112,7 @@ namespace PharmacyApp.Common.Repositories
             }
         }
 
-        public List<Item> getItemsByName(string name)
+        public List<Item> GetItemsByName(string name)
         {
             string connString = SQLUtility.GetConnectionString();
             List<Item> resultItems = new List<Item>();
@@ -171,7 +171,7 @@ namespace PharmacyApp.Common.Repositories
             return resultItems;
         }
 
-        public void changeItemInfo(int id, Item newItem)
+        public void ChangeItemInfo(int id, Item newItem)
         {
             string connString = SQLUtility.GetConnectionString();
             string updateItemString = $"UPDATE Items " +
@@ -234,7 +234,7 @@ namespace PharmacyApp.Common.Repositories
             }
         }
 
-        public bool checkItemExists(int id)
+        public bool ItemExists(int id)
         {
             string connString = SQLUtility.GetConnectionString();
             string selectQueryString = $"SELECT * FROM Items WHERE itemId={id}";
