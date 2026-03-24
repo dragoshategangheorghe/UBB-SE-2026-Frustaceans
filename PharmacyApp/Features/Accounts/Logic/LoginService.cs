@@ -18,8 +18,6 @@ namespace PharmacyApp.Features.Accounts.Logic
             this.users = users;
         }
 
-
-
         public User Login(string email,string password)
         {
             if (!UserValidationService.isCorrectEmailFormat(email))
