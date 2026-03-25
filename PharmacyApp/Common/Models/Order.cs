@@ -7,7 +7,7 @@ namespace PharmacyApp.Models
     {
 
         public int Id { get; private set; }
-        public int ClientID { get; set; }
+        public int ClientId { get; set; }
         public DateOnly PickUpDate { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsExpired { get; set; }
@@ -20,14 +20,14 @@ namespace PharmacyApp.Models
                      bool isCompleted = false, bool isExpired = false)
         {
             Id = id;
-            ClientID = clientId;
+            ClientId = clientId;
             PickUpDate = pickUpDate;
             IsCompleted = isCompleted;
             IsExpired = isExpired;
             ItemQuantitiesWithFinalPrice = new Dictionary<int, Tuple<int, float>>();
         }
 
-        public void AddItem(int newItemId, int itemQuantity, float finalPrice)
+        public void AddItemToOrder(int newItemId, int itemQuantity, float finalPrice)
         {
             if (ItemQuantitiesWithFinalPrice.ContainsKey(newItemId))
                 throw new ArgumentException("Item #" + newItemId + " already exists in order");
@@ -41,7 +41,7 @@ namespace PharmacyApp.Models
             ItemQuantitiesWithFinalPrice[itemId] = new Tuple<int, float>(newItemQuantity, newFinalPrice);
         }
 
-        public void RemoveItem(int itemId)
+        public void RemoveItemFromOrder(int itemId)
         {
             if (!ItemQuantitiesWithFinalPrice.ContainsKey(itemId))
                 throw new ArgumentException("Item #" + itemId + " doesn't exist");
