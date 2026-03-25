@@ -11,7 +11,9 @@ namespace PharmacyApp.Models
         public DateOnly PickUpDate { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsExpired { get; set; }
-        public Dictionary<int, int> Items { get; private set; }
+
+        // the tuple contains for every item its quantity and price
+        public Dictionary<int, Tuple<int, float>> ItemQuantitiesWithFinalPrice { get; private set; }
 
 
         public Order(int id, int clientId, DateOnly pickUpDate,
@@ -22,28 +24,28 @@ namespace PharmacyApp.Models
             PickUpDate = pickUpDate;
             IsCompleted = isCompleted;
             IsExpired = isExpired;
-            Items = new Dictionary<int, int>();
+            ItemQuantitiesWithFinalPrice = new Dictionary<int, Tuple<int, float>>();
         }
 
-        public void addItem(int newItemId, int quantity)
+        public void AddItem(int newItemId, int itemQuantity, float finalPrice)
         {
-            if (Items.ContainsKey(newItemId))
+            if (ItemQuantitiesWithFinalPrice.ContainsKey(newItemId))
                 throw new ArgumentException("Item #" + newItemId + " already exists in order");
-            Items[newItemId] = quantity;
+            ItemQuantitiesWithFinalPrice[newItemId] = new Tuple<int, float>(itemQuantity, finalPrice);
         }
 
-        public void changeItemQuantity(int itemId, int newQuantity)
+        public void ChangeItemInfoInOrder(int itemId, int newItemQuantity, float newFinalPrice)
         {
-            if (!Items.ContainsKey(itemId)) 
+            if (!ItemQuantitiesWithFinalPrice.ContainsKey(itemId)) 
                 throw new ArgumentException("Item #" + itemId + " doesn't exist");
-            Items[itemId] = newQuantity;
+            ItemQuantitiesWithFinalPrice[itemId] = new Tuple<int, float>(newItemQuantity, newFinalPrice);
         }
 
-        public void removeItem(int itemId)
+        public void RemoveItem(int itemId)
         {
-            if (!Items.ContainsKey(itemId))
+            if (!ItemQuantitiesWithFinalPrice.ContainsKey(itemId))
                 throw new ArgumentException("Item #" + itemId + " doesn't exist");
-            Items.Remove(itemId);
+            ItemQuantitiesWithFinalPrice.Remove(itemId);
         }
 
     }
