@@ -33,7 +33,92 @@ namespace PharmacyApp.Common.Repositories
         
         public List<User> GetAllUsers()
         {
-            throw new NotImplementedException();
+            string connString = SQLUtility.GetConnectionString();
+
+            string selectUsersString = $"SELECT * FROM Users";
+            
+            
+
+            using SqlConnection conn = new SqlConnection(connString);
+
+            SqlDataAdapter selectUsersAdapter = new SqlDataAdapter(selectUsersString, conn);
+
+            DataSet usersDataFromDB = new DataSet(); // all the tables will be put in this DataSet
+
+            conn.Open();
+
+            selectUsersAdapter.Fill(usersDataFromDB, "Users"); // this uses the connection, fills the data from the select query into a table called "Users"
+
+            if (usersDataFromDB.Tables["Users"].Rows.Count == 0)
+                return new List<User>(); // empty list
+
+
+            List<User> users = new List<User>(); // this list will contain all users 
+
+            // iterate each user and find their data
+            foreach (DataRow userRow in usersDataFromDB.Tables["Users"].Rows)
+            {
+                int userID = (int)userRow["userId"];
+
+                //NOTE: userData, not usersData...
+                DataSet userDataFromDB = new DataSet(); // all the tables relevant to THIS specific user will be put here
+
+                // query their period tracker
+                string selectPeriodTrackersString = $"SELECT * FROM PeriodTrackers WHERE userId={userID}";
+                SqlDataAdapter selectPeriodTrackersAdapter = new SqlDataAdapter(selectPeriodTrackersString, conn);
+                selectPeriodTrackersAdapter.Fill(userDataFromDB, "PeriodTrackers");
+
+                DataRow userPeriodTrackerRow = userDataFromDB.Tables["PeriodTrackers"].Rows[0]; // their period tracker, only one
+
+                User resultUser = new User((int)userRow["userId"], (string)userRow["email"],
+                    (string)userRow["phoneNumber"],
+                    (string)userRow["passwordHash"], (bool)userRow["isAdmin"], (bool)userRow["isDisabled"],
+                    (string)userRow["username"], (bool)userRow["discountNotifications"],
+                    (int)userRow["loyaltyPoints"],
+                    DateOnly.FromDateTime((DateTime)userPeriodTrackerRow["startPeriodDate"]), (int)userPeriodTrackerRow["cycleDays"],
+                    (int)userPeriodTrackerRow["periodLasts"], (int)userPeriodTrackerRow["PMSOption"],
+                    (bool)userPeriodTrackerRow["wantsToBePregnant"]);
+
+                // now find, using the same open connection, their notifications, discounts and period notes
+                string selectUserNotificationsString = $"SELECT * FROM UserNotifications WHERE userId={userID}";
+                string selectUserDiscountsString = $"SELECT * FROM UserDiscounts WHERE userId={userID}";
+                string selectPeriodNotesString = $"SELECT * FROM PeriodNotes WHERE userId={userID}";
+
+                SqlDataAdapter selectUserNotificationsAdapter = new SqlDataAdapter(selectUserNotificationsString, conn);
+                SqlDataAdapter selectUserDiscountsAdapter = new SqlDataAdapter(selectUserDiscountsString, conn);
+                SqlDataAdapter selectPeriodNotesAdapter = new SqlDataAdapter(selectPeriodNotesString, conn);
+
+                selectUserNotificationsAdapter.Fill(userDataFromDB, "UserNotifications");
+                selectUserDiscountsAdapter.Fill(userDataFromDB, "UserDiscounts");
+                selectPeriodNotesAdapter.Fill(userDataFromDB, "PeriodNotes");
+
+                // now  give them their notifications and discounts
+                foreach (DataRow notificationsRow in userDataFromDB.Tables["UserNotifications"].Rows)
+                {
+                    if ((bool)notificationsRow["favouriteItem"]) // add that item to the user's favorite items if they checked it
+                        resultUser.addFavoriteItem((int)notificationsRow["itemId"]);
+                    if ((bool)notificationsRow["stockAlert"]) // same principle
+                        resultUser.addStockAlert((int)notificationsRow["itemId"]);
+                    // if both are false, the item is NOT in the database at all
+                }
+
+                foreach (DataRow discountRow in userDataFromDB.Tables["UserDiscounts"].Rows)
+                {
+                    // a row is only present here if the user has personal discounts on some items
+                    resultUser.addUserDiscount((int)discountRow["itemId"], (float)(decimal)discountRow["itemDiscountPercentage"]);
+                }
+
+                // now add the user's period notes
+                foreach (DataRow periodNoteRow in userDataFromDB.Tables["PeriodNotes"].Rows)
+                {
+                    resultUser.addPeriodNote((int)periodNoteRow["noteId"], (string)periodNoteRow["noteBody"], (bool)periodNoteRow["isDone"]);
+                }
+
+
+                users.Add(resultUser); // finally add the user to the users list
+            }
+
+            return users;
         }
 
         public User GetUserByEmail(string email)

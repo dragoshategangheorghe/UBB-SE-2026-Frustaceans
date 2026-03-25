@@ -37,10 +37,8 @@ namespace PharmacyApp
             System.Diagnostics.Debug.WriteLine(usersRepository.UserExists(2));
 
             User user1 = usersRepository.GetUserById(1);
-            System.Diagnostics.Debug.WriteLine(user1.PeriodNotes);
-            System.Diagnostics.Debug.WriteLine(user1.UserDiscounts);
-            System.Diagnostics.Debug.WriteLine(user1.StockAlerts);
-            System.Diagnostics.Debug.WriteLine(user1.FavoriteItems);
+            List<User> users = usersRepository.GetAllUsers();
+
             InitializeComponent();
         }
     }
