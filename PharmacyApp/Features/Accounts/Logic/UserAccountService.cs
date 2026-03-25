@@ -1,4 +1,5 @@
-﻿using PharmacyApp.Models;
+﻿using PharmacyApp.Common.Repositories;
+using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace PharmacyApp.Features.Accounts.Logic
     public class UserAccountService
     {
         public User CurrentUser {  get; private set; }
+        public IUsersRepository users { get; private set; }
         public UserAccountService(User user) {
             CurrentUser = user;
         }
@@ -32,9 +34,9 @@ namespace PharmacyApp.Features.Accounts.Logic
 
             newPhoneNumber = string.IsNullOrEmpty(newPhoneNumber) ? CurrentUser.PhoneNumber : newPhoneNumber;
 
-            //update the stuff in the DB and in-memory
-            
-
+            CurrentUser.PhoneNumber = newPhoneNumber;
+            CurrentUser.Username = newUsername;
+            users.UpdateUser(CurrentUser);
         }
 
 
@@ -52,7 +54,9 @@ namespace PharmacyApp.Features.Accounts.Logic
                 throw new Exception("Passwords don't match");
             }
             var newPassHash = SecurityService.HashPassword(newPass);
-            //TODO update in db and in-memory
+            
+            CurrentUser.PasswordHash = newPassHash;
+            users.UpdateUser(CurrentUser);
 
         }
 

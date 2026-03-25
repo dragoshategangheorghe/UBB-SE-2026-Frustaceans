@@ -34,7 +34,7 @@ namespace PharmacyApp.Common.Services
             itemRepository.removeItem(id);
         }
 
-       public void updateItem(string id, Item updatedItem)
+        public void updateItem(string id, Item updatedItem)
         {
             itemRepository.changeItemInfo(id, updatedItem);
 

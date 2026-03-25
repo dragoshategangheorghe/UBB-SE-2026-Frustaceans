@@ -37,10 +37,10 @@ namespace PharmacyApp.Features.Accounts.Views
             vm.Password = PasswordBox.Password;
         }
 
-        //private void Register_Click(object sender, RoutedEventArgs e)
-        //{
+        private void Register_Click(object sender, RoutedEventArgs e)
+        {
         //    // TEMP: navigation later
         //    (this.Parent as Frame)?.Navigate(typeof(RegisterView));
-        //}
+        }
     }
 }
