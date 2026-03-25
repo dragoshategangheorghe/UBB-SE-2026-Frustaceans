@@ -34,7 +34,7 @@ namespace PharmacyApp.Features.Products_Catalogue
                 items = discountFilter(items, discounted);
                 items = substanceFilter(items, substances);
                 items = priceSort(items, ascending);
-                items = newestSort(items, ascending);
+                items = newestSort(items, ascending); //TODO change priceSort and newestSort to have only one function
                 items = paginate(items, page, pageSize);
                 return items;    
             }

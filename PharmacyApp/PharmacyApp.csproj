@@ -66,4 +66,12 @@
   <ItemGroup>
     <PRIResource Remove="Period Tracker\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Features\Products_Catalogue\BlankPage1.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Products_Catalogue\BlankPage1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

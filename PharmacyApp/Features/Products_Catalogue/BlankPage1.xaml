@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PharmacyApp.Features.Products_Catalogue.BlankPage1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PharmacyApp.Features.Products_Catalogue"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Padding="10">
+            <!--search-->
+            <TextBox x:Name="SearchBox" PlaceholderText="Search items..." />
+            <Button Content="Search" Click="OnSearchClicked"/>
+
+            <!--categories-->
+            <TextBlock Text="Categories" FontWeight="Bold"/>
+            <CheckBox Content="Category 1" x:Name="Category1Check"/> <!--!TODO what categories do we have?-->
+
+            <!--categories-->
+            <TextBlock Text="Price" FontWeight="Bold"/>
+            <CheckBox Content="0 - 49" x:Name="Price49"/>
+            <CheckBox Content="50 - 99" x:Name="Pric99"/>
+            <CheckBox Content="100 - 199" x:Name="Price199"/>
+            <CheckBox Content="200 - 499" x:Name="Price499"/>
+            <CheckBox Content="500+" x:Name="Price500"/>
+
+            <!--stock-->
+            <TextBlock Text="Stock" FontWeight="Bold"/>
+            <RadioButton Content="All" GroupName="StockGroup" IsChecked="True"/>
+            <RadioButton Content="In Stock" x:Name="InStockCheck" GroupName="StockGroup"/>
+            <RadioButton Content="Low Stock" x:Name="LowStockCheck" GroupName="StockGroup"/>
+
+            <!--discount-->
+            <TextBlock Text="Discount" FontWeight="Bold"/>
+            <CheckBox Content="Discounted" x:Name="DiscountCheck"/>
+
+            <!--sorting-->
+            <TextBlock Text="Sort By" FontWeight="Bold"/>
+            <ComboBox x:Name="SortBox">
+                 <ComboBoxItem Content="Price"/>
+                 <ComboBoxItem Content="Newest"/>
+            </ComboBox>
+                <ComboBox x:Name="AscendingBox">
+                    <ComboBoxItem Content="Ascending"/>
+                    <ComboBoxItem Content="Descending"/>
+                </ComboBox>
+        </StackPanel>
+
+    </Grid>
+</Page>
