@@ -10,13 +10,15 @@ create table Substances(
 )
 
 create table Items(
-	itemId int primary key,
+	--ids will be autoincremented
+	itemId int identity(1,1) primary key,
 	name varchar(255) not null,
 	price decimal(10,2),
 	category varchar(255),
-	numberPills int,
+	numberOfPills int,
 	producer varchar(255),
 	--image somehow
+	imagePath varchar(255),
 	quantity int,
 	label varchar(255),
 	description varchar(255),
@@ -38,7 +40,7 @@ create table ItemExpirationDates(
 )
 
 create table Users(
-	userId int primary key,
+	userId int identity(1,1) primary key,
 	email varchar(255) unique,
 	phoneNumber varchar(255),
 	passwordHash varchar(255),
@@ -47,6 +49,7 @@ create table Users(
 	username varchar(255),
 	discountNotifications bit not null,
 	--loyalty points? do we have these? cannot find them in features
+	loyaltyPoints int
 )
 
 create table UserDiscounts(
@@ -60,6 +63,7 @@ create table UserNotifications(
 	userId int references Users(userId),
 	itemId int references Items(itemId),
 	--favouriteItem? noi mai avem astea macar?
+	favouriteItem bit not null,
 	stockAlert bit not null,
 	primary key(userId,itemId)
 )
@@ -82,7 +86,7 @@ create table PeriodTrackers(
 )
 
 create table Orders(
-	orderId int primary key,
+	orderId int identity(1,1) primary key,
 	clientId int references Users(userId),
 	isCompleted bit not null,
 	isExpired bit not null,

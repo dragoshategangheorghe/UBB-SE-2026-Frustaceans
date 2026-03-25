@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PharmacyApp.Models
 {
-    internal class Order
+    public class Order
     {
 
-        public string Id { get; private set; }
-        public string ClientID { get; set; }
+        public int Id { get; private set; }
+        public int ClientID { get; set; }
         public DateOnly PickUpDate { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsExpired { get; set; }
-        // TODO should we store the prices at the time of the order?
-        public Dictionary<string, int> Items { get; private set; }
+        public Dictionary<int, int> Items { get; private set; }
 
 
-        public Order(string id, string clientId, DateOnly pickUpDate,
+        public Order(int id, int clientId, DateOnly pickUpDate,
                      bool isCompleted = false, bool isExpired = false)
         {
             Id = id;
@@ -26,28 +22,28 @@ namespace PharmacyApp.Models
             PickUpDate = pickUpDate;
             IsCompleted = isCompleted;
             IsExpired = isExpired;
-            Items = new Dictionary<string, int>();
+            Items = new Dictionary<int, int>();
         }
 
-        // TODO already existing item is rejected or updated?
-        public bool addItem(string newItemId, int quantity)
-        {
-            if (!Items.ContainsKey(newItemId))
-            {
-                Items.Add(newItemId, quantity);
-                return true;
-            }
-            return false;
-        }
-
-        public bool removeItem(string newItemId)
+        public void addItem(int newItemId, int quantity)
         {
             if (Items.ContainsKey(newItemId))
-            {
-                Items.Remove(newItemId);
-                return true;
-            }
-            return false;
+                throw new ArgumentException("Item #" + newItemId + " already exists in order");
+            Items[newItemId] = quantity;
+        }
+
+        public void changeItemQuantity(int itemId, int newQuantity)
+        {
+            if (!Items.ContainsKey(itemId)) 
+                throw new ArgumentException("Item #" + itemId + " doesn't exist");
+            Items[itemId] = newQuantity;
+        }
+
+        public void removeItem(int itemId)
+        {
+            if (!Items.ContainsKey(itemId))
+                throw new ArgumentException("Item #" + itemId + " doesn't exist");
+            Items.Remove(itemId);
         }
 
     }
