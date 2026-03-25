@@ -35,7 +35,6 @@ namespace PharmacyApp.Common.Repositories
 
         public void RemoveItem(int idToBeRemoved)
         {
-            // TODO remove the itemIds from OrderItems, UserNotifications and UserDiscounts
             string connString = SQLUtility.GetConnectionString();
             string deleteItemString = $"DELETE FROM Items WHERE itemId={idToBeRemoved}";
             string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE itemId = {idToBeRemoved}";
