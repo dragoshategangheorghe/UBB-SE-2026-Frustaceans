@@ -13,14 +13,14 @@ namespace PharmacyApp.Common.Repositories
         }
 
         public void AddItem(string name, string producer, string category,
-            float price, int nrOfPills, int quantity = 0,
+            float price, int nrOfPills,
             string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
             float discount = 0f)
         {
             string connString = SQLUtility.GetConnectionString();
             string insertNewItemString =
                 "INSERT INTO Items (name, price, category, numberOfPills, producer, imagePath, quantity, label, description, discountPercentage) " +
-                $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', {quantity}, '{label}', '{description}', {discount})";
+                $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', 0, '{label}', '{description}', {discount})";
 
             using SqlConnection conn = new SqlConnection(connString);
 
@@ -35,6 +35,7 @@ namespace PharmacyApp.Common.Repositories
 
         public void RemoveItem(int idToBeRemoved)
         {
+            // TODO remove the itemIds from OrderItems, UserNotifications and UserDiscounts
             string connString = SQLUtility.GetConnectionString();
             string deleteItemString = $"DELETE FROM Items WHERE itemId={idToBeRemoved}";
             string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE itemId = {idToBeRemoved}";
@@ -87,11 +88,17 @@ namespace PharmacyApp.Common.Repositories
 
             // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
 
-            Item resultItem = new Item((int)resultRow["itemId"], (string)resultRow["name"],
-                (string)resultRow["producer"],
-                (string)resultRow["category"], (float)(decimal)resultRow["price"], (int)resultRow["numberOfPills"],
-                (int)resultRow["quantity"], (string)resultRow["label"], (string)resultRow["description"],
-                (string)resultRow["imagePath"], (float)(decimal)resultRow["discountPercentage"]);
+            Item resultItem = new Item(
+                (int)               resultRow["itemId"], 
+                (string)            resultRow["name"],
+                (string)            resultRow["producer"],
+                (string)            resultRow["category"], 
+                (float)(decimal)    resultRow["price"], 
+                (int)               resultRow["numberOfPills"],
+                (string)            resultRow["label"], 
+                (string)            resultRow["description"],
+                (string)            resultRow["imagePath"], 
+                (float)(decimal)    resultRow["discountPercentage"]);
 
 
             // inserting the active substances and batches for the particular item one by one
@@ -132,11 +139,17 @@ namespace PharmacyApp.Common.Repositories
             {
                 // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
 
-                Item individualItem = new Item((int)itemRow["itemId"], (string)itemRow["name"],
-                    (string)itemRow["producer"],
-                    (string)itemRow["category"], (float)(decimal)itemRow["price"], (int)itemRow["numberOfPills"],
-                    (int)itemRow["quantity"], (string)itemRow["label"], (string)itemRow["description"],
-                    (string)itemRow["imagePath"], (float)(decimal)itemRow["discountPercentage"]);
+                Item individualItem = new Item(
+                    (int)               itemRow["itemId"], 
+                    (string)            itemRow["name"],
+                    (string)            itemRow["producer"],
+                    (string)            itemRow["category"], 
+                    (float)(decimal)    itemRow["price"], 
+                    (int)               itemRow["numberOfPills"],
+                    (string)            itemRow["label"], 
+                    (string)            itemRow["description"],
+                    (string)            itemRow["imagePath"], 
+                    (float)(decimal)    itemRow["discountPercentage"]);
 
 
                 // for every item we need to get its substances and batches
