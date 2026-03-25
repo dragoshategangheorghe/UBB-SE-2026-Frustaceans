@@ -12,8 +12,8 @@ namespace PharmacyApp.Features.Accounts.Logic
 {
     public class LoginService
     {
-        IUserRepository users;
-        public LoginService(IUserRepository users)
+        IUsersRepository users;
+        public LoginService(IUsersRepository users)
         {
             this.users = users;
         }
@@ -24,7 +24,7 @@ namespace PharmacyApp.Features.Accounts.Logic
                 throw new Exception("Not a valid e-mail");
             try
             {
-                var user = users.GetByEmail(email);
+                var user = users.GetUserByEmail(email);
                 if (user.IsDisabled)
                     throw new Exception("Account disabled");
                 if (!SecurityService.VerifyPassword(password, user.PasswordHash))
@@ -47,7 +47,7 @@ namespace PharmacyApp.Features.Accounts.Logic
 
             try
             {
-                var user = users.GetByEmail(email);
+                var user = users.GetUserByEmail(email);
                 throw new Exception("Email already linked to an account");
             }
             catch (UserNotFoundException) { }
@@ -55,7 +55,7 @@ namespace PharmacyApp.Features.Accounts.Logic
             
             var passwordHash = SecurityService.HashPassword(password);
             var discountNotificationsSetting = false;
-            users.Add(email,phoneNumber,passwordHash,username,discountNotificationsSetting);
+            users.AddUser(email,phoneNumber,passwordHash,username,discountNotificationsSetting);
         }
 
     }
