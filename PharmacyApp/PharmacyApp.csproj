@@ -26,7 +26,9 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,10 +69,15 @@
     <PRIResource Remove="Period Tracker\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Features\Products_Catalogue\BlankPage1.xaml" />
+    <None Remove="Assets\SurelyAMedicalProfessional.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Features\Products_Catalogue\BlankPage1.xaml">
+    <Page Update="Features\Products_Catalogue\HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Products_Catalogue\CatalogPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

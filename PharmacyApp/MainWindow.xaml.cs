@@ -26,7 +26,37 @@ namespace PharmacyApp
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.BlankPage1));
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
+        }
+
+        private void OnHomeClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
+        }
+
+        private void OnProductsClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage));
+        }
+
+        private void OnCartClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnAccountClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnCycleTrackerClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnAdminClicked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
