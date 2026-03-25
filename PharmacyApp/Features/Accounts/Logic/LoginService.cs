@@ -31,7 +31,7 @@ namespace PharmacyApp.Features.Accounts.Logic
                     throw new Exception("Incorrect password");
                 return user;
             }
-            catch (Exception ) {
+            catch (ArgumentException ) {
                 throw new Exception("E-mail not found");
             }
         }
@@ -50,7 +50,7 @@ namespace PharmacyApp.Features.Accounts.Logic
                 var user = users.GetUserByEmail(email);
                 throw new Exception("Email already linked to an account");
             }
-            catch (UserNotFoundException) { }
+            catch (ArgumentException) { }
             
             
             var passwordHash = SecurityService.HashPassword(password);

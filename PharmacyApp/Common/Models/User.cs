@@ -12,8 +12,8 @@ namespace PharmacyApp.Models
         public bool IsAdmin { get; set; }
         public string Username { get; set; }
         public bool IsDisabled { get; set; }
-        public bool DiscountNotifications { get; set; }
-        public int LoyaltyPoints { get; set; }
+
+
 
         public DateOnly StartPeriodDate { get; set; }
         public int CycleDays { get; set; }

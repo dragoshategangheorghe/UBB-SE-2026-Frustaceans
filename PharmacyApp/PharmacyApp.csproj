@@ -67,7 +67,11 @@
     <PRIResource Remove="Period Tracker\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Features\Accounts\ViewModels\" />
-    <Folder Include="Features\Accounts\Views\" />
+    <None Remove="Features\Accounts\Views\LoginView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Accounts\Views\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>
