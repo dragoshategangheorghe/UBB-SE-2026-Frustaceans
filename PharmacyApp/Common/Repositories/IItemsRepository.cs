@@ -6,8 +6,9 @@ namespace PharmacyApp.Common.Repositories
 {
     internal interface IItemsRepository
     {
+     
         void AddItem(string name, string producer, string category,
-                    float price, int nrOfPills, int quantity = 0,
+                    float price, int nrOfPills,
                     string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
                     float discount = 0f);
         void RemoveItem(int idToBeRemoved);

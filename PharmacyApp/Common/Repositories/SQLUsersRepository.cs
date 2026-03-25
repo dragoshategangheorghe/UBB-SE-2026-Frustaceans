@@ -17,6 +17,7 @@ namespace PharmacyApp.Common.Repositories
         {
         }
 
+        // TODO have the user start out always with 0 loyalty points?
         public void AddUser(string email, string phoneNumber, string passwordHash, string username,
             bool discountNotifications, bool isDisabled = false, bool isAdmin = false, int loyaltyPoints = 0)
         {
