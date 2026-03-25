@@ -9,11 +9,12 @@ namespace PharmacyApp.Common.Repositories
 {
     internal interface IOrdersRepository
     {
-        void AddOrder(Order newOrder);
-        void RemoveOrder(string idToBeRemoved);
-        Order GetOrder(string id);
-        List<Order> GetOrdersOfClient(string clientId);
-        void UpdateOrder(string id, Order newOrder);
-        bool OrderExists(string id);
+        void AddOrder(int clientId, DateOnly pickUpDate,
+                      bool isCompleted = false, bool isExpired = false);
+        void RemoveOrder(int orderIdToBeRemoved);
+        Order GetOrder(int orderId);
+        List<Order> GetOrdersOfClient(int clientId);
+        void UpdateOrder(Order newOrder);
+        bool OrderExists(int orderId);
     }
 }
