@@ -40,20 +40,36 @@ namespace PharmacyApp.Common.Repositories
             string deleteItemString = $"DELETE FROM Items WHERE itemId={idToBeRemoved}";
             string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE itemId = {idToBeRemoved}";
             string deleteBatchesCommandString = $"DELETE FROM ItemExpirationDates WHERE itemId = {idToBeRemoved}";
+            string deleteItemsFromOrdersCommandString = $"DELETE FROM OrderItems WHERE itemId = {idToBeRemoved}";
+            string deleteUserNotificationsCommandString = $"DELETE FROM UserNotifications WHERE itemId = {idToBeRemoved}";
+            string deleteUserDiscountsCommandString = $"DELETE FROM UserDiscounts WHERE itemId = {idToBeRemoved}";
 
             using SqlConnection conn = new SqlConnection(connString);
 
             conn.Open();
 
-            // we have to delete the substances and batches from ItemSubstances and
-            // ItemExpirationDates for the item that is going to be removed before
-            // removing the item itself (cuz of foreign key constraints)
+            // we have to delete
+            // 
+            // the active substances from ItemSubstances, 
+            // the batches of the item from ItemExpirationDates
+            // and the references to the item from OrderItems, UserNotifications and UserDiscounts
+            // 
+            // before removing the item itself (because of foreign key constraints)
 
             SqlCommand deleteActiveSubstancesCommand = new SqlCommand(deleteActiveSubstancesCommandString, conn);
             deleteActiveSubstancesCommand.ExecuteNonQuery();
 
             SqlCommand deleteBatchesCommand = new SqlCommand(deleteBatchesCommandString, conn);
             deleteBatchesCommand.ExecuteNonQuery();
+
+            SqlCommand deleteItemsFromOrdersCommand = new SqlCommand(deleteItemsFromOrdersCommandString, conn);
+            deleteItemsFromOrdersCommand.ExecuteNonQuery();
+
+            SqlCommand deleteUserNotificationsCommand = new SqlCommand(deleteUserNotificationsCommandString, conn);
+            deleteUserNotificationsCommand.ExecuteNonQuery();
+
+            SqlCommand deleteUserDiscountsCommand = new SqlCommand(deleteUserDiscountsCommandString, conn);
+            deleteUserDiscountsCommand.ExecuteNonQuery();
 
             SqlCommand deleteItemCommand = new SqlCommand(deleteItemString, conn);
             deleteItemCommand.ExecuteNonQuery();
