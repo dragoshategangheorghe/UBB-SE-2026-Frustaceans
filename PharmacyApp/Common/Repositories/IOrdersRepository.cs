@@ -15,6 +15,7 @@ namespace PharmacyApp.Common.Repositories
         Order GetOrder(int orderId);
         List<Order> GetOrdersOfClient(int clientId);
         void UpdateOrder(Order newOrder);
+        // TODO better name
         bool OrderExists(int orderId);
     }
 }
