@@ -15,6 +15,7 @@ namespace PharmacyApp.Models
         // should be a relative path to the Assets folder
         public string ImagePath { get; set; }
         public int NumberOfPills { get; set; }
+        // Quantity's setter is private, because we aren't supposed to modify it directly
         public int Quantity { get; private set; }
         public string Label { get; set; }
         public string Description { get; set; }
@@ -23,8 +24,11 @@ namespace PharmacyApp.Models
         public Dictionary<DateOnly, int> Batches { get; private set; }
 
 
+        // I changed the constructor, so that we don't have a way to
+        // add the quantity directly, we have to wait for the batches to modify it
+        // so DON'T FORGET TO CALL addNewBatch() to get the correct result
         public Item(int id, string name, string producer, string category,
-                    float price, int nrOfPills, int quantity = 0,
+                    float price, int nrOfPills,
                     string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
                     float discount = 0f)
         {
@@ -35,7 +39,7 @@ namespace PharmacyApp.Models
             NumberOfPills = nrOfPills;
             Category = category;
             ImagePath = imagePath;
-            Quantity = quantity;
+            Quantity = 0;
             Label = label;
             Description = description;
             DiscountPercentage = discount;
@@ -72,17 +76,31 @@ namespace PharmacyApp.Models
             }
 
             Batches[newExpirationDate] = nrOfPacks;
+
+            // because we aren't supposed to modify Quantity directly
+            // and let the batches automatically modify the Quantity property
+            Quantity += nrOfPacks;
         }
 
         public void changeBatchNrOfPacks(DateOnly expirationDate, int newNrOfPacks)
         {
+            // we need to know the difference between the old and new number of packs
+            // to update the quantity accordingly
+            int oldNrOfPacks = Batches[expirationDate];
+
+            // TODO if the new number of packs is 0, then the batch should be deleted automatically
+
             if (!Batches.ContainsKey(expirationDate))
                 throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
             Batches[expirationDate] = newNrOfPacks;
+
+            Quantity += (newNrOfPacks - oldNrOfPacks);
         }
 
         public void removeBatch(DateOnly expirationDate)
         {
+            Quantity -= Batches[expirationDate];
+
             if (!Batches.ContainsKey(expirationDate))
                 throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
             Batches.Remove(expirationDate);
