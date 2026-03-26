@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PharmacyApp.Features.Period_Tracker.Views.PeriodTrackerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PharmacyApp.Features.Period_Tracker.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <CalendarView
+            SelectionMode="None"
+            IsGroupLabelVisible="True"
+            IsOutOfScopeEnabled="True"
+            Language="en"
+            CalendarIdentifier="GregorianCalendar" />
+    </Grid>
+</Page>

@@ -58,7 +58,7 @@ namespace PharmacyApp
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Period_Tracker.Views.Page));
+            MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
         }
     }
 }
