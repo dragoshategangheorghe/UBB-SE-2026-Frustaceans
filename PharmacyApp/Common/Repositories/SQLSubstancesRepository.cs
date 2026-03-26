@@ -14,7 +14,19 @@ namespace PharmacyApp.Common.Repositories
     {
         public void AddSubstance(string name, float lethalDose, string description)
         {
-            
+            if (SubstanceExists(name))
+                throw new ArgumentException("Substance " + name + " exists already.");
+
+            string connString = SQLUtility.GetConnectionString();
+            string insertSubstanceCommandString =
+                $"INSERT INTO Substances VALUES ('{name}', {lethalDose}, '{description}')";
+
+            using SqlConnection conn = new SqlConnection(connString);
+
+            SqlCommand insertSubstanceCommand = new SqlCommand(insertSubstanceCommandString, conn);
+
+            conn.Open();
+            insertSubstanceCommand.ExecuteNonQuery();
         }
 
         public Substance GetSubstance(string name)
