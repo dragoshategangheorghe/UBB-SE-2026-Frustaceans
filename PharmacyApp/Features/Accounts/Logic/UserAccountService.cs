@@ -10,14 +10,62 @@ namespace PharmacyApp.Features.Accounts.Logic
 {
     public class UserAccountService
     {
-        public User CurrentUser {  get; private set; }
+        public User? CurrentUser {  get; private set; }
         public IUsersRepository users { get; private set; }
-        public UserAccountService(User user) {
-            CurrentUser = user;
+        
+        public UserAccountService(IUsersRepository usersRepository) {
+            CurrentUser = null;
+            users = usersRepository;
         }
+
+        public void Login(string email, string password)
+        {
+            if (!UserValidationService.isCorrectEmailFormat(email))
+                throw new Exception("Not a valid e-mail");
+            try
+            {
+                var user = users.GetUserByEmail(email);
+                if (user.IsDisabled)
+                    throw new Exception("Account disabled");
+                if (!SecurityService.VerifyPassword(password, user.PasswordHash))
+                    throw new Exception("Incorrect password");
+                CurrentUser = user;
+            }
+            catch (ArgumentException)
+            {
+                throw new Exception("E-mail not found");
+            }
+        }
+
+        public void Register(string email, string password, string confirmPassword, string username = "", string phoneNumber = "")
+        {
+            if (!UserValidationService.isCorrectEmailFormat(email))
+                throw new Exception("Not a valid email");
+            if (!UserValidationService.isCorrectPasswordFormat(password))
+                throw new Exception("Incorrect format");
+            if (password != confirmPassword)
+                throw new Exception("Passwords don't match");
+
+            try
+            {
+                var user = users.GetUserByEmail(email);
+                throw new Exception("Email already linked to an account");
+            }
+            catch (ArgumentException) { }
+
+
+            var passwordHash = SecurityService.HashPassword(password);
+            var discountNotificationsSetting = false;
+            users.AddUser(email, phoneNumber, passwordHash, username, discountNotificationsSetting);
+            CurrentUser = users.GetUserByEmail(email);
+        }
+
+
 
         public void UpdateProfile(string newUsername, string newPhoneNumber)
         {
+            if (CurrentUser == null)
+                throw new Exception("Not logged in");
             if (string.IsNullOrEmpty(newUsername)) {
                 
                     newUsername = CurrentUser.Email.Split("@")[0];
@@ -41,6 +89,8 @@ namespace PharmacyApp.Features.Accounts.Logic
 
 
         public void ChangePassword(string oldPass, string newPass, string confirmPass) {
+            if (CurrentUser == null)
+                throw new Exception("Not logged in");
             if (!SecurityService.VerifyPassword(oldPass, CurrentUser.PasswordHash))
             {
                 throw new Exception("Incorrect password");    
@@ -61,8 +111,68 @@ namespace PharmacyApp.Features.Accounts.Logic
         }
 
 
+        public List<User> SearchUsers(string query)
+        {
+            if (CurrentUser == null)
+                throw new Exception("Not logged in");
+            if (!CurrentUser.IsAdmin)
+                throw new Exception($"Current user with id={CurrentUser.Id} not an admin");
+            query = query.Trim();
+            List<User> queriedUsers=users.GetAllUsers();
+            if (query.StartsWith("id:"))
+            {
+                int id;
+                try
+                {
+                    id = int.Parse(query.Substring(3));
+                    return queriedUsers.Where(u => u.Id == id).ToList();
+                }
+                catch (FormatException) { }
 
+            }
 
+            if (query.StartsWith("username:"))
+            {
+                string username = query.Substring(9);
+                return queriedUsers.Where(u => u.Username.Contains(username)).ToList();
+            }
+
+            if (query.StartsWith("mail:"))
+            {
+                string mail = query.Substring(5);
+                return queriedUsers.Where(u => u.Email.Contains(mail)).ToList();
+            }
+
+            return queriedUsers;
+        }
+
+        public void PromoteToAdmin(User client)
+        {
+            if (CurrentUser == null)
+                throw new Exception("Not logged in");
+            if (!CurrentUser.IsAdmin) throw new Exception($"Current user with id={CurrentUser.Id} not an admin");
+            if (client.IsAdmin || client.IsDisabled)
+            {
+                return;
+            }
+            client.IsAdmin = true;
+            users.UpdateUser(client);
+        }
+        public void DisableAccount(User client)
+        {
+            if (CurrentUser == null)
+                throw new Exception("Not logged in");
+            if (!CurrentUser.IsAdmin) throw new Exception($"Current user with id={CurrentUser.Id} not an admin");
+            if (client.IsAdmin || client.IsDisabled)
+                return;
+            client.IsDisabled = true;
+            users.UpdateUser(client);
+        }
+
+        public void Logout()
+        {
+            CurrentUser = null;
+        }
 
 
     }
