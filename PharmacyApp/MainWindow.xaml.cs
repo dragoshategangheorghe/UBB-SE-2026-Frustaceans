@@ -27,6 +27,9 @@ namespace PharmacyApp
     {
         public MainWindow()
         {
+            ISubstancesRepository substancesRepo = new SQLSubstancesRepository();
+            System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("ibuprophen"));
+            System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("dggfddg"));
             InitializeComponent();
         }
     }
