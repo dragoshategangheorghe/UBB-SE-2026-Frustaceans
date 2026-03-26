@@ -6,7 +6,7 @@ go
 create table Substances(
 	name varchar(255) primary key,
 	lethalDose decimal(10,2),
-	description varchar
+	description varchar(200)
 )
 
 create table Items(

@@ -2,17 +2,18 @@
 //using PharmacyApp.Models;
 //using System;
 
-//namespace PharmacyApp.Common.Services
-//{
-//    internal class AdminService
-//    {
-//        IItemsRepository itemRepository;
-//        ISubstancesRepository substanceRepository;
-//        public AdminService(IItemsRepository itemRepo, ISubstancesRepository substanceRepo)
-//        {
-//            this.itemRepository = itemRepo;
-//            this.substanceRepository = substanceRepo;
-//        }
+namespace PharmacyApp.Common.Services
+{
+    internal class AdminService
+    {
+        /*
+        IItemRepository itemRepository;
+        ISubstanceRepository substanceRepository;
+        public AdminService(IItemRepository itemRepo, ISubstanceRepository substanceRepo)
+        {
+            this.itemRepository = itemRepo;
+            this.substanceRepository = substanceRepo;
+        }
 
 //        public void addItem(Item newItem)
 //        {
@@ -88,18 +89,19 @@
 
 //        }
 
-//        public void validateItemAdd(Item item)
-//        {
-//            if (item.Name == "" ||
-//                item.Producer == "" ||
-//                item.Price <= 0 ||
-//                item.NumberOfPills <= 0 ||
-//                item.Quantity < 0 ||
-//                item.DiscountPercentage < 0 ||
-//                item.ActiveSubstances.Count == 0)
-//            {
-//                throw new Exception("Invalid item data. Please check the input and try again.");
-//            }
-//        }
-//    }
-//}
+        public void validateItemAdd(Item item)
+        {
+            if (item.Name == "" ||
+                item.Producer == "" ||
+                item.Price <= 0 ||
+                item.NumberOfPills <= 0 ||
+                item.Quantity < 0 ||
+                item.DiscountPercentage < 0 ||
+                item.ActiveSubstances.Count == 0)
+            {
+                throw new Exception("Invalid item data. Please check the input and try again.");
+            }
+        }
+        */
+    }
+}
