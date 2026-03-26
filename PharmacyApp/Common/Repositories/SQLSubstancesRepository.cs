@@ -53,6 +53,34 @@ namespace PharmacyApp.Common.Repositories
                 (string)substanceDataRow["description"]);
         }
 
+
+        public List<Substance> GetAllSubstances()
+        {
+            List<Substance> allSubstances = new List<Substance>();
+            string connString = SQLUtility.GetConnectionString();
+            string selectAllSubstancesQueryString = $"SELECT * FROM Substances";
+
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlDataAdapter selectSubstancesAdapter = new SqlDataAdapter(selectAllSubstancesQueryString, conn);
+            DataSet substanceDataFromDB = new DataSet();
+
+            conn.Open();
+            selectSubstancesAdapter.Fill(substanceDataFromDB, "Substances");
+
+            foreach (DataRow substanceDataRow in substanceDataFromDB.Tables["Substances"].Rows)
+            {
+                Substance newSubstance = new Substance(
+                    (string)        substanceDataRow["name"], 
+                    (float)(decimal)substanceDataRow["lethalDose"],
+                    (string)        substanceDataRow["description"]);
+
+                allSubstances.Add(newSubstance);
+            }
+
+            return allSubstances;
+        }
+
+
         public void RemoveSubstance(string name)
         {
             if (!SubstanceExists(name))
