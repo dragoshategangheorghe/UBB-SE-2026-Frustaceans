@@ -51,12 +51,12 @@ namespace PharmacyApp
             MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
 
-        private void OnCycleTrackerClicked(object sender, RoutedEventArgs e)
+        private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void OnAdminClicked(object sender, RoutedEventArgs e)
+        private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
         {
 
         }
