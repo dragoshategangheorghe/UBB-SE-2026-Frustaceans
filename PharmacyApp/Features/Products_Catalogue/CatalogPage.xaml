@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- 🔹 LEFT SIDEBAR -->
+        <!--sidebar-->
         <Border Grid.Column="0"
             Background="#E8F5E9"
             CornerRadius="10"
@@ -23,7 +23,7 @@
             <ScrollViewer Grid.Column="0">
                 <StackPanel Spacing="12">
 
-                    <!-- Search -->
+                    <!--search-->
                     <TextBox x:Name="SearchBox" PlaceholderText="Search items..." Foreground="#389e7c" 
                              Background="White" BorderBrush="#389e7c" PlaceholderForeground="#389e7c">
                     <TextBox.Resources>
@@ -36,7 +36,7 @@
                             <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#2c7d62"/>
                         </Button.Resources>
                     </Button>
-                    <!-- Sorting -->
+                    <!--sorting-->
                     <TextBlock Text="Sort By" FontWeight="Bold" Margin="0,10,0,0" Foreground="#389e7c"/>
                     <ComboBox SelectedIndex="0" Foreground="#389e7c" BorderBrush="#389e7c">
                         <ComboBoxItem Content="Price" Foreground="#389e7c"/>
@@ -46,7 +46,7 @@
                         <ComboBoxItem Content="Ascending" Foreground="#389e7c"/>
                         <ComboBoxItem Content="Descending" Foreground="#389e7c"/>
                     </ComboBox>
-                    <!-- Categories -->
+                    <!--categories-->
                     <TextBlock Text="Categories" FontWeight="Bold" Margin="0,10,0,0" Foreground="#389e7c"/>
                     <CheckBox Content="Medicine" Foreground="#389e7c">
                         <CheckBox.Resources>
@@ -55,7 +55,7 @@
                     </CheckBox>
                     <CheckBox Content="Supplements" Foreground="#389e7c"/>
 
-                    <!-- Price -->
+                    <!--price-->
                     <TextBlock Text="Price" FontWeight="Bold" Margin="0,10,0,0" Foreground="#389e7c"/>
                     <CheckBox Content="0 - 49" Foreground="#389e7c"/>
                     <CheckBox Content="50 - 99" Foreground="#389e7c"/>
@@ -63,13 +63,13 @@
                     <CheckBox Content="200 - 499" Foreground="#389e7c"/>
                     <CheckBox Content="500+" Foreground="#389e7c"/>
 
-                    <!-- Stock -->
+                    <!--stock-->
                     <TextBlock Text="Stock" FontWeight="Bold" Margin="0,10,0,0" Foreground="#389e7c"/>
                     <RadioButton Content="All" GroupName="StockGroup" IsChecked="True" Foreground="#389e7c"/>
                     <RadioButton Content="In Stock" GroupName="StockGroup" Foreground="#389e7c"/>
                     <RadioButton Content="Low Stock" GroupName="StockGroup" Foreground="#389e7c"/>
 
-                    <!-- Discount -->
+                    <!--discount-->
                     <TextBlock Text="Discount" FontWeight="Bold" Margin="0,10,0,0" Foreground="#389e7c"/>
                     <CheckBox Content="Discounted" Foreground="#389e7c"/>
 
