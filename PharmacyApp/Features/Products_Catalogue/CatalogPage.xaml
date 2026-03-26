@@ -26,9 +26,9 @@
                     <!--search-->
                     <TextBox x:Name="SearchBox" PlaceholderText="Search items..." Foreground="#389e7c" 
                              Background="White" BorderBrush="#389e7c" PlaceholderForeground="#389e7c">
-                    <TextBox.Resources>
+                        <TextBox.Resources>
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
-                    </TextBox.Resources>
+                        </TextBox.Resources>
                     </TextBox>
                     <Button Content="Search" Click="OnSearchClicked" Foreground="#389e7c" Background="White">
                         <Button.Resources>
@@ -76,7 +76,53 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+        <ScrollViewer Grid.Column="1">
+            <ItemsControl x:Name="ProductsList">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapGrid MaximumRowsOrColumns="5" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-        
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="220"
+                                Margin="10"
+                                Padding="10"
+                                CornerRadius="10"
+                                Background="White"
+                                BorderBrush="#DDDDDD"
+                                BorderThickness="1">
+
+                            <StackPanel Spacing="8">
+
+                                <!--item-mage-->
+                                <Image Source="{Binding Image}"
+                                       Height="120"
+                                       Stretch="UniformToFill"/>
+
+                                <!--name-->
+                                <TextBlock Text ="{Binding Name}"
+                                           FontWeight="Bold"
+                                           Foreground="#389e7c"
+                                           TextWrapping="WrapWholeWords"/>
+                                <!--price-->
+                                <TextBlock Text="{Binding Price}"
+                                           Foreground="#389e7c"
+                                           FontWeight="SemiBold"/>
+
+                                <!--cart-->
+                                <Button Content="Add to Cart"
+                                        Background="#389e7c"
+                                        Foreground="White"/>
+
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+        </ScrollViewer>
+
     </Grid>
 </Page>
