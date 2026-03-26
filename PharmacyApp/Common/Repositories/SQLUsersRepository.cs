@@ -145,7 +145,7 @@ namespace PharmacyApp.Common.Repositories
         public User GetUserByEmail(string email)
         {
             string connString = SQLUtility.GetConnectionString();
-            string selectUserString = $"SELECT * FROM Users WHERE email={email}";
+            string selectUserString = $"SELECT * FROM Users WHERE email='{email}'";
 
             using SqlConnection conn = new SqlConnection(connString);
 
