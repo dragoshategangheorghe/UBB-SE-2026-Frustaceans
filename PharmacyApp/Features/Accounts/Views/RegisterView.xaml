@@ -10,14 +10,22 @@
 
     <Page.Resources>
 
-        <!-- Normal -->
-        <SolidColorBrush x:Key="TextControlBackground" Color="Gray"/>
+        <!--for the box-->
+        <SolidColorBrush x:Key="TextControlBackground" Color="White"/>
+        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#389e7c"/>
+        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White"/>
 
-        <!-- Hover -->
-        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Black"/>
 
-        <!-- Focus -->
-        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Gray"/>
+        <!--for the text-->
+        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#389e7c"></SolidColorBrush>
+        <SolidColorBrush x:Key="TextControlForeground" Color="#389e7c"></SolidColorBrush>
+        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="White"></SolidColorBrush>
+        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#389e7c"></SolidColorBrush>
+        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#389e7c"></SolidColorBrush>
+
+        <!--button stuff-->
+        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#C8E6C9"/>
+        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#C8E6C9"/>
 
     </Page.Resources>
 
@@ -25,7 +33,7 @@
         <Border
             Width="320"
             Padding="20"
-            Background="LightGray"
+            Background="#E8F5E9"
             CornerRadius="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
@@ -35,51 +43,73 @@
                     Text="Register"
                     FontSize="24"
                     HorizontalAlignment="Center"
-                    Foreground="Black"
+                    Foreground="#389e7c"
                     Margin="0,0,0,10">
  
                 </TextBlock>
                 <TextBox
                     PlaceholderText="Email"
+                    PlaceholderForeground="#389e7c"
+                    BorderBrush="#389e7c"
                     Text="{Binding Email, Mode=TwoWay}">
+                    <TextBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
+                    </TextBox.Resources>
                 </TextBox>
 
                 <TextBox
                     PlaceholderText="Phone number (optional)"
+                    PlaceholderForeground="#389e7c"
+                    BorderBrush="#389e7c"
+
                     Text="{Binding PhoneNumber, Mode=TwoWay}">
+                    <TextBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
+                    </TextBox.Resources>
                 </TextBox>
 
                 <TextBox
                     PlaceholderText="Username (optional)"
+                    PlaceholderForeground="#389e7c"
+                    BorderBrush="#389e7c"
                     Text="{Binding Username, Mode=TwoWay}">
+                    <TextBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
+                    </TextBox.Resources>
                 </TextBox>
 
                 <PasswordBox
                     x:Name="PasswordBox"
                     PlaceholderText="Password"
                     PasswordChanged="PasswordBox_PasswordChanged">
+                    <PasswordBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
+                    </PasswordBox.Resources>
                 </PasswordBox>
                 
                 <PasswordBox
                     x:Name="ConfirmPasswordBox"
                     PlaceholderText="Confirm Password"
                     PasswordChanged="ConfirmPasswordBox_PasswordChanged">
+                    <PasswordBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#389e7c"/>
+                    </PasswordBox.Resources>
                 </PasswordBox>
 
                 <Button
                     Content="Register"
                     HorizontalAlignment="Center"
                     Margin="0,10,0,0"
-                    Background="#F0F0F0"
-                    Foreground="Black"
+                    Background="#389e7c"
+                    Foreground="White"
                     BorderBrush="Gray"
                     Command="{Binding RegisterCommand}">
                 </Button>
 
                 <TextBlock HorizontalAlignment="Center">
-                    <Run Text="Already have an account? "/>
+                    <Run Text="Already have an account?" Foreground="Black"></Run>
                     <Hyperlink Click="Login_Click">
-                        <Run Text="Login"/>
+                        <Run Foreground="#389e7c">Login</Run>
                     </Hyperlink>
                 </TextBlock>
 
