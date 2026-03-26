@@ -4,15 +4,15 @@
 
 namespace PharmacyApp.Common.Services
 {
-    internal class AdminService
-    {
-        IItemRepository itemRepository;
-        ISubstanceRepository substanceRepository;
-        public AdminService(IItemRepository itemRepo, ISubstanceRepository substanceRepo)
-        {
-            this.itemRepository = itemRepo;
-            this.substanceRepository = substanceRepo;
-        }
+    //internal class AdminService
+    //{
+    //    IItemRepository itemRepository;
+    //    ISubstanceRepository substanceRepository;
+    //    public AdminService(IItemRepository itemRepo, ISubstanceRepository substanceRepo)
+    //    {
+    //        this.itemRepository = itemRepo;
+    //        this.substanceRepository = substanceRepo;
+    //    }
 
 //        public void addItem(Item newItem)
 //        {
@@ -34,17 +34,17 @@ namespace PharmacyApp.Common.Services
 //            itemRepository.removeItem(id);
 //        }
 
-       public void updateItem(string id, Item updatedItem)
-        {
-            itemRepository.changeItemInfo(id, updatedItem);
+       //public void updateItem(string id, Item updatedItem)
+       // {
+       //     itemRepository.changeItemInfo(id, updatedItem);
 
-            // notification functionality
-            Item prevItem = itemRepository.getItem(id);
-            if(prevItem.Quantity == 0 && updatedItem.Quantity>0)
-            {
-                sendNewStockNotification(updatedItem);
-            }
-        }
+       //     // notification functionality
+       //     Item prevItem = itemRepository.getItem(id);
+       //     if(prevItem.Quantity == 0 && updatedItem.Quantity>0)
+       //     {
+       //         sendNewStockNotification(updatedItem);
+       //     }
+       // }
 
 //        public void addSubstance(Substance newSubstance)
 //        {
@@ -88,18 +88,18 @@ namespace PharmacyApp.Common.Services
 
 //        }
 
-        public void validateItemAdd(Item item)
-        {
-            if (item.Name == "" ||
-                item.Producer == "" ||
-                item.Price <= 0 ||
-                item.NumberOfPills <= 0 ||
-                item.Quantity < 0 ||
-                item.DiscountPercentage < 0 ||
-                item.ActiveSubstances.Count == 0)
-            {
-                throw new Exception("Invalid item data. Please check the input and try again.");
-            }
-        }
-    }
+        //public void validateItemAdd(Item item)
+        //{
+        //    if (item.Name == "" ||
+        //        item.Producer == "" ||
+        //        item.Price <= 0 ||
+        //        item.NumberOfPills <= 0 ||
+        //        item.Quantity < 0 ||
+        //        item.DiscountPercentage < 0 ||
+        //        item.ActiveSubstances.Count == 0)
+        //    {
+        //        throw new Exception("Invalid item data. Please check the input and try again.");
+        //    }
+        //}
+    //}
 }

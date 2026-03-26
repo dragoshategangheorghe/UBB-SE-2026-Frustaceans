@@ -99,13 +99,13 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                 );
 
                 ErrorMessage = "Registration successful!";
-                System.Console.WriteLine(ErrorMessage);
+                System.Diagnostics.Debug.WriteLine(ErrorMessage);
                 // TODO: go to next page
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
-                System.Console.Debug.WriteLine(ErrorMessage);
+                System.Diagnostics.Debug.WriteLine(ErrorMessage);
             }
         }
 

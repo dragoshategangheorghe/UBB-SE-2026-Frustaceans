@@ -48,7 +48,7 @@ namespace PharmacyApp
 
         private void OnAccountClicked(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
 
         private void OnCycleTrackerClicked(object sender, RoutedEventArgs e)
