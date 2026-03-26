@@ -6,6 +6,7 @@ namespace PharmacyApp.Common.Services
 {
     internal class AdminService
     {
+        /*
         IItemRepository itemRepository;
         ISubstanceRepository substanceRepository;
         public AdminService(IItemRepository itemRepo, ISubstanceRepository substanceRepo)
@@ -101,5 +102,6 @@ namespace PharmacyApp.Common.Services
                 throw new Exception("Invalid item data. Please check the input and try again.");
             }
         }
+        */
     }
 }

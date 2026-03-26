@@ -17,10 +17,12 @@ namespace PharmacyApp.Common.Repositories
         {
         }
 
-        // TODO have the user start out always with 0 loyalty points?
         public void AddUser(string email, string phoneNumber, string passwordHash, string username,
             bool discountNotifications, bool isDisabled = false, bool isAdmin = false, int loyaltyPoints = 0)
         {
+            if (UserExists(email))
+                throw new ArgumentException("User with E-Mail " + email + " exists already.");
+
             string connString = SQLUtility.GetConnectionString();
             string insertNewUserString =
                 "INSERT INTO Users VALUES " +
