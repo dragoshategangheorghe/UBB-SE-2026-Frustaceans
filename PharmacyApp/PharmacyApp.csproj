@@ -84,10 +84,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Features\Orders\Logic\" />
-    <Folder Include="Features\Orders\ViewModels\" />
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Features\Orders\Views\BasketPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
