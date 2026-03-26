@@ -66,4 +66,18 @@
   <ItemGroup>
     <PRIResource Remove="Period Tracker\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Features\Pharmacy_Management\EditPage.xaml" />
+    <None Remove="Features\Pharmacy_Management\StatisticsPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Pharmacy_Management\StatisticsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Pharmacy_Management\EditPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

@@ -14,6 +14,85 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!--topbar-->
+            <RowDefinition Height="*"/>
+            <!--page-->
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#4CAF50" Padding="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                Spacing="15"
+                VerticalAlignment="Center">
 
+                <Button Content="Home"
+                Click="OnHomeClicked"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+                <Button Content="Products"
+                Click="OnProductsClicked"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+                <Button Content="Cycle Tracker"
+                Click="OnCycleTrackerClicked"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+                <Button x:Name="AdminButton"
+                Content="Admin Dashboard"
+                Click="OnAdminClicked"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+            </StackPanel>
+            <StackPanel Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="15"
+                VerticalAlignment="Center">
+
+                <Button Content="🛒"
+                Click="OnCartClicked"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+                <Button Content="👤"
+                FontSize="16"
+                FontWeight="SemiBold"
+                FontFamily="Segoe UI"
+                Click="OnAccountClicked"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="Transparent"/>
+
+            </StackPanel>
+        </Grid>
+
+        <Frame x:Name="MainFrame" Grid.Row="1"/>
     </Grid>
 </Window>
