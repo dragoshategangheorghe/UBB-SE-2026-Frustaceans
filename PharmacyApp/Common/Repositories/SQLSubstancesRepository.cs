@@ -44,7 +44,7 @@ namespace PharmacyApp.Common.Repositories
             selectSubstanceAdapter.Fill(substanceDataFromDB, "Substances");
 
             if (substanceDataFromDB.Tables["Substances"].Rows.Count == 0)
-                throw new ArgumentException("Substance " + name + "does NOT exist.");
+                throw new ArgumentException("Substance " + name + " does NOT exist.");
 
 
             DataRow substanceDataRow = substanceDataFromDB.Tables["Substances"].Rows[0];
@@ -54,7 +54,19 @@ namespace PharmacyApp.Common.Repositories
 
         public void RemoveSubstance(string name)
         {
-            throw new NotImplementedException();
+            if (!SubstanceExists(name))
+                throw new ArgumentException("Substance " + name + " does NOT exist.");
+
+            string connString = SQLUtility.GetConnectionString();
+            string deleteSubstanceCommandString = $"DELETE FROM Substances WHERE name='{name}'";
+            string deleteActiveSubstancesCommandString = $"DELETE FROM ItemSubstances WHERE name='{name}'";
+            using SqlConnection conn = new SqlConnection(connString);
+
+            conn.Open();
+            SqlCommand deleteActiveSubstancesCommand = new SqlCommand(deleteActiveSubstancesCommandString, conn);
+            deleteActiveSubstancesCommand.ExecuteNonQuery();
+            SqlCommand deleteSubstanceCommand = new SqlCommand(deleteSubstanceCommandString, conn);
+            deleteSubstanceCommand.ExecuteNonQuery();
         }
 
         public bool SubstanceExists(string name)
