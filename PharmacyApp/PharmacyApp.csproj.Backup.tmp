@@ -12,6 +12,12 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Period Tracker\**" />
+    <EmbeddedResource Remove="Period Tracker\**" />
+    <None Remove="Period Tracker\**" />
+    <Page Remove="Period Tracker\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -60,8 +66,19 @@
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
+    <PRIResource Remove="Period Tracker\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Assets\HomePageBackground.jpg" />
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="features\period_tracker\PeriodTrackerPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Features\Period_Tracker\PeriodTrackerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Products_Catalogue\HomePage.xaml">
