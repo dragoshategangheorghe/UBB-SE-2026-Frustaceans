@@ -71,7 +71,6 @@
   <ItemGroup>
     <None Remove="Assets\HomePageBackground.jpg" />
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
-    <None Remove="Features\Orders\Views\BasketPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Products_Catalogue\HomePage.xaml">
@@ -84,8 +83,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Features\Orders\Views\BasketPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Folder Include="Features\Orders\Views\" />
   </ItemGroup>
 </Project>
