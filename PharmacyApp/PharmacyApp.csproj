@@ -68,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Features\Accounts\Views\LoginView.xaml" />
+    <None Remove="Features\Accounts\Views\RegisterView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Accounts\Views\RegisterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Accounts\Views\LoginView.xaml">

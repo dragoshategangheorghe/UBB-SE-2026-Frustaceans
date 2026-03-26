@@ -1,4 +1,5 @@
-﻿using PharmacyApp.Common.Commands;
+﻿using Microsoft.WindowsAppSDK.Runtime.Packages;
+using PharmacyApp.Common.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,11 +12,13 @@ using System.Windows.Input;
 
 namespace PharmacyApp.Features.Accounts.ViewModels
 {
-    public class LoginViewModel : INotifyPropertyChanged
+    public class RegisterViewModel : INotifyPropertyChanged
     {
         private string email;
         private string password;
-
+        private string confirmPassword;
+        private string username;
+        private string phoneNumber;
         public string Email
         {
             get => email;
@@ -35,30 +38,46 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public ICommand LoginCommand { get; set; }
-
-        public LoginViewModel()
+        public string ConfirmPassword
         {
-            LoginCommand = (ICommand)new RelayCommand(Login);
-        }
-
-        public void Login()
-        {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            get => confirmPassword;
+            set
             {
-                // TODO: show error in UI later
-                System.Diagnostics.Debug.WriteLine("Fields cannot be empty");
-                return;
+                password = value;
+                OnPropertyChanged();
             }
-
-            // TODO: replace with real service later
-            System.Diagnostics.Debug.WriteLine($"Logging in with {Email}");
-
-            // Example future:
-            // var user = userService.Login(Email, Password);
         }
+
+
+        public string Username
+        {
+            get => username;
+            set
+            {
+                username = value;
+                OnPropertyChanged();
+            }
+        }
+        public string PhoneNumber
+        {
+            get => phoneNumber;
+            set
+            {
+                phoneNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand RegisterCommand { get; }
+        public RegisterViewModel()
+        {
+            RegisterCommand = new RelayCommand(Register);
+        }
+        private void Register()
+        {
+
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
