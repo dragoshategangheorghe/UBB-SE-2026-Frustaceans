@@ -19,7 +19,6 @@ namespace PharmacyApp.Models
         public string Label { get; set; }
         public string Description { get; set; }
         public float DiscountPercentage { get; set; }
-        public string Category { get; set; }
         public Dictionary<string, float> ActiveSubstances { get; private set; }
         public Dictionary<DateOnly, int> Batches { get; private set; }
 

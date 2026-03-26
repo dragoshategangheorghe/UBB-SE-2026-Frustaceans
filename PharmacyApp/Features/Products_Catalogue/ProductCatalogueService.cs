@@ -11,8 +11,8 @@ namespace PharmacyApp.Features.Products_Catalogue
 {
     internal class ProductCatalogueService
     {
-        private readonly IItemRepository itemRepo;
-        public ProductCatalogueService(IItemRepository itemRepo)
+        private readonly IItemsRepository itemRepo;
+        public ProductCatalogueService(IItemsRepository itemRepo)
         {
             this.itemRepo = itemRepo;
         }
@@ -40,7 +40,7 @@ namespace PharmacyApp.Features.Products_Catalogue
             }
         private List<Item> searchItems(string productName)
         {
-            var items = itemRepo.getItemsByName(""); //itemRepo.getAll() when implemented idk what to put here
+            var items = itemRepo.GetItemsByName(""); //itemRepo.getAll() when implemented idk what to put here
 
             if (string.IsNullOrWhiteSpace(productName))
             {

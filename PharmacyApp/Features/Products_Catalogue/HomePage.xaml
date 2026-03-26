@@ -9,34 +9,21 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-            <!--container-->
-            <Border Width="1300" Height="650">
-                <Grid>
-                    <!--img-->
-                    <Image Source="ms-appx:///Assets/SurelyAMedicalProfessional.png" Stretch="UniformToFill"/>
-                    <!-- overlay-->
-                    <Rectangle Fill="#80000000"/>
-                    <!--text-->
-                    <StackPanel VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                Spacing="10"
-                                Margin="400,0,0,0">
-                        <TextBlock Text="Welcome to nameApp"
-                                   FontSize="32"
-                                   FontWeight="Bold"
-                                   Foreground="Black"
-                                   TextAlignment="Center"
-                                   TextWrapping="WrapWholeWords"/>
-                        <TextBlock Text="The online store for your medical needs. placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text placeholder text "
-                                   FontSize="16"
-                                   Foreground="Black"
-                                   TextAlignment="Center"
-                                   Width="500"
-                                   TextWrapping="WrapWholeWords"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </Grid>
+        <Image Source="ms-appx:///Assets/HomePageBackground.jpg" Stretch="UniformToFill"/>
+        <StackPanel VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Spacing="10">
+            <TextBlock Text="Welcome to PharmacyApp"
+                   FontSize="36"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   TextAlignment="Center"/>
+            <TextBlock Text="Your online store for medical needs"
+                   FontSize="18"
+                   Foreground="White"
+                   TextAlignment="Center"
+                   Width="500"
+                   TextWrapping="WrapWholeWords"/>
+        </StackPanel>
     </Grid>
 </Page>

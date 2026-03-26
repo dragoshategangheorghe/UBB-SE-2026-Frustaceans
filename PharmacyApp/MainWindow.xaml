@@ -20,57 +20,56 @@
             <RowDefinition Height="*"/>
             <!--page-->
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="#4CAF50" Padding="20,10">
+        <Grid Grid.Row="0" Background="White" Padding="20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal"
                 Spacing="15"
                 VerticalAlignment="Center">
 
-                <Button Content="Home"
-                Click="OnHomeClicked"
-                FontSize="16"
-                FontWeight="SemiBold"
-                FontFamily="Segoe UI"
-                Background="Transparent"
-                Foreground="White"
-                BorderBrush="Transparent"/>
+                <Button Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="OnHomeClicked">
+                    
+                    <TextBlock Text="Home"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
 
-                <Button Content="Products"
-                Click="OnProductsClicked"
-                FontSize="16"
-                FontWeight="SemiBold"
-                FontFamily="Segoe UI"
-                Background="Transparent"
-                Foreground="White"
-                BorderBrush="Transparent"/>
-
-                <Button Content="Cycle Tracker"
-                Click="OnCycleTrackerClicked"
-                FontSize="16"
-                FontWeight="SemiBold"
-                FontFamily="Segoe UI"
-                Background="Transparent"
-                Foreground="White"
-                BorderBrush="Transparent"/>
+                <Button Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="OnProductsClicked">
+                    <TextBlock Text="Products"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
 
                 <Button x:Name="AdminButton"
-                Content="Admin Dashboard"
-                Click="OnAdminClicked"
-                FontSize="16"
-                FontWeight="SemiBold"
-                FontFamily="Segoe UI"
-                Background="Transparent"
-                Foreground="White"
-                BorderBrush="Transparent"/>
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="OnAdminClicked">
+                    <TextBlock Text="Admin Dashboard"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
 
             </StackPanel>
-            <StackPanel Grid.Column="1"
+            <Image Grid.Column="1"
+                Source="ms-appx:///Assets/logo.png"
+                Height="40"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+            <StackPanel Grid.Column="2"
                 Orientation="Horizontal"
                 Spacing="15"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right">
 
                 <Button Content="🛒"
                 Click="OnCartClicked"
@@ -78,7 +77,7 @@
                 FontWeight="SemiBold"
                 FontFamily="Segoe UI"
                 Background="Transparent"
-                Foreground="White"
+                Foreground="#4CAF50"
                 BorderBrush="Transparent"/>
 
                 <Button Content="👤"
@@ -87,7 +86,7 @@
                 FontFamily="Segoe UI"
                 Click="OnAccountClicked"
                 Background="Transparent"
-                Foreground="White"
+                Foreground="#4CAF50"
                 BorderBrush="Transparent"/>
 
             </StackPanel>

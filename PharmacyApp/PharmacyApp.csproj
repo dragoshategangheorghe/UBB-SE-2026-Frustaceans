@@ -69,6 +69,7 @@
     <PRIResource Remove="Period Tracker\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\HomePageBackground.jpg" />
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
   </ItemGroup>
   <ItemGroup>
