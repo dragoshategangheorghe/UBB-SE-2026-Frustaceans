@@ -1,8 +1,10 @@
 ﻿using PharmacyApp.Common.Commands;
+using PharmacyApp.Features.Accounts.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 {
     public class LoginViewModel : INotifyPropertyChanged
     {
+        private UserAccountService _userAccountService;
         private string email;
         private string password;
 
@@ -38,26 +41,34 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 
         public ICommand LoginCommand { get; set; }
 
-        public LoginViewModel()
+        public LoginViewModel(UserAccountService userAccountService)
         {
+            _userAccountService = userAccountService;
             LoginCommand = (ICommand)new RelayCommand(Login);
         }
 
         public void Login()
         {
-            // Basic validation
+
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                // TODO: show error in UI later
+                // TODO: show error in UI
                 System.Diagnostics.Debug.WriteLine("Fields cannot be empty");
                 return;
             }
 
-            // TODO: replace with real service later
             System.Diagnostics.Debug.WriteLine($"Logging in with {Email}");
 
-            // Example future:
-            // var user = userService.Login(Email, Password);
+            try
+            {
+
+                _userAccountService.Login(Email, Password);
+                System.Diagnostics.Debug.WriteLine("Successful login");
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

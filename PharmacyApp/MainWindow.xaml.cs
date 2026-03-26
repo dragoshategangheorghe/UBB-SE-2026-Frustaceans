@@ -62,6 +62,7 @@ namespace PharmacyApp
 
 
             InitializeComponent();
+
             MainFrame.Navigate(typeof(LoginView));
         }
     }

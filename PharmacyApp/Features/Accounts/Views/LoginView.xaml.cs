@@ -14,6 +14,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using PharmacyApp.Features.Accounts.ViewModels;
+using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Common.Repositories;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,7 +28,7 @@ namespace PharmacyApp.Features.Accounts.Views
         public LoginView()
         {
             this.InitializeComponent();
-            this.DataContext = new LoginViewModel();
+            this.DataContext = new LoginViewModel(ServiceWrapper.UserAccountService);
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

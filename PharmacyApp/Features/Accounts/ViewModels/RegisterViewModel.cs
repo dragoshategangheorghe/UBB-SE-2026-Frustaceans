@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAppSDK.Runtime.Packages;
 using PharmacyApp.Common.Commands;
+using PharmacyApp.Features.Accounts.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 {
     public class RegisterViewModel : INotifyPropertyChanged
     {
+        private UserAccountService _userAccountService;
         private string email;
         private string password;
         private string confirmPassword;
@@ -43,7 +45,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
             get => confirmPassword;
             set
             {
-                password = value;
+                confirmPassword = value;
                 OnPropertyChanged();
             }
         }
@@ -67,15 +69,44 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                 OnPropertyChanged();
             }
         }
+        private string errorMessage;
+        public string ErrorMessage
+        {
+            get => errorMessage;
+            set
+            {
+                errorMessage = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand RegisterCommand { get; }
-        public RegisterViewModel()
+        public RegisterViewModel(UserAccountService userAccountService)
         {
+            _userAccountService = userAccountService;
             RegisterCommand = new RelayCommand(Register);
         }
         private void Register()
         {
+            try
+            {
+                _userAccountService.Register(
+                    Email,
+                    Password,
+                    ConfirmPassword,
+                    Username,
+                    PhoneNumber
+                );
 
+                ErrorMessage = "Registration successful!";
+                System.Console.WriteLine(ErrorMessage);
+                // TODO: go to next page
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                System.Console.Debug.WriteLine(ErrorMessage);
+            }
         }
 
 

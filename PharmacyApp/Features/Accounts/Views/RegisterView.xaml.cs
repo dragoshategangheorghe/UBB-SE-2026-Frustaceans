@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace PharmacyApp.Features.Accounts.Views
         public RegisterView()
         {
             this.InitializeComponent();
-            this.DataContext = new RegisterViewModel();
+            this.DataContext = new RegisterViewModel(ServiceWrapper.UserAccountService);
         }
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
