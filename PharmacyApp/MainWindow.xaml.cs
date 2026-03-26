@@ -30,7 +30,7 @@ namespace PharmacyApp
             ISubstancesRepository substancesRepo = new SQLSubstancesRepository();
             System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("ibuprophen"));
             System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("dggfddg"));
-            substancesRepo.AddSubstance("newwow", 14.5f, "no desc for u");
+            Substance a = substancesRepo.GetSubstance("ibuprophen");
             InitializeComponent();
         }
     }

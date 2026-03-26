@@ -31,7 +31,25 @@ namespace PharmacyApp.Common.Repositories
 
         public Substance GetSubstance(string name)
         {
-            throw new NotImplementedException();
+            string connString = SQLUtility.GetConnectionString();
+            string selectSubstanceQueryString = $"SELECT * FROM Substances WHERE name='{name}'";
+
+            using SqlConnection conn = new SqlConnection(connString);
+
+            SqlDataAdapter selectSubstanceAdapter = new SqlDataAdapter(selectSubstanceQueryString, conn);
+
+            DataSet substanceDataFromDB = new DataSet();
+
+            conn.Open();
+            selectSubstanceAdapter.Fill(substanceDataFromDB, "Substances");
+
+            if (substanceDataFromDB.Tables["Substances"].Rows.Count == 0)
+                throw new ArgumentException("Substance " + name + "does NOT exist.");
+
+
+            DataRow substanceDataRow = substanceDataFromDB.Tables["Substances"].Rows[0];
+            return new Substance((string)substanceDataRow["name"], (float)(decimal)substanceDataRow["lethalDose"],
+                (string)substanceDataRow["description"]);
         }
 
         public void RemoveSubstance(string name)
