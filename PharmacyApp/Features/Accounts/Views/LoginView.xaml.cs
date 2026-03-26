@@ -20,9 +20,7 @@ using PharmacyApp.Features.Accounts.ViewModels;
 
 namespace PharmacyApp.Features.Accounts.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class LoginView : Page
     {
         public LoginView()
@@ -39,7 +37,6 @@ namespace PharmacyApp.Features.Accounts.Views
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-        //    // TEMP: navigation later
         //    (this.Parent as Frame)?.Navigate(typeof(RegisterView));
         }
     }

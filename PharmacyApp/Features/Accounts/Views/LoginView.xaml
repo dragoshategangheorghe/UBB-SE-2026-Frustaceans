@@ -8,13 +8,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="#F5F5F5">
+    <Page.Resources>
+
+        <!-- Normal -->
+        <SolidColorBrush x:Key="TextControlBackground" Color="Gray"/>
+
+        <!-- Hover -->
+        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Black"/>
+
+        <!-- Focus -->
+        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Gray"/>
+
+    </Page.Resources>
+
+
+    <Grid Background="White">
 
         <!-- Center container -->
         <Border
             Width="300"
             Padding="20"
-            Background="White"
+            Background="LightGray"
             CornerRadius="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
@@ -32,18 +46,11 @@
                 <!-- Email -->
                 <TextBox 
                     PlaceholderText="Email"
-                    Background="#F0F0F0"
-                    Foreground="Black"
-                    BorderBrush="Gray"
-                    SelectionHighlightColorWhenNotFocused="Red"
                     Text="{Binding Email, Mode=TwoWay}" />
 
                 <!-- Password -->
                 <PasswordBox 
                     x:Name="PasswordBox"
-                    Background="#F0F0F0"
-                    Foreground="Black"
-                    BorderBrush="Gray"
                     PlaceholderText="Password"
                     PasswordChanged="PasswordBox_PasswordChanged"/>
 
@@ -53,6 +60,7 @@
                     Background="#F0F0F0"
                     Foreground="Black"
                     BorderBrush="Gray"
+                    HorizontalAlignment="Center"
                     Command="{Binding LoginCommand}"
                     Margin="0,10,0,0"/>
 
