@@ -9,10 +9,10 @@ namespace PharmacyApp.Common.Repositories
 {
     internal interface ISubstancesRepository
     {
-        void AddSubstances(Substance newSubstance);
+        void AddSubstance(string name, float lethalDose, string description);
         void RemoveSubstance(string name);
         Substance GetSubstance(string name);
-        void UpdateOrder(string name, Substance newSubstance);
+        //void UpdateOrder(string name, Substance newSubstance);
         bool SubstanceExists(string name);
     }
 }

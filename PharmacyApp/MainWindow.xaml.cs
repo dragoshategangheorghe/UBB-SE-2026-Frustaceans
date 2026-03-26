@@ -19,38 +19,28 @@ namespace PharmacyApp
     {
         public MainWindow()
         {
-            /* TEST CODE!!!
-            IUsersRepository usersRepository = new SQLUsersRepository();
-
-            System.Diagnostics.Debug.WriteLine(SQLUtility.GetConnectionString());
-            System.Diagnostics.Debug.WriteLine(usersRepository.GetUserById(1).Email);
-            System.Diagnostics.Debug.WriteLine(usersRepository.UserExists(1));
-            System.Diagnostics.Debug.WriteLine(usersRepository.UserExists("dgfs@ghsg.com"));
-            System.Diagnostics.Debug.WriteLine(usersRepository.UserExists("dgfgfdssfds@ghsg.com"));
-            System.Diagnostics.Debug.WriteLine(usersRepository.UserExists(2));
-
-            User user1 = usersRepository.GetUserById(1);
-            List<User> users = usersRepository.GetAllUsers();
-
-
-            User newUser = user1;
-
-            newUser.Email = "newmail@gdsdd.com";
-            newUser.PhoneNumber = "0727063545";
-            newUser.PasswordHash = "newpass";
-;           //newUser.RemovePeriodNote(2);
-            //newUser.RemoveUserDiscount(1); // remove the 30% discount
-            newUser.CycleDays = 25;
-            newUser.PMSOption = 4;
-            newUser.StartPeriodDate = new DateOnly(2026, 3, 25);
-            //newUser.RemoveStockAlert(1);
-            //newUser.RemoveFavoriteItem(2);
-
-            usersRepository.UpdateUser(newUser);
+            /*
+            ISubstancesRepository substancesRepo = new SQLSubstancesRepository();
+            System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("ibuprophen"));
+            System.Diagnostics.Debug.WriteLine(substancesRepo.SubstanceExists("dggfddg"));
+            Substance a = substancesRepo.GetSubstance("ibuprophen");
+            try
+            {
+                Substance b = substancesRepo.GetSubstance("nooooooo");
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            substancesRepo.RemoveSubstance("meth");
+            try
+            {
+                substancesRepo.RemoveSubstance("nooooooo");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
             */
-
-
-
             InitializeComponent();
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
