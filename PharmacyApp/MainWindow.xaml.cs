@@ -43,7 +43,7 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage));
         }
 
         private void OnAccountClicked(object sender, RoutedEventArgs e)

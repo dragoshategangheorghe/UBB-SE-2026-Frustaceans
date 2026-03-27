@@ -8,7 +8,120 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Page.Resources>
+        
+        <!--defining the way items are presented 
+        in the list view of the bucket-->
+        <DataTemplate x:Key="ItemBucketListViewTemplate">
 
+            <Grid RowDefinitions="Auto, Auto"
+                  ColumnDefinitions="Auto, *">
+
+                <!-- Thumbnail image (occupies the left half of the item view -->
+                <Image Grid.Row="0"
+                       Grid.RowSpan="2"
+                       Grid.Column="0"
+                       Source="/Assets/placeholder.png"
+                       Width="150"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+                <!-- Name and short description (upper row after image) -->
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Text="Heyyyyy I'm a TextBLOCK Lookk at me"/>
+
+                <!-- Quantities and prices (lower row after image) -->
+                <Grid Grid.Row="1"
+                      Grid.Column="1"
+                      RowDefinitions="Auto"
+                      ColumnDefinitions="*, 2*">
+
+                    <!-- Quantity with numberbox -->
+                    <NumberBox Grid.Row="0"
+                               Grid.Column="0"
+                               Value="1"
+                               SpinButtonPlacementMode="Inline"
+                               AcceptsExpression="False"
+                               ValidationMode="InvalidInputOverwritten"/>
+                    
+                    <!-- Prices with discounts displayed -->
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="19.99"/>
+
+                </Grid>
+
+            </Grid>
+
+        </DataTemplate>
+
+    </Page.Resources>
+
+    <Grid Padding="20"
+          Background="Black"
+          ColumnDefinitions="*, Auto">
+
+        <ListView Grid.Row="0"
+                  Grid.Column="0">
+
+            <Grid RowDefinitions="Auto, Auto"
+      ColumnDefinitions="Auto, *">
+
+                <!-- Thumbnail image (occupies the left half of the item view -->
+                <Image Grid.Row="0"
+           Grid.RowSpan="2"
+           Grid.Column="0"
+           Source="/Assets/placeholder.png"
+           Width="150"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
+
+                <!-- Name and short description (upper row after image) -->
+                <TextBlock Grid.Row="0"
+               Grid.Column="1"
+               Text="Heyyyyy I'm a TextBLOCK Lookk at me"/>
+
+                <!-- Quantities and prices (lower row after image) -->
+                <Grid Grid.Row="1"
+          Grid.Column="1"
+          RowDefinitions="Auto"
+          ColumnDefinitions="*, 2*">
+
+                    <!-- Quantity with numberbox -->
+                    <NumberBox Grid.Row="0"
+                   Grid.Column="0"
+                   Value="1"
+                   SpinButtonPlacementMode="Inline"
+                   AcceptsExpression="False"
+                   ValidationMode="InvalidInputOverwritten"/>
+
+                    <!-- Prices with discounts displayed -->
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Spacing="10">
+
+                        <TextBlock Text="-20%"/>
+                        <TextBlock Text="-15%"/>
+                        <StackPanel Orientation="Vertical"
+                                    Spacing="5">
+
+                            <TextBlock Text="29.99"/>
+                            <TextBlock Text="15.99"/>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Grid>
+
+        </ListView>
+        <Rectangle Fill="Cyan" Grid.Row="0" Grid.Column="1" Width="300"></Rectangle>
+        
     </Grid>
 </Page>
