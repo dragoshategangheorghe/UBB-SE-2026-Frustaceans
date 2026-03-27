@@ -12,6 +12,12 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Period Tracker\**" />
+    <EmbeddedResource Remove="Period Tracker\**" />
+    <None Remove="Period Tracker\**" />
+    <Page Remove="Period Tracker\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -41,7 +47,6 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
-    <PackageReference Include="Syncfusion.Calendar.WinUI" Version="33.1.45" />
   </ItemGroup>
 
   <!--
@@ -61,8 +66,19 @@
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
+    <PRIResource Remove="Period Tracker\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Assets\HomePageBackground.jpg" />
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Features\Period_Tracker\Page.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Features\Period_Tracker\Page.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Products_Catalogue\HomePage.xaml">
@@ -75,8 +91,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Features\Period_Tracker\Views\PeriodTrackerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Folder Include="Features\Period_Tracker\Views\" />
   </ItemGroup>
 </Project>
