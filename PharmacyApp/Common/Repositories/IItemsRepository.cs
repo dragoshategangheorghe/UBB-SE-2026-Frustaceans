@@ -13,6 +13,7 @@ namespace PharmacyApp.Common.Repositories
                     float discount = 0f);
         void RemoveItem(int idToBeRemoved);
         Item GetItem(int id);
+        List<Item> GetAllItems();
         List<Item> GetItemsByName(string name);
         void UpdateItem(Item newItem);
         bool ItemExists(int id);

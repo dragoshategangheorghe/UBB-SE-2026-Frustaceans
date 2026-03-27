@@ -13,6 +13,7 @@ namespace PharmacyApp.Common.Repositories
                       bool isCompleted = false, bool isExpired = false);
         void RemoveOrder(int orderIdToBeRemoved);
         Order GetOrder(int orderId);
+        List<Order> GetAllOrders();
         List<Order> GetOrdersOfClient(int clientId);
         void UpdateOrder(Order newOrder);
         bool OrderExists(int orderId);

@@ -145,7 +145,7 @@ namespace PharmacyApp.Common.Repositories
         public User GetUserByEmail(string email)
         {
             string connString = SQLUtility.GetConnectionString();
-            string selectUserString = $"SELECT * FROM Users WHERE email={email}";
+            string selectUserString = $"SELECT * FROM Users WHERE email='{email}'";
 
             using SqlConnection conn = new SqlConnection(connString);
 
@@ -159,7 +159,7 @@ namespace PharmacyApp.Common.Repositories
             if (userDataFromDB.Tables["Users"].Rows.Count == 0)
                 throw new ArgumentException("User with E-Mail " + email + " does NOT exist.");
 
-            DataRow userRow = userDataFromDB.Tables["Items"].Rows[0];
+            DataRow userRow = userDataFromDB.Tables["Users"].Rows[0];
 
 
             return

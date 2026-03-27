@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="White" Padding="20,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal"
@@ -33,7 +33,7 @@
                 <Button Background="Transparent"
                     BorderBrush="Transparent"
                     Click="OnHomeClicked">
-
+                    
                     <TextBlock Text="Home"
                         Foreground="#389e7c"
                         FontSize="16"
@@ -57,6 +57,16 @@
                         Foreground="#389e7c"
                         FontSize="16"
                         FontWeight="SemiBold"/>
+                </Button>
+
+                <Button x:Name="PeriodTrackerButton"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnPeriodTrackerClicked">
+                    <TextBlock Text="Period Tracker"
+                               Foreground="#389e7c"
+                               FontSize="16"
+                               FontWeight="SemiBold"/>
                 </Button>
 
             </StackPanel>

@@ -134,6 +134,73 @@ namespace PharmacyApp.Common.Repositories
             
         }
 
+
+        public List<Item> GetAllItems()
+        {
+            string connString = SQLUtility.GetConnectionString();
+            List<Item> resultItems = new List<Item>();
+
+            string selectItemString = $"SELECT * FROM Items";
+
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
+            DataSet itemDataFromDb = new DataSet();
+
+            conn.Open();
+            itemAdapter.Fill(itemDataFromDb, "Items");
+
+            // for each item that we get by name, we have repeat basically what happens in getItem(int id)
+
+            foreach (DataRow itemRow in itemDataFromDb.Tables["Items"].Rows)
+            {
+                // that conversion from object{decimal} to decimal then to float isn't pretty (for price and discount)
+
+                Item individualItem = new Item(
+                    (int)itemRow["itemId"],
+                    (string)itemRow["name"],
+                    (string)itemRow["producer"],
+                    (string)itemRow["category"],
+                    (float)(decimal)itemRow["price"],
+                    (int)itemRow["numberOfPills"],
+                    (string)itemRow["label"],
+                    (string)itemRow["description"],
+                    (string)itemRow["imagePath"],
+                    (float)(decimal)itemRow["discountPercentage"]);
+
+
+                // for every item we need to get its substances and batches
+
+                string selectActiveSubstances =
+                    $"SELECT name, concentration FROM ItemSubstances WHERE itemId={individualItem.Id}";
+                string selectBatches =
+                    $"SELECT expirationDate, numberOfPacks FROM ItemExpirationDates WHERE itemId={individualItem.Id}";
+                SqlDataAdapter activeSubstancesAdapter = new SqlDataAdapter(selectActiveSubstances, conn);
+                SqlDataAdapter batchesAdapter = new SqlDataAdapter(selectBatches, conn);
+
+                DataSet individualItemDataFromDb = new DataSet();
+                activeSubstancesAdapter.Fill(individualItemDataFromDb, "ActiveSubstances");
+                batchesAdapter.Fill(individualItemDataFromDb, "Batches");
+
+                foreach (DataRow substanceRow in individualItemDataFromDb.Tables["ActiveSubstances"].Rows)
+                {
+                    individualItem.addActiveSubstance((string)substanceRow["name"],
+                        (float)(decimal)substanceRow["concentration"]);
+                }
+
+                foreach (DataRow batchRow in individualItemDataFromDb.Tables["Batches"].Rows)
+                {
+                    DateOnly extractedExpirationDate = DateOnly.FromDateTime((DateTime)batchRow["expirationDate"]);
+                    individualItem.addNewBatch(extractedExpirationDate, (int)batchRow["numberOfPacks"]);
+                }
+
+
+                resultItems.Add(individualItem);
+            }
+
+            return resultItems;
+        }
+
+
         public List<Item> GetItemsByName(string name)
         {
             string connString = SQLUtility.GetConnectionString();
