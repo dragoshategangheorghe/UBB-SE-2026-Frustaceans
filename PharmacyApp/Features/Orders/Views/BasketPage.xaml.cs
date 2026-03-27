@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Orders.Logic;
+using PharmacyApp.Features.Orders.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,8 +25,14 @@ namespace PharmacyApp.Features.Orders.Views
     /// </summary>
     public sealed partial class BasketPage : Page
     {
+        // TODO rewrite asap
+        UserService userServ;
+        public BasketViewModel ViewModel { get; set; }
+
         public BasketPage()
         {
+            userServ = new();
+            ViewModel = new BasketViewModel(userServ);
             InitializeComponent();
         }
     }
