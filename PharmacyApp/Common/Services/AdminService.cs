@@ -1,6 +1,6 @@
-﻿//using PharmacyApp.Common.Repositories;
-//using PharmacyApp.Models;
-//using System;
+﻿using PharmacyApp.Common.Repositories;
+using PharmacyApp.Models;
+using System;
 
 namespace PharmacyApp.Common.Services
 {
@@ -33,10 +33,10 @@ namespace PharmacyApp.Common.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error adding item: {ex.Message}");
-                //return;
+                return;
 
-//            }
-//        }
+            }
+        }
 
         public void RemoveItem(int id)
         {
@@ -76,32 +76,32 @@ namespace PharmacyApp.Common.Services
             //substanceRepository.UpdateSubstance(name, substance);
         }
 
-//        public Notification sendNewStockNotification(Item item)
-//        {
-//            string message = $"The item {item.Name} is back in stock with quantity {item.Quantity}," +
-//                $"number of pills {item.NumberOfPills!}," +
-//                $"producer {item.Producer}";
-//            Notification notification = new Notification("Stock Alert", "New item back in stock!");
-//            // :D i am lost
+        public Notification sendNewStockNotification(Item item)
+        {
+            string message = $"The item {item.Name} is back in stock with quantity {item.Quantity}," +
+                $"number of pills {item.NumberOfPills!}," +
+                $"producer {item.Producer}";
+            Notification notification = new Notification("Stock Alert", "New item back in stock!");
+            // :D i am lost
 
-//            return notification;
-//        }
+            return notification;
+        }
 
-//        //change return to: list of notifications 
-//        public Notification sendAboutToExprNotification()
-//        {
+        //change return to: list of notifications 
+        public Notification sendAboutToExprNotification()
+        {
 
-//            //getall items
-//            //sort by date ascending
-//            // while loop through items and check if the date is still valid, if not send notification
+            //getall items
+            //sort by date ascending
+            // while loop through items and check if the date is still valid, if not send notification
 
-//            //string message = $"Item with ID {items[i].id} is about to expire!";
-//            //Notification notification = new Notification("Expiration Alert", message);
-//            Notification notification = new Notification("Expiration Alert", "Some items are about to expire!");
+            //string message = $"Item with ID {items[i].id} is about to expire!";
+            //Notification notification = new Notification("Expiration Alert", message);
+            Notification notification = new Notification("Expiration Alert", "Some items are about to expire!");
 
-//            return notification;
+            return notification;
 
-//        }
+        }
 
         public void validateItemAdd(Item item)
         {
