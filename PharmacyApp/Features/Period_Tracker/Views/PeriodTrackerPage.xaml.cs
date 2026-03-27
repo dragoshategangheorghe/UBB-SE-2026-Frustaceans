@@ -25,10 +25,12 @@ namespace PharmacyApp.Features.Period_Tracker.Views
         {
             InitializeComponent();
             //CalendarsStackPanel.Visibility=Visibility.Collapsed;
+            //CalendarLegendStackPanel.Visibility = Visibility.Collapsed;
         }
-        private void UpdateCalendar()
+        private void CalculateCycle(object sender, RoutedEventArgs e)
         {
             
         }
+
     }
 }

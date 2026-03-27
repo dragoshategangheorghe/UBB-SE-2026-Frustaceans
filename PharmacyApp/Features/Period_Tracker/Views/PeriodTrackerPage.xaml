@@ -11,195 +11,327 @@
     mc:Ignorable="d"
     xmlns:viewModels="using:PharmacyApp.Features.Period_Tracker.ViewModels">
 
-    
+
+
     <Page.DataContext>
         <viewModels:PeriodTrackerViewModel/> <!--to add the view model as data context-->
     </Page.DataContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <!--calendars row-->
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto">
 
-        <!-- first row: Calendars-->
-        <StackPanel Orientation="Horizontal"
-                    Spacing="15"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    x:Name="CalendarsStackPanel">
+        <Grid RowSpacing="20" Padding="25" CanBeScrollAnchor="True">
+            <Grid.RowDefinitions>
+                <!--calendars row-->
+                <RowDefinition Height="Auto"/>
+                <!-- legends row -->
+                <RowDefinition Height="Auto"/>
+                <!-- Input row -->
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <!-- products -->
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Grid>
+            <!-- first row: Calendars-->
+            <StackPanel Orientation="Horizontal"
+                        Spacing="15"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        x:Name="CalendarsStackPanel">
 
-                <Grid.Resources>
-                    <viewModels:Calendar1Converter x:Key="Calendar1ConverterKey" />
-                    <DataTemplate x:Key="customTemplate">
-                        <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar1ConverterKey}}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate >
-                                    <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </DataTemplate>
-                </Grid.Resources>
-                <calendar:SfCalendar
-                                OutOfScopeVisibility="Hidden"
-                                DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
-                    <calendar:SfCalendar.Resources>
-                        <ResourceDictionary>
-                            <Style TargetType="calendar:CalendarItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <Grid MinWidth="40" MinHeight="40">
-                                                <ContentControl
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Margin="2"
-                                                                Content="{Binding DisplayText}"/>
-                                                <ContentControl
-                                                                Margin="3"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Bottom"
-                                                                Content="{Binding Date}"
-                                                                ContentTemplate="{StaticResource customTemplate}"
-                                                               />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ResourceDictionary>
-                    </calendar:SfCalendar.Resources>
-                </calendar:SfCalendar>
+                <Grid>
 
-            </Grid>
-            <Grid>
+                    <Grid.Resources>
+                        <viewModels:Calendar1Converter x:Key="Calendar1ConverterKey" />
+                        <DataTemplate x:Key="customTemplate">
+                            <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar1ConverterKey}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate >
+                                        <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <calendar:SfCalendar
+                                    OutOfScopeVisibility="Hidden"
+                                    DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
+                        <calendar:SfCalendar.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="calendar:CalendarItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Grid MinWidth="40" MinHeight="40">
+                                                    <ContentControl
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Margin="2"
+                                                                    Content="{Binding DisplayText}"/>
+                                                    <ContentControl
+                                                                    Margin="3"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Bottom"
+                                                                    Content="{Binding Date}"
+                                                                    ContentTemplate="{StaticResource customTemplate}"
+                                                                   />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ResourceDictionary>
+                        </calendar:SfCalendar.Resources>
+                    </calendar:SfCalendar>
 
-                <Grid.Resources>
-                    <viewModels:Calendar2Converter x:Key="Calendar2ConverterKey" />
-                    <DataTemplate x:Key="customTemplate">
-                        <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar2ConverterKey}}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate >
-                                    <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </DataTemplate>
-                </Grid.Resources>
-                <calendar:SfCalendar
-                    OutOfScopeVisibility="Hidden"
-                    DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
-                    <calendar:SfCalendar.Resources>
-                        <ResourceDictionary>
-                            <Style TargetType="calendar:CalendarItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <Grid MinWidth="40" MinHeight="40">
-                                                <ContentControl
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Margin="2"
-                                                    Content="{Binding DisplayText}"/>
-                                                <ContentControl
-                                                    Margin="3"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Bottom"
-                                                    Content="{Binding Date}"
-                                                    ContentTemplate="{StaticResource customTemplate}"
-                                                   />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ResourceDictionary>
-                    </calendar:SfCalendar.Resources>
-                </calendar:SfCalendar>
+                </Grid>
+                <Grid>
 
-            </Grid>
-            <Grid>
+                    <Grid.Resources>
+                        <viewModels:Calendar2Converter x:Key="Calendar2ConverterKey" />
+                        <DataTemplate x:Key="customTemplate">
+                            <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar2ConverterKey}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate >
+                                        <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <calendar:SfCalendar
+                        OutOfScopeVisibility="Hidden"
+                        DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
+                        <calendar:SfCalendar.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="calendar:CalendarItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Grid MinWidth="40" MinHeight="40">
+                                                    <ContentControl
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Margin="2"
+                                                        Content="{Binding DisplayText}"/>
+                                                    <ContentControl
+                                                        Margin="3"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Bottom"
+                                                        Content="{Binding Date}"
+                                                        ContentTemplate="{StaticResource customTemplate}"
+                                                       />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ResourceDictionary>
+                        </calendar:SfCalendar.Resources>
+                    </calendar:SfCalendar>
 
-                <Grid.Resources>
-                    <viewModels:Calendar3Converter x:Key="Calendar3ConverterKey" />
-                    <DataTemplate x:Key="customTemplate">
-                        <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar3ConverterKey}}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate >
-                                    <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </DataTemplate>
-                </Grid.Resources>
-                <calendar:SfCalendar
-                    OutOfScopeVisibility="Hidden"
-                    DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
-                    <calendar:SfCalendar.Resources>
-                        <ResourceDictionary>
-                            <Style TargetType="calendar:CalendarItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <Grid MinWidth="40" MinHeight="40">
-                                                <ContentControl
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Margin="2"
-                                                    Content="{Binding DisplayText}"/>
-                                                <ContentControl
-                                                    Margin="3"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Bottom"
-                                                    Content="{Binding Date}"
-                                                    ContentTemplate="{StaticResource customTemplate}"
-                                                   />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ResourceDictionary>
-                    </calendar:SfCalendar.Resources>
-                </calendar:SfCalendar>
+                </Grid>
+                <Grid>
 
-            </Grid>
+                    <Grid.Resources>
+                        <viewModels:Calendar3Converter x:Key="Calendar3ConverterKey" />
+                        <DataTemplate x:Key="customTemplate">
+                            <ItemsControl ItemsSource="{Binding Path=Date, Converter={StaticResource Calendar3ConverterKey}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate >
+                                        <Ellipse MinHeight="6" MinWidth="6" Margin="2" Fill="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <calendar:SfCalendar
+                        OutOfScopeVisibility="Hidden"
+                        DayOfWeekFormat="{}{dayofweek.abbreviated(3)}">
+                        <calendar:SfCalendar.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="calendar:CalendarItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Grid MinWidth="40" MinHeight="40">
+                                                    <ContentControl
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Margin="2"
+                                                        Content="{Binding DisplayText}"/>
+                                                    <ContentControl
+                                                        Margin="3"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Bottom"
+                                                        Content="{Binding Date}"
+                                                        ContentTemplate="{StaticResource customTemplate}"
+                                                       />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ResourceDictionary>
+                        </calendar:SfCalendar.Resources>
+                    </calendar:SfCalendar>
 
-        </StackPanel>
+                </Grid>
 
-        <!-- second row: Calendar labels -->
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    Spacing="15"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
+            </StackPanel>
 
-        </StackPanel>
-    </Grid>
+            <!-- second row: Calendar labels -->
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        Spacing="30"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        x:Name="CalendarLegendStackPanel">
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                    <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
+                    <TextBlock Text="Period Days"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                    <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
+                    <TextBlock Text="Ovulation Days"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                    <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
+                    <TextBlock Text="Low Fertility Days"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                    <Rectangle Width="10" Height="10" Fill="Red" Stroke="Black"></Rectangle>
+                    <TextBlock Text="PMS Days"></TextBlock>
+                </StackPanel>
 
+            </StackPanel>
+
+            <!-- third row: Data inputs -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Spacing="20"
+
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        x:Name="DataInputsStackPanel">
+                
+                <DatePicker x:Name="LastPeriodDate" Header="Start Date of Last Period" DayFormat="{}{day.integer} ({dayofweek.abbreviated})"></DatePicker>
+                <NumberBox
+                    x:Name="PeriodDaysNumberBox"
+                    Header="How much did your last period last:"
+                    Value="5"
+                    SpinButtonPlacementMode="Inline"
+                    SmallChange="1"
+                    MaxHeight="80"
+                    MaxWidth="160"/>
+                <NumberBox
+                    x:Name="CycleDaysNumberBox"
+                    Header="How much does your average cycle last:"
+                    Value="28"
+                    SpinButtonPlacementMode="Inline"
+                    SmallChange="1"
+                    MaxHeight="90"
+                    MaxWidth="160"/>
+                <StackPanel Orientation="Vertical"
+                            Spacing="20"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <RadioButtons Header="When do PMS symptoms appear:">
+                        <RadioButton Content="Not applicable"/>
+                        <RadioButton Content="1-3 days before period"/>
+                        <RadioButton Content="4-7 days before period"/>
+                        <RadioButton Content="7-14 days before period"/>
+                    </RadioButtons>
+                </StackPanel>
+            </StackPanel>
+            <!-- fourth row: The CALCULATE BUTTON -->
+            <Button Grid.Row="3" Click="CalculateCycle" HorizontalAlignment="Center" VerticalAlignment="Center">CALCULATE</Button>
+            <!-- fifth row: NOTES -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <RichEditBox x:Name="PeriodNote1" Width="200" Height="300"></RichEditBox>
+                <RichEditBox x:Name="PeriodNote2" Width="200" Height="300"></RichEditBox>
+                <RichEditBox x:Name="PeriodNote3" Width="200" Height="300"></RichEditBox>
+                <RichEditBox x:Name="PeriodNote4" Width="200" Height="300"></RichEditBox>
+                <Button x:Name="AddNoteButton" VerticalAlignment="Top" HorizontalAlignment="Left">+</Button> <!-- Gets hidden after all 4 notes are shown -->
+            </StackPanel>
+
+            <!-- Sixth row: Products recommendation -->
+            <StackPanel Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="50">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
+                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                </Grid>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
+                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                </Grid>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
+                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                </Grid>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
+                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>
