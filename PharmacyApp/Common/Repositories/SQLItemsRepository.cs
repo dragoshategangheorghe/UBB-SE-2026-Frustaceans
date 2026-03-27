@@ -18,6 +18,7 @@ namespace PharmacyApp.Common.Repositories
             float discount = 0f)
         {
             string connString = SQLUtility.GetConnectionString();
+            System.Diagnostics.Debug.WriteLine($"Connection string in SQLItemsRepository.AddItem: {connString}");
             string insertNewItemString =
                 "INSERT INTO Items (name, price, category, numberOfPills, producer, imagePath, quantity, label, description, discountPercentage) " +
                 $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', 0, '{label}', '{description}', {discount})";

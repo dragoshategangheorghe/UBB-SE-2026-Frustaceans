@@ -16,77 +16,6 @@ namespace PharmacyApp.Features.Products_Catalogue
         public ProductCatalogueService(IItemsRepository itemRepo)
         {
             this.itemRepo = itemRepo;
-            //itemRepo.AddItem(
-            //    "Paracetamol",
-            //    "PharmaCorp",
-            //    "Medicine",
-            //    5.99f,
-            //    20,
-            //    "Pain relief",
-            //    "Used for headaches and fever",
-            //    "ms-appx:///Assets/logo.png",
-            //    0.1f
-            //);
-
-            //itemRepo.AddItem(
-            //    "Ibuprofen",
-            //    "HealthPlus",
-            //    "Medicine",
-            //    7.49f,
-            //    30,
-            //    "Anti-inflammatory",
-            //    "Reduces inflammation and pain",
-            //    "ms-appx:///Assets/logo.png",
-            //    0f
-            //);
-
-            //itemRepo.AddItem(
-            //    "Vitamin C",
-            //    "NutriLife",
-            //    "Supplements",
-            //    9.99f,
-            //    60,
-            //    "Immune support",
-            //    "Boosts immune system",
-            //    "ms-appx:///Assets/logo.png",
-            //    0.15f
-            //);
-
-            //itemRepo.AddItem(
-            //    "Cough Syrup",
-            //    "MediCare",
-            //    "Medicine",
-            //    6.75f,
-            //    1,
-            //    "Cough relief",
-            //    "Soothes throat and reduces coughing",
-            //    "ms-appx:///Assets/logo.png",
-            //    0f
-            //);
-
-            //itemRepo.AddItem(
-            //    "Aspirin",
-            //    "PharmaCorp",
-            //    "Medicine",
-            //    4.50f,
-            //    25,
-            //    "Painkiller",
-            //    "Used for mild pain and fever",
-            //    "ms-appx:///Assets/logo.png",
-            //    0.05f
-            //);
-
-            //itemRepo.AddItem(
-            //    "Magnesium Tablets",
-            //    "NutriLife",
-            //    "Supplements",
-            //    11.25f,
-            //    50,
-            //    "Muscle support",
-            //    "Helps muscle recovery and relaxation",
-            //    "ms-appx:///Assets/logo.png",
-            //    0.2f
-            //);
         }
         public List<Item> getItems(
             string search,
@@ -112,9 +41,13 @@ namespace PharmacyApp.Features.Products_Catalogue
             }
         private List<Item> searchItems(string productName)
         {
-            var items = itemRepo.GetItemsByName(""); //itemRepo.getAll() when implemented idk what to put here
+            var items = itemRepo.GetAllItems();
 
             if (string.IsNullOrWhiteSpace(productName))
+            {
+                return items;
+            }
+            if (string.IsNullOrEmpty(productName))
             {
                 return items;
             }

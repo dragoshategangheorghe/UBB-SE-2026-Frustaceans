@@ -15,7 +15,6 @@ namespace PharmacyApp.Common.Repositories
         Item GetItem(int id);
         List<Item> GetAllItems();
         List<Item> GetItemsByName(string name);
-        List<Item> GetAll();
         void UpdateItem(Item newItem);
         bool ItemExists(int id);
     }

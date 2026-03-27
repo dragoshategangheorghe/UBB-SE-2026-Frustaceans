@@ -6,7 +6,7 @@ namespace PharmacyApp.Common.Repositories
     {
         public static string GetConnectionString()
         {
-            return "Data Source=DESKTOP-IIB5S8S\\SQLEXPRESS;Initial Catalog=Pharmacy;Integrated Security=true;TrustServerCertificate=true;";
+            return "Data Source="+ Environment.MachineName +"\\SQLEXPRESS;Initial Catalog=Pharmacy;Integrated Security=true;TrustServerCertificate=true;";
         }
     }
 }

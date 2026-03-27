@@ -30,29 +30,49 @@ namespace PharmacyApp.Features.Products_Catalogue
     }
     public sealed partial class CatalogPage : Page
     {
+        private ProductCatalogueService productService;
         public CatalogPage()
         {
             InitializeComponent();
-            LoadProducts();
         }
 
         private void OnSearchClicked(object sender, RoutedEventArgs e)
         {
 
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            productService = (ProductCatalogueService)e.Parameter;
+
+            LoadProducts();
+        }
         private void LoadProducts()
         {
-            var items = new List<UIItem>
+            var items = productService.getItems(" ");
+            var uiItems = items.Select(item => new UIItem
             {
-                new UIItem { Name = "Paracetamol", Price = "5.99 lei", Image = "ms-appx:///Assets/logo.png" },
-                new UIItem { Name = "Ibuprofen", Price = "7.49 lei", Image = "ms-appx:///Assets/logo.png" },
-                new UIItem { Name = "Vitamin C", Price = "9.99 lei", Image = "ms-appx:///Assets/logo.png" },
-                new UIItem { Name = "Cough Syrup", Price = "6.75 lei", Image = "ms-appx:///Assets/logo.png" },
-                new UIItem { Name = "Aspirin", Price = "4.50 lei", Image = "ms-appx:///Assets/logo.png" },
-                new UIItem { Name = "Magnesium", Price = "11.25 lei", Image = "ms-appx:///Assets/logo.png" }
-            };
+                Name = item.Name,
+                Price = $"{item.Price:F2} lei",
+                Image = item.ImagePath
+            }).ToList();
 
-            ProductsList.ItemsSource = items;
+            ProductsList.ItemsSource = uiItems;
         }
+        //private void LoadProducts()
+        //{
+        //    var items = new List<UIItem>
+        //    {
+        //        new UIItem { Name = "Paracetamol", Price = "5.99 lei", Image = "ms-appx:///Assets/logo.png" },
+        //        new UIItem { Name = "Ibuprofen", Price = "7.49 lei", Image = "ms-appx:///Assets/logo.png" },
+        //        new UIItem { Name = "Vitamin C", Price = "9.99 lei", Image = "ms-appx:///Assets/logo.png" },
+        //        new UIItem { Name = "Cough Syrup", Price = "6.75 lei", Image = "ms-appx:///Assets/logo.png" },
+        //        new UIItem { Name = "Aspirin", Price = "4.50 lei", Image = "ms-appx:///Assets/logo.png" },
+        //        new UIItem { Name = "Magnesium", Price = "11.25 lei", Image = "ms-appx:///Assets/logo.png" }
+        //    };
+
+        //    ProductsList.ItemsSource = items;
+        //}
     }
 }
