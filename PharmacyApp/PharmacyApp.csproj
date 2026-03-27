@@ -41,7 +41,7 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.11" />
+    <PackageReference Include="Syncfusion.Calendar.WinUI" Version="33.1.45" />
   </ItemGroup>
 
   <!--
