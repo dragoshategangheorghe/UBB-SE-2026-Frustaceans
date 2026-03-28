@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace PharmacyApp.Common.Repositories
 {
@@ -24,6 +25,36 @@ namespace PharmacyApp.Common.Repositories
             SqlCommand insertOrderCommand = new SqlCommand(insertCommandString, conn);
             conn.Open();
             insertOrderCommand.ExecuteNonQuery();
+        }
+
+        public void AddOrderWithItems(int clientId, DateOnly pickUpDate, Dictionary<int, Tuple<int, float>> items,
+                                      bool isCompleted = false, bool isExpired = false)
+        {
+            // because we don't know the orderId for the order that's about to be inserted,
+            // we have to keep track of what orders are associated with the user
+            // before and after the insertion, the difference is the freshly inserted order
+            // which we'll modify by adding the items, then update it
+
+            // TODO maybe we can ditch this and just get the last order of ordersAfterAdd?
+            // (if the newest order is always at the end, just like in the DBMS, it should
+            // make sense, cuz of auto-incremented ids...I'll test later)
+
+            List<Order> ordersBeforeAdd = GetOrdersOfClient(clientId);
+            AddOrder(clientId, pickUpDate, isCompleted, isExpired);
+            List<Order> ordersAfterAdd = GetOrdersOfClient(clientId);
+
+            IEnumerable<Order> difference = ordersAfterAdd.Except<Order>(ordersBeforeAdd);
+            Order newOrder = difference.First;
+
+            for (KeyValuePair<int, Tuple<int, float>> item in items)
+            {
+                int itemId = item.Key;
+                int itemQuantity = item.Value.Item1;
+                float finalPrice = item.Value.Item2;
+
+                newOrder.AddItemToOrder(itemId, itemQuantity, finalPrice);
+            }
+            UpdateOrder(newOrder);
         }
 
         public void RemoveOrder(int orderIdToBeRemoved)

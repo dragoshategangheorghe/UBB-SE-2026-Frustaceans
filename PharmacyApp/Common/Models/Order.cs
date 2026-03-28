@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PharmacyApp.Models
 {
-    public class Order
+    public class Order : IEquatable<Order>
     {
 
         public int Id { get; private set; }
@@ -25,6 +25,12 @@ namespace PharmacyApp.Models
             IsCompleted = isCompleted;
             IsExpired = isExpired;
             ItemQuantitiesWithFinalPrice = new Dictionary<int, Tuple<int, float>>();
+        }
+
+        public bool Equals(Order other)
+        {
+            if (other is null) return false;
+            return this.Id == other.Id;
         }
 
         public void AddItemToOrder(int newItemId, int itemQuantity, float finalPrice)
