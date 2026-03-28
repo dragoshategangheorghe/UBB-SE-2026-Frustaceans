@@ -20,8 +20,8 @@ namespace PharmacyApp.Models
         public string Label { get; set; }
         public string Description { get; set; }
         public float DiscountPercentage { get; set; }
-        public Dictionary<string, float> ActiveSubstances { get; private set; }
-        public Dictionary<DateOnly, int> Batches { get; private set; }
+        public Dictionary<string, float> ActiveSubstances { get; set; }
+        public Dictionary<DateOnly, int> Batches { get; set; }
 
 
         // I changed the constructor, so that we don't have a way to
@@ -45,6 +45,26 @@ namespace PharmacyApp.Models
             DiscountPercentage = discount;
             ActiveSubstances = new Dictionary<string, float>();
             Batches = new Dictionary<DateOnly, int>();
+        }
+
+        public Item(string name, string producer, string category,
+            float price, int nrOfPills,
+             Dictionary<DateOnly, int> batches, Dictionary<string, float> activeSubstances,
+            string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+            float discount = 0f)
+        {
+            Name = name;
+            Producer = producer;
+            Price = price;
+            NumberOfPills = nrOfPills;
+            Category = category;
+            ImagePath = imagePath;
+            Quantity = 0;
+            Label = label;
+            Description = description;
+            DiscountPercentage = discount;
+            ActiveSubstances = activeSubstances;
+            Batches = batches;
         }
 
         public void addActiveSubstance(string newSubstanceName, float concentration)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Models;
+using Item = PharmacyApp.Models.Item;
 
 namespace PharmacyApp.Features.Products_Catalogue
 {
@@ -40,9 +41,13 @@ namespace PharmacyApp.Features.Products_Catalogue
             }
         private List<Item> searchItems(string productName)
         {
-            var items = itemRepo.GetItemsByName(""); //itemRepo.getAll() when implemented idk what to put here
+            var items = itemRepo.GetAllItems();
 
             if (string.IsNullOrWhiteSpace(productName))
+            {
+                return items;
+            }
+            if (string.IsNullOrEmpty(productName))
             {
                 return items;
             }

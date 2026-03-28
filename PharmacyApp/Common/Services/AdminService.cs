@@ -6,60 +6,74 @@ namespace PharmacyApp.Common.Services
 {
     internal class AdminService
     {
-        /*
         IItemsRepository itemRepository;
         ISubstancesRepository substanceRepository;
+
+        public AdminService()
+        {
+            this.itemRepository = new SQLItemsRepository();
+            this.substanceRepository = new SQLSubstancesRepository();
+        }
         public AdminService(IItemsRepository itemRepo, ISubstancesRepository substanceRepo)
         {
             this.itemRepository = itemRepo;
             this.substanceRepository = substanceRepo;
         }
 
-        public void addItem(Item newItem)
+        public void AddItem(Item newItem)
         {
             try
             {
                 validateItemAdd(newItem);
-                itemRepository.addItem(newItem);
+                itemRepository.AddItem(newItem.Name, newItem.Producer, newItem.Category,
+                                       newItem.Price, newItem.NumberOfPills,
+                                       newItem.Label, newItem.Description, newItem.ImagePath,
+                                       newItem.DiscountPercentage);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error adding item: {ex.Message}");
-                //return;
+                return;
 
             }
         }
 
-        public void removeItem(string id)
+        public void RemoveItem(int id)
         {
-            itemRepository.removeItem(id);
+            itemRepository.RemoveItem(id);
         }
 
-        public void updateItem(string id, Item updatedItem)
+       public void UpdateItem(int id, Item updatedItem)
         {
-            itemRepository.changeItemInfo(id, updatedItem);
+            if (!itemRepository.ItemExists(id)) { 
+                throw new ArgumentException("Item with the specified ID does not exist.");
+            }
 
             // notification functionality
-            Item prevItem = itemRepository.getItem(id);
-            if (prevItem.Quantity == 0 && updatedItem.Quantity > 0)
+            Item prevItem = itemRepository.GetItem(id);
+            if(prevItem.Quantity == 0 && updatedItem.Quantity>0)
             {
                 sendNewStockNotification(updatedItem);
             }
+
+            itemRepository.UpdateItem(updatedItem);
         }
 
-        public void addSubstance(Substance newSubstance)
+        public void AddSubstance(Substance newSubstance)
         {
-            substanceRepository.addSubstances(newSubstance);
+            substanceRepository.AddSubstance(newSubstance.Name, newSubstance.LethalDose, newSubstance.Description);
         }
 
-        public void removeSubstance(Substance substance)
+        public void RemoveSubstance(Substance substance)
         {
-            substanceRepository.removeSubstance(substance.Name);
+            // TODO: add a if substance exists check
+            substanceRepository.RemoveSubstance(substance.Name);
         }
 
-        public void updateSubstance(string name, Substance substance)
+        public void UpdateSubstance(string name, Substance substance)
         {
-            substanceRepository.changeSubstanceInfo(name, substance);
+            //?????????????????????
+            //substanceRepository.UpdateSubstance(name, substance);
         }
 
         public Notification sendNewStockNotification(Item item)
@@ -99,9 +113,9 @@ namespace PharmacyApp.Common.Services
                 item.DiscountPercentage < 0 ||
                 item.ActiveSubstances.Count == 0)
             {
-                throw new Exception("Invalid item data. Please check the input and try again.");
+                throw new ArgumentException("Invalid item data. Please check the input and try again.");
             }
         }
-        */
+        
     }
 }
