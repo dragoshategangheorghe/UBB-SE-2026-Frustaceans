@@ -10,10 +10,10 @@
     mc:Ignorable="d"
     x:Name="PageRoot">
 
-
+    
     <Grid Padding="20"
           Background="Black"
-          ColumnDefinitions="*, Auto">
+          ColumnDefinitions="3*, *">
 
         <ListView Grid.Row="0"
                   Grid.Column="0"
@@ -98,9 +98,36 @@
             </ListView.ItemTemplate>
 
         </ListView>
-        
-        <!--  -->
-        <Rectangle Fill="Cyan" Grid.Row="0" Grid.Column="1" Width="300"></Rectangle>
-        
+
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              RowDefinitions="Auto, *">
+            
+            <!-- prescription input -->
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        Spacing="5">
+
+                <TextBlock Text="If you have a valid prescription on your name, you can automatically put in your medicine"
+                           TextWrapping="WrapWholeWords"/>
+                <TextBox PlaceholderText="Enter prescription ID"/>
+
+            </StackPanel>
+            
+
+            <!-- display total prices, discounted and not -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="0"
+                        Spacing="5">
+
+                <TextBlock Text="Total price"/>
+                <TextBlock Text="after discounts:"/>
+                <TextBlock Text="Total discounted price"/>
+                <Button Content="Checkout"/>
+
+            </StackPanel>
+            
+        </Grid>
+
     </Grid>
 </Page>
