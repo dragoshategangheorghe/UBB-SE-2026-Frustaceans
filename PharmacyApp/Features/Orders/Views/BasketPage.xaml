@@ -12,7 +12,6 @@
 
     
     <Grid Padding="20"
-          Background="Black"
           ColumnDefinitions="3*, *">
 
         <ListView Grid.Row="0"
@@ -99,9 +98,8 @@
 
         </ListView>
 
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              RowDefinitions="Auto, *">
+        <ListView Grid.Row="0"
+                  Grid.Column="1">
             
             <!-- prescription input -->
             <StackPanel Grid.Row="0"
@@ -123,11 +121,11 @@
                 <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"/>
                 <TextBlock Text="after discounts:"/>
                 <TextBlock Text="{x:Bind ViewModel.TotalDiscountedPriceString, Mode=OneWay}"/>
-                <Button Content="Checkout"/>
+                <Button Content="Checkout" Click="NavigateToCheckout"/>
 
             </StackPanel>
             
-        </Grid>
+        </ListView>
 
     </Grid>
 </Page>

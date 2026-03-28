@@ -23,14 +23,12 @@ namespace PharmacyApp.Features.Orders.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class BasketPage : Page
+    public sealed partial class CheckoutPage : Page
     {
-        
         UserService userServ;
-        // does it need to be a property? I don't have time
-        public BasketViewModel ViewModel { get; set; }
+        CheckoutViewModel viewModel;
 
-        public BasketPage()
+        public CheckoutPage()
         {
             InitializeComponent();
         }
@@ -38,14 +36,24 @@ namespace PharmacyApp.Features.Orders.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             userServ = (UserService)e.Parameter;
-            ViewModel = new BasketViewModel(userServ);
-            DataContext = ViewModel;
+            viewModel = new CheckoutViewModel(userServ);
             base.OnNavigatedTo(e);
         }
 
-        private void NavigateToCheckout(object sender, RoutedEventArgs e)
+        private void SetDefaultPickUpDate(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CheckoutPage), userServ);
+            PickUpDateSelector.MinDate = new DateTimeOffset(DateTime.Now.Date);
+            PickUpDateSelector.SelectedDates.Add(PickUpDateSelector.MinDate.AddDays(1));
+        }
+
+        private void PlaceOrder(object sender, RoutedEventArgs e)
+        {
+            DateTime selectedDate = PickUpDateSelector.SelectedDates[0].DateTime;
+        }
+
+        private void NavigateToBasket(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(BasketPage), userServ);
         }
     }
 }

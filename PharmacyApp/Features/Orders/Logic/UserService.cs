@@ -44,9 +44,9 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.RemoveItemFromBasket(itemIdToRemove);
         }
 
-        public void PlaceOrderFromBasket()
+        public void PlaceOrderFromBasket(DateOnly chosenPickUpDate)
         {
-            // implement
+            
         }
 
         public void FillBasketFromPrescription(string prescriptionId)

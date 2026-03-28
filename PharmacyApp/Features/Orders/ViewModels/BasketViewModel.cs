@@ -16,8 +16,7 @@ using System.Windows.Input;
 namespace PharmacyApp.Features.Orders.ViewModels
 {
 
-    // TODO refactor BasketItem to use just Item inside as property (less confusing code)
-    // TODO REFACTOR ACCESS MODIFIERS...and just about everything
+    // TODO maybe refactor access modifiers
     public class BasketItem : INotifyPropertyChanged
     {
         float finalPrice;
@@ -67,6 +66,11 @@ namespace PharmacyApp.Features.Orders.ViewModels
         { 
             get { return ItemName + " - " + ItemProducer; } 
             set { } 
+        }
+        public string ItemQuantityString
+        {
+            get { return "Quantity: " + ItemQuantityInBasket; }
+            set { }
         }
         public string ItemDiscountString 
         { 

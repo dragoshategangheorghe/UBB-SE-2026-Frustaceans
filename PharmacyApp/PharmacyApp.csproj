@@ -84,6 +84,11 @@
     <None Remove="Features\Pharmacy_Management\StatisticsPage.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Features\Orders\Views\CheckoutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Features\Pharmacy_Management\EditPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
