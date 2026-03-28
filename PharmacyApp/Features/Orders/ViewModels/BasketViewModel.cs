@@ -141,10 +141,6 @@ namespace PharmacyApp.Features.Orders.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-        // custom delegate and event to update the total price in the basket page
-        // AFTER the individual prices were calculated
-
     }
 
     public class BasketViewModel : INotifyPropertyChanged
