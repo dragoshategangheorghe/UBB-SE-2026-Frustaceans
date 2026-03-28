@@ -19,6 +19,7 @@ namespace PharmacyApp.Features.Orders.Logic
             ItemsRepo = new();
             UsersRepo = new();
             OrdersRepo = new();
+            // TODO add the user parameter to the constructor
             ActiveUser = UsersRepo.GetUserByEmail("xyz@gmail.com");
 
             AddToBasket(5, 1);
@@ -43,5 +44,14 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.RemoveItemFromBasket(itemIdToRemove);
         }
 
+        public void PlaceOrderFromBasket()
+        {
+            // implement
+        }
+
+        public void FillBasketFromPrescription(string prescriptionId)
+        {
+            // implement
+        }
     }
 }

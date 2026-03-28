@@ -1,54 +1,122 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PharmacyApp.Models;
+﻿using Microsoft.UI.Xaml;
+using PharmacyApp.Common.Commands;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Orders.Logic;
-using Microsoft.UI.Xaml;
+using PharmacyApp.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace PharmacyApp.Features.Orders.ViewModels
 {
 
-    public class BasketItem
+    // TODO refactor BasketItem to use just Item inside as property (less confusing code)
+    // TODO REFACTOR ACCESS MODIFIERS...and just about everything
+    public class BasketItem : INotifyPropertyChanged
     {
         float finalPrice;
-        float finalPriceDiscounted;
+        float priceDiscountsApplied;
+        int quantity;
 
+        public int ItemId { get; private set; }
         public string ItemThumbnailImagePath { get; private set; }
-        public string ItemDescriptionInBasket { get; private set; }
-        public int ItemQuantityInBasket { get; set; }
+        public string ItemName { get; private set; }
+        public string ItemProducer { get; private set; }
+        public int ItemQuantityInBasket 
+        { 
+            get { return quantity; } 
+            set { 
+                quantity = value; 
+                OnPropertyChanged();
+                CalculateFinalPrices();
+            } 
+        }
         public float ItemActiveDiscount { get; private set; }
         public float ItemActiveUserDiscount { get; private set; }
         public float InitialPricePerBox { get; private set; }
         public float FinalPriceBeforeDiscount 
         { 
-            get
-            {
-                finalPrice = InitialPricePerBox * ItemQuantityInBasket;
-                return finalPrice;
+            get { return finalPrice; }
+            private set {
+                finalPrice = value;
+                OnPropertyChanged();
             }
-            set { }
         }
         public float FinalPriceAfterDiscount
         { 
-            get
-            {
-                finalPriceDiscounted = finalPrice * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
-                decimal temp = Math.Truncate((decimal)finalPriceDiscounted * 100) / 100;
-                finalPriceDiscounted = (float)temp;
-                return finalPriceDiscounted;
+            get { return priceDiscountsApplied; }
+            private set {
+                priceDiscountsApplied = value;
+                OnPropertyChanged();
             }
-            set { }
         }
 
-        public BasketItem(string imagePath, string description, int quantity,
+
+        // These properties were written because AFAIK there's no way
+        // to for ex. set the text in a TextBox to a concatenation of two strings which
+        // are bound to the properties in this class (I mean to use x:Bind multiple times between quotes)
+        //
+        // calling OnPropertyChanged on the underlying numerical properties
+        public string ItemDescription 
+        { 
+            get { return ItemName + " - " + ItemProducer; } 
+            set { } 
+        }
+        public string ItemDiscountString 
+        { 
+            get { return "-" + (int)(ItemActiveDiscount * 100) + "%"; } 
+            set { } 
+        }
+        public string ItemUserDiscountString { 
+            get { return "-" + (int)(ItemActiveUserDiscount * 100) + "%"; } 
+            set { }
+        }
+        private string finalPriceString;
+        public string ItemFinalPriceString
+        {
+            get { return finalPriceString; }
+            set { finalPriceString = value; OnPropertyChanged(); }
+        }
+        private string finalDiscountedPriceString;
+        public string ItemFinalDiscountedPriceString
+        {
+            get { return finalDiscountedPriceString; }
+            set { finalDiscountedPriceString = value; OnPropertyChanged(); }
+        }
+
+
+        private void CalculateFinalPrices()
+        {
+            FinalPriceBeforeDiscount = InitialPricePerBox * ItemQuantityInBasket;
+
+            priceDiscountsApplied = FinalPriceBeforeDiscount * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
+            decimal temp = Math.Truncate((decimal)priceDiscountsApplied * 100) / 100;
+            FinalPriceAfterDiscount = (float)temp;
+
+            // we have to update the strings as well
+            // this is convoluted I know...
+            // but right now I don't know any other way to chain together the changes
+            // from quantity to price calculation
+            // it does price calculation automatically under the hood, it's just that the UI
+            // elements that display the updated prices (discounted and not) don't bind to the numbers themselves
+            ItemFinalPriceString = FinalPriceBeforeDiscount.ToString("0.00") + " RON";
+            ItemFinalDiscountedPriceString = FinalPriceAfterDiscount.ToString("0.00") + " RON";
+        }
+
+
+        public BasketItem(int itemId, string imagePath, string name, string producer, int quantity,
                           float activeDiscount, float userDiscount, float initialPrice)
         {
+            ItemId = itemId;
             ItemThumbnailImagePath = imagePath;
-            ItemDescriptionInBasket = description;
+            ItemName = name;
+            ItemProducer = producer;
             ItemQuantityInBasket = quantity;
             ItemActiveDiscount = activeDiscount;
             ItemActiveUserDiscount = userDiscount;
@@ -56,22 +124,38 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
             finalPrice = InitialPricePerBox * ItemQuantityInBasket;
 
-            // TODO rewrite this (and in the getter as well)
-            finalPriceDiscounted = finalPrice * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
-            decimal temp = Math.Truncate((decimal)finalPriceDiscounted * 100) / 100;
-            finalPriceDiscounted = (float)temp;
+            // TODO rewrite this (and in the getter as well) because it doesn't seem elegant
+            CalculateFinalPrices();
+        }
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
-    public class BasketViewModel : INotifyPropertyChanged
+    public class BasketViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged = delegate { };
 
-        public List<BasketItem> BasketItems { get; }
+        UserService activeUserService;
+
+
+        public ICommand RemoveItemCommand { get; set; }
+
+
+        //public List<BasketItem> BasketItems { get; }
+        public ObservableCollection<BasketItem> BasketItems { get; private set; }
+
 
         public BasketViewModel(UserService userService)
         {
+            activeUserService = userService;
+            RemoveItemCommand = new RelayCommandWithOneParameter<BasketItem>(RemoveItemFromBasket);
+
+            // get the info for every item (from Items, Users) inside a wrapper class
             Dictionary<int,int> itemsInBasket = userService.ActiveUser.Basket;
             BasketItems = new();
 
@@ -92,15 +176,35 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 string alteredImagePath = backwardSlashedImagePath.Replace("\\", "/");
 
                 BasketItem basketItem = new(
+                    currentItem.Id,
                     alteredImagePath,
                     currentItem.Name,
-                    item.Value,
+                    currentItem.Producer,
+                    item.Value,  // the quantity inside the basket for said item
                     currentItem.DiscountPercentage,
                     userDiscount,
                     currentItem.Price);
+
+                basketItem.PropertyChanged += UpdateItemInBasket;
                 BasketItems.Add(basketItem);
             }
         }
 
+
+        public void RemoveItemFromBasket(BasketItem itemToRemove)
+        {
+            activeUserService.RemoveFromBasket(itemToRemove.ItemId);
+            BasketItems.Remove(itemToRemove);
+        }
+
+        // TODO maybe leave the removing part in the service to RemoveItemFromBasket from here?
+        private void UpdateItemInBasket(object item, PropertyChangedEventArgs e)
+        {
+            BasketItem itemToUpdate = (BasketItem)item;
+            activeUserService.UpdateBasketItemQuantity(itemToUpdate.ItemId, itemToUpdate.ItemQuantityInBasket);
+
+            if (itemToUpdate.ItemQuantityInBasket <= 0)
+                BasketItems.Remove(itemToUpdate);
+        }
     }
 }

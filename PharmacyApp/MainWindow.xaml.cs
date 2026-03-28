@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Products_Catalogue;
 using PharmacyApp.Models;
 using System;
@@ -27,11 +28,13 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
+        private UserService userService;
         public MainWindow()
         {
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
             productService = new ProductCatalogueService(repo);
+            userService = new UserService();
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 
@@ -47,7 +50,7 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage));
+            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), userService);
         }
 
         private void OnAccountClicked(object sender, RoutedEventArgs e)

@@ -7,7 +7,8 @@
     xmlns:localModel="using:PharmacyApp.Features.Orders.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Name="PageRoot">
 
 
     <Grid Padding="20"
@@ -43,12 +44,14 @@
 
                         <TextBlock Grid.Row="0"
                                    Grid.Column="0"
-                                   Text="{x:Bind ItemDescriptionInBasket, Mode=OneTime}"/>
+                                   Text="{x:Bind ItemDescription, Mode=OneTime}"/>
                         <Button Grid.Row="0"
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Content="🗑"/>
+                                Content="🗑"
+                                Command="{Binding DataContext.RemoveItemCommand, ElementName=PageRoot}"
+                                CommandParameter="{Binding}"/>
 
                     </Grid>
 
@@ -74,13 +77,13 @@
                                     VerticalAlignment="Center"
                                     Spacing="10">
 
-                            <TextBlock Text="{x:Bind ItemActiveDiscount, Mode=OneTime}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ItemActiveUserDiscount, Mode=OneTime}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ItemDiscountString, Mode=OneTime}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ItemUserDiscountString, Mode=OneTime}" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Vertical"
                                         Spacing="5">
 
-                                <TextBlock Text="{x:Bind FinalPriceBeforeDiscount, Mode=TwoWay}"/>
-                                <TextBlock Text="{x:Bind FinalPriceAfterDiscount, Mode=TwoWay}"/>
+                                <TextBlock Text="{x:Bind ItemFinalPriceString, Mode=TwoWay}"/>
+                                <TextBlock Text="{x:Bind ItemFinalDiscountedPriceString, Mode=TwoWay}"/>
 
                             </StackPanel>
 
@@ -95,6 +98,8 @@
             </ListView.ItemTemplate>
 
         </ListView>
+        
+        <!--  -->
         <Rectangle Fill="Cyan" Grid.Row="0" Grid.Column="1" Width="300"></Rectangle>
         
     </Grid>

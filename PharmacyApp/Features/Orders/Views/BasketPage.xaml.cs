@@ -31,9 +31,15 @@ namespace PharmacyApp.Features.Orders.Views
 
         public BasketPage()
         {
-            userServ = new();
-            ViewModel = new BasketViewModel(userServ);
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            userServ = (UserService)e.Parameter;
+            ViewModel = new BasketViewModel(userServ);
+            DataContext = ViewModel;
+            base.OnNavigatedTo(e);
         }
     }
 }
