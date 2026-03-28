@@ -120,9 +120,9 @@
                         Grid.Column="0"
                         Spacing="5">
 
-                <TextBlock Text="Total price"/>
+                <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"/>
                 <TextBlock Text="after discounts:"/>
-                <TextBlock Text="Total discounted price"/>
+                <TextBlock Text="{x:Bind ViewModel.TotalDiscountedPriceString, Mode=OneWay}"/>
                 <Button Content="Checkout"/>
 
             </StackPanel>

@@ -93,11 +93,17 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         private void CalculateFinalPrices()
         {
-            FinalPriceBeforeDiscount = InitialPricePerBox * ItemQuantityInBasket;
+            //FinalPriceBeforeDiscount = InitialPricePerBox * ItemQuantityInBasket;
 
-            priceDiscountsApplied = FinalPriceBeforeDiscount * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
+            //priceDiscountsApplied = FinalPriceBeforeDiscount * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
+            //decimal temp = Math.Truncate((decimal)priceDiscountsApplied * 100) / 100;
+            //FinalPriceAfterDiscount = (float)temp;
+
+            finalPrice = InitialPricePerBox * ItemQuantityInBasket;
+
+            priceDiscountsApplied = finalPrice * (1 - ItemActiveDiscount) * (1 - ItemActiveUserDiscount);
             decimal temp = Math.Truncate((decimal)priceDiscountsApplied * 100) / 100;
-            FinalPriceAfterDiscount = (float)temp;
+            priceDiscountsApplied = (float)temp;
 
             // we have to update the strings as well
             // this is convoluted I know...
@@ -122,22 +128,26 @@ namespace PharmacyApp.Features.Orders.ViewModels
             ItemActiveUserDiscount = userDiscount;
             InitialPricePerBox = initialPrice;
 
-            finalPrice = InitialPricePerBox * ItemQuantityInBasket;
-
             // TODO rewrite this (and in the getter as well) because it doesn't seem elegant
             CalculateFinalPrices();
         }
 
 
+        // for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+        // custom delegate and event to update the total price in the basket page
+        // AFTER the individual prices were calculated
+
     }
 
-    public class BasketViewModel
+    public class BasketViewModel : INotifyPropertyChanged
     {
 
         UserService activeUserService;
@@ -148,6 +158,21 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         //public List<BasketItem> BasketItems { get; }
         public ObservableCollection<BasketItem> BasketItems { get; private set; }
+
+
+        string totalPriceBeforeDiscount;
+        public string TotalPriceString
+        {
+            get { return totalPriceBeforeDiscount; }
+            set { totalPriceBeforeDiscount = value; OnPropertyChanged(); }
+        }
+
+        string totalPriceAfterDiscount;
+        public string TotalDiscountedPriceString
+        {
+            get { return totalPriceAfterDiscount; }
+            set { totalPriceAfterDiscount = value; OnPropertyChanged(); }
+        }
 
 
         public BasketViewModel(UserService userService)
@@ -188,13 +213,17 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 basketItem.PropertyChanged += UpdateItemInBasket;
                 BasketItems.Add(basketItem);
             }
+
+            UpdateTotalPrices();
         }
 
 
-        public void RemoveItemFromBasket(BasketItem itemToRemove)
+        private void RemoveItemFromBasket(BasketItem itemToRemove)
         {
             activeUserService.RemoveFromBasket(itemToRemove.ItemId);
             BasketItems.Remove(itemToRemove);
+
+            UpdateTotalPrices();
         }
 
         // TODO maybe leave the removing part in the service to RemoveItemFromBasket from here?
@@ -205,6 +234,31 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
             if (itemToUpdate.ItemQuantityInBasket <= 0)
                 BasketItems.Remove(itemToUpdate);
+
+            UpdateTotalPrices();
+        }
+
+        private void UpdateTotalPrices()
+        {
+            float newTotalPrice = 0f;
+            float newTotalDiscountedPrice = 0f;
+
+            foreach (BasketItem item in BasketItems)
+            {
+                newTotalPrice += item.FinalPriceBeforeDiscount;
+                newTotalDiscountedPrice += item.FinalPriceAfterDiscount;
+            }
+
+            TotalPriceString = newTotalPrice.ToString("0.00") + " RON";
+            TotalDiscountedPriceString = newTotalDiscountedPrice.ToString("0.00") + " RON";
+        }
+
+        // for INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
