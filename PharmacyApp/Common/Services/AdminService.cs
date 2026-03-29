@@ -25,8 +25,8 @@ namespace PharmacyApp.Common.Services
             try
             {
                 validateItemAdd(newItem);
-                itemRepository.AddItem(newItem.Name, newItem.Producer, newItem.Category,
-                                       newItem.Price, newItem.NumberOfPills,
+                itemRepository.AddItemWithQuantity(newItem.Name, newItem.Producer, newItem.Category,
+                                       newItem.Price, newItem.NumberOfPills, newItem.Quantity, newItem.ActiveSubstances, newItem.Batches,
                                        newItem.Label, newItem.Description, newItem.ImagePath,
                                        newItem.DiscountPercentage);
             }
@@ -45,7 +45,7 @@ namespace PharmacyApp.Common.Services
                 validateItemAdd(newItem);
                 itemRepository.AddItemWithQuantity(newItem.Name, newItem.Producer, newItem.Category,
                                        newItem.Price, newItem.NumberOfPills,
-                                       newItem.Quantity,
+                                       newItem.Quantity, newItem.ActiveSubstances, newItem.Batches,
                                        newItem.Label, newItem.Description, newItem.ImagePath,
                                        newItem.DiscountPercentage);
             }

@@ -212,7 +212,7 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
 
 
-        Item newItem = new Item(name, producer, category, price, numberOfPills, ActiveSubstancesDict, quantity, label, description, imagePath, discount);
+        Item newItem = new Item(name, producer, category, price, numberOfPills, quantity, label, description, imagePath, discount);
 
 
             //why does this not work?
@@ -220,6 +220,12 @@ namespace PharmacyApp.Features.Pharmacy_Management
             {
                 newItem.addNewBatch(BatchesDict.ElementAt(i).Key, BatchesDict.ElementAt(i).Value);
                 System.Diagnostics.Debug.WriteLine("Added batch: " + BatchesDict.ElementAt(i).Key + " " + BatchesDict.ElementAt(i).Value);
+            }
+
+            for (int i= 0; i < ActiveSubstancesDict.Count; i++)
+            {
+                newItem.addActiveSubstance(ActiveSubstancesDict.ElementAt(i).Key, ActiveSubstancesDict.ElementAt(i).Value);
+                System.Diagnostics.Debug.WriteLine("Added active substance: " + ActiveSubstancesDict.ElementAt(i).Key + " " + ActiveSubstancesDict.ElementAt(i).Value);
             }
 
             //System.Diagnostics.Debug.WriteLine(newItem.Quantity);
@@ -404,7 +410,24 @@ namespace PharmacyApp.Features.Pharmacy_Management
                 AddActiveSubstanceFormatError.Visibility = Visibility.Visible;
                 isValid = false;
             }
-                
+
+            if (ActiveSubstancesDict.ContainsKey(SubstanceNameBox.Text))
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                SubstanceNameBox.Text = string.Empty;
+                AddActiveSubstanceInvalidError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!substancesRepository.SubstanceExists(SubstanceNameBox.Text))
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                SubstanceNameBox.Text = string.Empty;
+                ConcentrationBox.Text = string.Empty;
+                AddActiveSubstanceInvalidError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
 
             return isValid;
         }
@@ -447,6 +470,7 @@ namespace PharmacyApp.Features.Pharmacy_Management
             AddActiveSubstanceMandatoryError.Visibility = Visibility.Collapsed;
             AddActiveSubstanceFormatError.Visibility = Visibility.Collapsed;
             RemoveActiveSubstanceError.Visibility = Visibility.Collapsed;
+            AddActiveSubstanceInvalidError.Visibility = Visibility.Collapsed;
         }
 
         //batches
@@ -687,7 +711,7 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
             int quantity = 0;
 
-            adminService.UpdateItem(id, new Item(name, producer, category, price, numberOfPills, ActiveSubstancesDict,quantity, label, description, imagePath, discount));
+            adminService.UpdateItem(id, new Item(name, producer, category, price, numberOfPills,quantity, label, description, imagePath, discount));
             System.Diagnostics.Debug.WriteLine("Added item");
 
             ItemList.ItemsSource = itemsRepository.GetAllItems();

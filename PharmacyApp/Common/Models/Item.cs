@@ -49,7 +49,6 @@ namespace PharmacyApp.Models
 
         public Item(string name, string producer, string category,
             float price, int nrOfPills,
-            Dictionary<string, float> activeSubstances,
             int quantity=0,
             string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
             float discount = 0f)
@@ -64,7 +63,7 @@ namespace PharmacyApp.Models
             Label = label;
             Description = description;
             DiscountPercentage = discount;
-            ActiveSubstances = activeSubstances;
+            ActiveSubstances = new Dictionary<string, float>();
             Batches = new Dictionary<DateOnly, int>();
         }
 

@@ -15,7 +15,7 @@ namespace PharmacyApp.Common.Repositories
         // couldnt update quantity otherwise
         void AddItemWithQuantity(string name, string producer, string category,
                     float price, int nrOfPills,
-                    int quantity,
+                    int quantity, Dictionary<string, float> activeSubstances, Dictionary<DateOnly, int> batches,
                     string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
                     float discount = 0f);
         void RemoveItem(int idToBeRemoved);

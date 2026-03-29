@@ -289,6 +289,7 @@
                         <Button Content="Remove Substance"
                         Click="RemoveSubstance_Click"/>
 
+                        <TextBlock x:Name="AddActiveSubstanceInvalidError" Visibility="Collapsed" Foreground="Red">Invalid input!</TextBlock>
                         <TextBlock x:Name="AddActiveSubstanceFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
                         <TextBlock x:Name="AddActiveSubstanceMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
                         <TextBlock x:Name="RemoveActiveSubstanceError" Visibility="Collapsed" Foreground="Red">Insert the name of a valid substance to remove it!</TextBlock>
@@ -476,6 +477,7 @@
                 Click="RemoveBatchUpdate_Click"/>
                     </StackPanel>
 
+                    <!--<TextBlock x:Name="UpdateItemFormatError" Visibility="Collapsed" Foreground="Red">In</TextBlock>-->
                     <TextBlock x:Name="UpdateItemFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
                     <TextBlock x:Name="UpdateItemMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
                     <Button Content="Update Item" Click="OnUpdateItemClick"/>
