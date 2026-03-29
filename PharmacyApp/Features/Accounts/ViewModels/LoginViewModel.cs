@@ -16,6 +16,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
     public class LoginViewModel : INotifyPropertyChanged
     {
         private UserAccountService _userAccountService;
+        public event Action LoginSucceded;
         private string email;
         private string password;
 
@@ -44,6 +45,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
         public LoginViewModel(UserAccountService userAccountService)
         {
             _userAccountService = userAccountService;
+
             LoginCommand = (ICommand)new RelayCommand(Login);
         }
 
@@ -64,6 +66,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 
                 _userAccountService.Login(Email, Password);
                 System.Diagnostics.Debug.WriteLine("Successful login");
+                LoginSucceded?.Invoke();
             }
             catch (Exception ex) {
                 System.Diagnostics.Debug.WriteLine(ex.ToString());

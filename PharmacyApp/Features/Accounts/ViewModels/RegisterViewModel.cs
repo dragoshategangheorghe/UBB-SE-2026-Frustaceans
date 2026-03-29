@@ -16,6 +16,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
     public class RegisterViewModel : INotifyPropertyChanged
     {
         private UserAccountService _userAccountService;
+        public event Action RegisterSucceded;
         private string email;
         private string password;
         private string confirmPassword;
@@ -100,7 +101,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 
                 ErrorMessage = "Registration successful!";
                 System.Diagnostics.Debug.WriteLine(ErrorMessage);
-                // TODO: go to next page
+                RegisterSucceded?.Invoke();
             }
             catch (Exception ex)
             {

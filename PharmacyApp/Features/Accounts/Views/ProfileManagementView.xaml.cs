@@ -26,14 +26,14 @@ namespace PharmacyApp.Features.Accounts.Views
     public sealed partial class ProfileManagementView : Page
     {
         private UserAccountService _accountService;
-        public ProfileViewModel ViewModel { get; }
+        public ProfileManagementViewModel ViewModel { get; }
 
         public ProfileManagementView()
         {
             this.InitializeComponent();
 
             _accountService = ServiceWrapper.UserAccountService;
-            ViewModel = new ProfileViewModel(_accountService);
+            ViewModel = new ProfileManagementViewModel(_accountService);
 
             this.DataContext = ViewModel;
         }
