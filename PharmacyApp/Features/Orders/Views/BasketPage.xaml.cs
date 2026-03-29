@@ -43,6 +43,8 @@ namespace PharmacyApp.Features.Orders.Views
 
             ViewModel.BasketQuantityChanged += HandleCheckoutButton;
 
+            ViewModel.OnBasketQuantityChanged();
+
             base.OnNavigatedTo(e);
         }
 

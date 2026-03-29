@@ -266,7 +266,8 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         public event QuantityChanged BasketQuantityChanged;
 
-        protected virtual void OnBasketQuantityChanged()
+        // TODO maybe a bad idea to expose the function like this
+        public virtual void OnBasketQuantityChanged()
         {
             int totalQuantity = 0;
             foreach (BasketItem basketEntry in BasketItems)

@@ -67,7 +67,7 @@ namespace PharmacyApp.Features.Orders.Logic
                                                 "of " + currentItem.Name + " by " + currentItem.Producer + " " +
                                                 "instead of " + currentItemQuantity + ".");
 
-                float finalPrice = currentItem.Price *
+                float finalPrice = currentItemQuantity * currentItem.Price *
                     (1 - currentItem.DiscountPercentage) *
                     (1 - ActiveUser.UserDiscounts[currentItem.Id]);
 
