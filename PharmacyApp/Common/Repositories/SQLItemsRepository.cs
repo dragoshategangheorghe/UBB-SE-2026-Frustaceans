@@ -34,6 +34,24 @@ namespace PharmacyApp.Common.Repositories
             // and disposes of it
         }
 
+        // only used when adding batches from the ui, so we can set the initial quantity of the item in the store
+        public void AddItemWithQuantity(string name, string producer, string category,
+            float price, int nrOfPills,
+            int quantity,
+            string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+            float discount = 0f)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            System.Diagnostics.Debug.WriteLine($"Connection string in SQLItemsRepository.AddItemWithQuantity: {connString}");
+            string insertNewItemString =
+                "INSERT INTO Items (name, price, category, numberOfPills, producer, imagePath, quantity, label, description, discountPercentage) " +
+                $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', {quantity}, '{label}', '{description}', {discount})";
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlCommand insertNewItemCommand = new SqlCommand(insertNewItemString, conn);
+            conn.Open();
+            insertNewItemCommand.ExecuteNonQuery();
+        }
+
         public void RemoveItem(int idToBeRemoved)
         {
             string connString = SQLUtility.GetConnectionString();

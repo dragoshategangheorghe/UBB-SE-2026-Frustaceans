@@ -1,3 +1,4 @@
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,10 +10,13 @@ using PharmacyApp.Common.Repositories;
 using PharmacyApp.Common.Services;
 using PharmacyApp.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -29,6 +33,9 @@ namespace PharmacyApp.Features.Pharmacy_Management
         private AdminService adminService;
         private IItemsRepository itemsRepository;
         private ISubstancesRepository substancesRepository;
+
+        public ObservableCollection<Item> Items = new ObservableCollection<Item>();
+        public ObservableCollection<Substance> Substances = new ObservableCollection<Substance>();
 
         //helper classes -------------------------------------------------
         public class ActiveSubstance
@@ -48,9 +55,12 @@ namespace PharmacyApp.Features.Pharmacy_Management
         {
             InitializeComponent();
             itemsRepository = new SQLItemsRepository();
-            //itemsRepository.GetAllItems();
             substancesRepository = new SQLSubstancesRepository();
-            
+            List<Item> list = itemsRepository.GetAllItems();
+            this.Items = new ObservableCollection<Item>(list);
+            List<Substance> substancesList = substancesRepository.GetAllSubstances();
+            this.Substances = new ObservableCollection<Substance>(substancesList);
+
 
             adminService = new AdminService(itemsRepository, substancesRepository);
 
@@ -117,7 +127,7 @@ namespace PharmacyApp.Features.Pharmacy_Management
             CategoryBox.Text = string.Empty;
             ImagePathBox.Text = string.Empty;
             NumberOfPillsBox.Text = string.Empty;
-            QuantityBox.Text = string.Empty;
+            //QuantityBox.Text = string.Empty;
             LabelBox.Text = string.Empty;
             DescriptionBox.Text = string.Empty;
             DiscountBox.Text = string.Empty;
@@ -136,7 +146,7 @@ namespace PharmacyApp.Features.Pharmacy_Management
             CategoryBoxUpdate.Text = string.Empty;
             ImagePathBoxUpdate.Text = string.Empty;
             NumberOfPillsBoxUpdate.Text = string.Empty;
-            QuantityBoxUpdate.Text = string.Empty;
+            //QuantityBoxUpdate.Text = string.Empty;
             LabelBoxUpdate.Text = string.Empty;
             DescriptionBoxUpdate.Text = string.Empty;
             DiscountBoxUpdate.Text = string.Empty;
@@ -173,51 +183,165 @@ namespace PharmacyApp.Features.Pharmacy_Management
         }
         private void OnAddItemClick(object sender, RoutedEventArgs e)
         {
-            if (!float.TryParse(PriceBox.Text, out float price))
+            if(!ValidateAddItem())
             {
-                throw new ArgumentException("Invalid format");
+                return;
             }
-
-            if (!int.TryParse(NumberOfPillsBox.Text, out int numberOfPills))
-            {
-                throw new ArgumentException("Invalid format");
-            }
-
-            if (!int.TryParse(QuantityBox.Text, out int quantity))
-            {
-                throw new ArgumentException("Invalid format");
-            }
-
-            if (!float.TryParse(DiscountBox.Text, out float discount))
-            {
-                throw new ArgumentException("Invalid format");
-            }
+            float discount=0f;
+            int quantity = 0;
 
             string name = NameBox.Text;
             string producer = ProducerBox.Text;
             string category = CategoryBox.Text;
             string imagePath = ImagePathBox.Text;
+            float price = float.Parse(PriceBox.Text);
+            int numberOfPills = int.Parse(NumberOfPillsBox.Text);
+            if (DiscountBox.Text != string.Empty)
+                discount = float.Parse(DiscountBox.Text);
+
+            //if (QuantityBox.Text != string.Empty)
+            //    quantity = int.Parse(QuantityBox.Text);
+            //for (int i = 0; i < BatchesDict.Count; i++)
+            //{
+            //    quantity += BatchesDict.ElementAt(i).Value;
+            //    //System.Diagnostics.Debug.WriteLine(quantity);
+            //}
+
             string label = LabelBox.Text;
             string description = DescriptionBox.Text;
 
-            //active substance add
-            if (ActiveSubstancesDict.Count == 0)
+
+
+        Item newItem = new Item(name, producer, category, price, numberOfPills, ActiveSubstancesDict, quantity, label, description, imagePath, discount);
+
+
+            //why does this not work?
+            for (int i = 0; i < BatchesDict.Count; i++)
             {
-                throw new ArgumentException("At least one active substance is required");
+                newItem.addNewBatch(BatchesDict.ElementAt(i).Key, BatchesDict.ElementAt(i).Value);
+                System.Diagnostics.Debug.WriteLine("Added batch: " + BatchesDict.ElementAt(i).Key + " " + BatchesDict.ElementAt(i).Value);
             }
 
-            //id should not be in the constructorrrr + need the lists of active substances and batches
-            //Item newItem = new Item(name, producer, category, price, numberOfPills, quantity, label, description, imagePath, discount, ActiveSubstancesDict, BatchesDict);
+            //System.Diagnostics.Debug.WriteLine(newItem.Quantity);
+            adminService.AddItemWithQuantity(newItem);
+            
+            ItemList.ItemsSource = itemsRepository.GetAllItems();
 
-            Item newItem = new Item(name, producer, category, price, numberOfPills, BatchesDict, ActiveSubstancesDict, label, description, imagePath, discount);
-
-
-            adminService.AddItem(newItem);
             System.Diagnostics.Debug.WriteLine("Added item");
 
             clearItemAddBoxes();
             ActiveSubstancesDict.Clear();
+            RefreshActiveSubstancesList();
             BatchesDict.Clear();
+            RefreshBatchesList();
+            ResetAddItemErrors();
+        }
+
+        private bool ValidateAddItem()
+        {
+            bool isValid = true;
+            if (NameBox.Text == string.Empty)
+            {
+                NameBox.Background = new SolidColorBrush(Colors.LightPink);
+                NameBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid=false;
+            }
+
+            if (ProducerBox.Text == string.Empty)
+            {
+                ProducerBox.Background = new SolidColorBrush(Colors.LightPink);
+                ProducerBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+             if (CategoryBox.Text == string.Empty)
+            {
+                CategoryBox.Background = new SolidColorBrush(Colors.LightPink);
+                CategoryBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+             if (PriceBox.Text == string.Empty)
+            {
+                PriceBox.Background = new SolidColorBrush(Colors.LightPink);
+                PriceBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+             if (NumberOfPillsBox.Text == string.Empty)
+            {
+                NumberOfPillsBox.Background = new SolidColorBrush(Colors.LightPink);
+                NumberOfPillsBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!float.TryParse(PriceBox.Text, out float price))
+            {
+                //throw new ArgumentException("Invalid format");
+                // add a label thing in the xaml which can have changes :)
+                PriceBox.Background = new SolidColorBrush(Colors.LightPink);
+                PriceBox.Text = string.Empty;
+                AddItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!int.TryParse(NumberOfPillsBox.Text, out int numberOfPills))
+            {
+                //throw new ArgumentException("Invalid format");
+                NumberOfPillsBox.Background = new SolidColorBrush(Colors.LightPink);
+                NumberOfPillsBox.Text = string.Empty;
+                AddItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            //if (!int.TryParse(QuantityBox.Text, out int quantity) && QuantityBox.Text != string.Empty)
+            //{
+            //    QuantityBox.Background = new SolidColorBrush(Colors.LightPink);
+            //    QuantityBox.Text = string.Empty;
+            //    AddItemFormatError.Visibility = Visibility.Visible;
+            //    isValid = false;
+            //    //throw new ArgumentException("Invalid format");
+            //}
+
+            if (!float.TryParse(DiscountBox.Text, out float discount) && DiscountBox.Text != string.Empty)
+            {
+                DiscountBox.Background = new SolidColorBrush(Colors.LightPink);
+                DiscountBox.Text = string.Empty;
+                AddItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+                //throw new ArgumentException("Invalid format");
+            }
+
+            if (ActiveSubstancesDict.Count == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Active substances count is 0");
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                SubstanceNameBox.Text = string.Empty;
+                ConcentrationBox.Background = new SolidColorBrush(Colors.LightPink);
+                ConcentrationBox.Text = string.Empty;
+                AddItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            return isValid;
+
+        }
+
+        private void ResetAddItemErrors()
+        {
+            NameBox.Background = new SolidColorBrush(Colors.White);
+            ProducerBox.Background = new SolidColorBrush(Colors.White);
+            CategoryBox.Background = new SolidColorBrush(Colors.White);
+            PriceBox.Background = new SolidColorBrush(Colors.White);
+            NumberOfPillsBox.Background = new SolidColorBrush(Colors.White);
+            //QuantityBox.Background = new SolidColorBrush(Colors.White);
+            DiscountBox.Background = new SolidColorBrush(Colors.White);
+            SubstanceNameBox.Background = new SolidColorBrush(Colors.White);
+            ConcentrationBox.Background = new SolidColorBrush(Colors.White);
+            AddItemMandatoryError.Visibility = Visibility.Collapsed;
+            AddItemFormatError.Visibility = Visibility.Collapsed;
         }
 
         private void RefreshActiveSubstancesList()
@@ -235,13 +359,13 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
         private void AddSubstance_Click(object sender, RoutedEventArgs e)
         {
+            if (!ValidateAddItemSubstance())
+            {
+                return;
+            }
+
             string name = SubstanceNameBox.Text;
-
-            if (!float.TryParse(ConcentrationBox.Text, out float concentration))
-                throw new ArgumentException("invalid");
-
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("invalid");
+            float concentration = float.Parse(ConcentrationBox.Text);
 
             ActiveSubstancesDict[name] = concentration;
 
@@ -251,6 +375,38 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
             SubstanceNameBox.Text = string.Empty;
             ConcentrationBox.Text = string.Empty;
+            ResetActiveSubstanceErrors();
+        }
+
+        private bool ValidateAddItemSubstance()
+        {
+            bool isValid = true;
+            if (SubstanceNameBox.Text == string.Empty)
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                SubstanceNameBox.Text = string.Empty;
+                AddActiveSubstanceMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (ConcentrationBox.Text == string.Empty)
+            {
+                ConcentrationBox.Background = new SolidColorBrush(Colors.LightPink);
+                ConcentrationBox.Text = string.Empty;
+                AddActiveSubstanceMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!float.TryParse(ConcentrationBox.Text, out float concentration))
+            {
+                ConcentrationBox.Background = new SolidColorBrush(Colors.LightPink);
+                ConcentrationBox.Text = string.Empty;
+                AddActiveSubstanceFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+                
+
+            return isValid;
         }
 
         private void RemoveSubstance_Click(object sender, RoutedEventArgs e)
@@ -258,11 +414,21 @@ namespace PharmacyApp.Features.Pharmacy_Management
             string name = SubstanceNameBox.Text;
 
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("invalid");
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                RemoveActiveSubstanceError.Visibility = Visibility.Visible;
+                return;
+            }
+                
 
             if (ActiveSubstancesDict.ContainsKey(name))
             {
                 ActiveSubstancesDict.Remove(name);
+            }
+            else
+            {
+                RemoveActiveSubstanceError.Visibility = Visibility.Visible;
+                return;
             }
 
             // Refresh
@@ -270,7 +436,17 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
 
             SubstanceNameBox.Text = string.Empty;
-            //ConcentrationBox.Text = string.Empty;
+            ConcentrationBox.Text = string.Empty;
+            ResetActiveSubstanceErrors();
+        }
+
+        private void ResetActiveSubstanceErrors()
+        {
+            SubstanceNameBox.Background = new SolidColorBrush(Colors.White);
+            ConcentrationBox.Background = new SolidColorBrush(Colors.White);
+            AddActiveSubstanceMandatoryError.Visibility = Visibility.Collapsed;
+            AddActiveSubstanceFormatError.Visibility = Visibility.Collapsed;
+            RemoveActiveSubstanceError.Visibility = Visibility.Collapsed;
         }
 
         //batches
@@ -290,9 +466,12 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
         private void AddBatch_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(PacksBox.Text, out int packs))
-                throw new ArgumentException("invalid");
+            if (!ValidateAddBatch())
+            {
+                return;
+            }
 
+            int packs = int.Parse(PacksBox.Text);
             // Convert DatePicker.Date (DateTimeOffset) to DateOnly
             DateOnly date = DateOnly.FromDateTime(BatchDatePicker.Date.Date);
 
@@ -301,17 +480,65 @@ namespace PharmacyApp.Features.Pharmacy_Management
             RefreshBatchesList();
 
             PacksBox.Text = string.Empty;
+            ResetAddBatchErrors();
         }
 
-        private void RemoveBatch_Click(object sender, RoutedEventArgs e) {
+        private bool ValidateAddBatch()
+        {
+            bool isValid = true;
+            if (BatchDatePicker.Date == null)
+            {
+                // Handle error: date not selected
+                AddBatchMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (PacksBox.Text == string.Empty)
+            {
+                PacksBox.Background = new SolidColorBrush(Colors.LightPink);
+                AddBatchMandatoryError.Visibility = Visibility.Visible;
+                PacksBox.Text = string.Empty;
+                isValid = false;
+            }
+
+            if (!int.TryParse(PacksBox.Text, out int packs))
+            {
+                // Handle error: invalid number format
+                PacksBox.Background = new SolidColorBrush(Colors.LightPink);
+                AddBatchFormatError.Visibility = Visibility.Visible;
+                PacksBox.Text = string.Empty;
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        public void ResetAddBatchErrors()
+        {
+            BatchDatePicker.Background = new SolidColorBrush(Colors.White);
+            PacksBox.Background = new SolidColorBrush(Colors.White);
+            AddBatchMandatoryError.Visibility = Visibility.Collapsed;
+            AddBatchFormatError.Visibility = Visibility.Collapsed;
+            RemoveBatchError.Visibility = Visibility.Collapsed;
+        }
+
+        private void RemoveBatch_Click(object sender, RoutedEventArgs e)
+        {
 
             var selectedBatch = BatchesList.SelectedItem as BatchItem;
-   
-            if (BatchesDict.ContainsKey(selectedBatch.Date))
-            {
-                BatchesDict.Remove(selectedBatch.Date);
 
-                RefreshBatchesList();
+            if (selectedBatch != null)
+            {
+
+                if (BatchesDict.ContainsKey(selectedBatch.Date))
+                {
+                    BatchesDict.Remove(selectedBatch.Date);
+
+                    RefreshBatchesList();
+                }
+            }
+            else
+            {
+                RemoveBatchError.Visibility = Visibility.Visible;
             }
         }
 
@@ -327,15 +554,21 @@ namespace PharmacyApp.Features.Pharmacy_Management
         {
             var selectedItem = ItemList.SelectedItem as Item;
             if (selectedItem == null)
-                throw new ArgumentException("not selected"); // Nothing selected
+            {
+                RemoveItemError.Visibility = Visibility.Visible;
+                return;
+            }    
+                
 
             int id = selectedItem.Id;
 
             // Call admin service to remove
             adminService.RemoveItem(id);
+            ItemList.ItemsSource = itemsRepository.GetAllItems();
+            RemoveItemError.Visibility = Visibility.Collapsed;
 
         }
-
+//CONTINUE HERE !!!!!!!!!!!!!!!!!!!!!
         private void OnItemUpdateClick(object sender, RoutedEventArgs e)
         {
 
@@ -348,37 +581,74 @@ namespace PharmacyApp.Features.Pharmacy_Management
             {
                 UpdateItemGrid.Visibility = Visibility.Visible;
                 AddItemGrid.Visibility = Visibility.Collapsed;
+                
             }
         }
 
-        private void OnUpdateItemClick(object sender, RoutedEventArgs e)
-        //TODO everything. i cant .
+        private void OnGetItemDataClick(object sender, RoutedEventArgs e)
         {
+            if (!ValidateGetItemData())
+            {
+                return;
+            }
+
+            Item item = itemsRepository.GetItem(int.Parse(IdBox.Text));
+            NameBoxUpdate.Text = item.Name;
+            ProducerBoxUpdate.Text = item.Producer;
+            PriceBox.Text = item.Price.ToString();
+            CategoryBoxUpdate.Text = item.Category;
+            ImagePathBoxUpdate.Text = item.ImagePath;
+            NumberOfPillsBoxUpdate.Text = item.NumberOfPills.ToString();
+            LabelBoxUpdate.Text = item.Label;
+            DescriptionBoxUpdate.Text = item.Description;
+            DiscountBoxUpdate.Text = item.DiscountPercentage.ToString();
+
+            ActiveSubstancesDict = item.ActiveSubstances;
+            RefreshActiveSubstancesListUpdate();
+            BatchesDict = item.Batches;
+            RefreshBatchesListUpdate();
+
+            ResetUpdateItemErrors();
+
+        }
+
+        private bool ValidateGetItemData()
+        {
+            bool isValid = true;
+            if (IdBox.Text == string.Empty)
+            {
+                IdBox.Background = new SolidColorBrush(Colors.LightPink);
+                IdBox.Text = string.Empty;
+                UpdateItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else if (!int.TryParse(IdBox.Text, out int id))
+            {
+                IdBox.Background = new SolidColorBrush(Colors.LightPink);
+                IdBox.Text = string.Empty;
+                UpdateItemFormatError.Visibility = Visibility.Visible;
+                isValid= false;
+            } else if (itemsRepository.GetItem(id) == null)
+            {
+                IdBox.Background = new SolidColorBrush(Colors.LightPink);
+                IdBox.Text = string.Empty;
+                UpdateInvalidIdError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        private void OnUpdateItemClick(object sender, RoutedEventArgs e)
+        {
+            if(!ValidateUpdateItem())
+            {
+                return;
+            }
+
+            int id = int.Parse(IdBox.Text);
+
             Item itemToBeUpdated = itemsRepository.GetItem(int.Parse(IdBox.Text));
-            if (!int.TryParse(IdBox.Text, out int id))
-            {
-                throw new ArgumentException("Invalid format");
-            }
-
-            if (!float.TryParse(PriceBoxUpdate.Text, out float price))
-            {
-                price = itemToBeUpdated.Price;
-            }
-
-            if (!int.TryParse(NumberOfPillsBoxUpdate.Text, out int numberOfPills))
-            {
-                numberOfPills = itemToBeUpdated.NumberOfPills;
-            }
-
-            if (!int.TryParse(QuantityBoxUpdate.Text, out int quantity))
-            {
-                quantity = itemToBeUpdated.Quantity;
-            }
-
-            if (!float.TryParse(DiscountBoxUpdate.Text, out float discount))
-            {
-                discount = itemToBeUpdated.DiscountPercentage;
-            }
 
             // Strings: replace if empty
             string name = string.IsNullOrWhiteSpace(NameBoxUpdate.Text)
@@ -405,12 +675,82 @@ namespace PharmacyApp.Features.Pharmacy_Management
                 ? itemToBeUpdated.Description
                 : DescriptionBoxUpdate.Text;
 
-            adminService.UpdateItem(id, new Item(name, producer, category, price, numberOfPills, BatchesDict, ActiveSubstancesDict, label, description, imagePath, discount));
+            float price = string.IsNullOrWhiteSpace(PriceBoxUpdate.Text)
+                ? itemToBeUpdated.Price
+                : float.Parse(PriceBoxUpdate.Text);
+            int numberOfPills = string.IsNullOrWhiteSpace(NumberOfPillsBoxUpdate.Text)
+                ? itemToBeUpdated.NumberOfPills
+                : int.Parse(NumberOfPillsBoxUpdate.Text);
+            float discount = string.IsNullOrWhiteSpace(DiscountBoxUpdate.Text)
+                ? itemToBeUpdated.DiscountPercentage
+                : float.Parse(DiscountBoxUpdate.Text);
+
+            int quantity = 0;
+
+            adminService.UpdateItem(id, new Item(name, producer, category, price, numberOfPills, ActiveSubstancesDict,quantity, label, description, imagePath, discount));
             System.Diagnostics.Debug.WriteLine("Added item");
 
-            clearItemAddBoxes();
+            ItemList.ItemsSource = itemsRepository.GetAllItems();
+            clearItemUpdateBoxes();
             ActiveSubstancesDict.Clear();
+            RefreshActiveSubstancesList();
             BatchesDict.Clear();
+            RefreshBatchesList();
+            ResetUpdateItemErrors();
+        }
+        private bool ValidateUpdateItem()
+        {
+            bool isValid = true;
+
+            if (IdBox.Text == string.Empty)
+            {
+                IdBox.Background = new SolidColorBrush(Colors.LightPink);
+                IdBox.Text = string.Empty;
+                UpdateItemMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!float.TryParse(PriceBoxUpdate.Text, out float price) && PriceBoxUpdate.Text != string.Empty)
+            {
+                //throw new ArgumentException("Invalid format");
+                // add a label thing in the xaml which can have changes :)
+                PriceBoxUpdate.Background = new SolidColorBrush(Colors.LightPink);
+                PriceBoxUpdate.Text = string.Empty;
+                UpdateItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!int.TryParse(NumberOfPillsBoxUpdate.Text, out int numberOfPills) && NumberOfPillsBoxUpdate.Text != string.Empty)
+            {
+                //throw new ArgumentException("Invalid format");
+                NumberOfPillsBoxUpdate.Background = new SolidColorBrush(Colors.LightPink);
+                NumberOfPillsBoxUpdate.Text = string.Empty;
+                UpdateItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!float.TryParse(DiscountBoxUpdate.Text, out float discount) && DiscountBoxUpdate.Text != string.Empty)
+            {
+                DiscountBoxUpdate.Background = new SolidColorBrush(Colors.LightPink);
+                DiscountBoxUpdate.Text = string.Empty;
+                UpdateItemFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+                //throw new ArgumentException("Invalid format");
+            }
+
+            return isValid;
+
+        }
+
+        private void ResetUpdateItemErrors()
+        {
+            IdBox.Background = new SolidColorBrush(Colors.White);
+            PriceBoxUpdate.Background = new SolidColorBrush(Colors.White);
+            NumberOfPillsBoxUpdate.Background = new SolidColorBrush(Colors.White);
+            DiscountBoxUpdate.Background = new SolidColorBrush(Colors.White);
+            UpdateItemMandatoryError.Visibility = Visibility.Collapsed;
+            UpdateItemFormatError.Visibility = Visibility.Collapsed;
+            UpdateInvalidIdError.Visibility = Visibility.Collapsed;
         }
 
 
@@ -443,6 +783,205 @@ namespace PharmacyApp.Features.Pharmacy_Management
             }
         }
 
+        private void RefreshActiveSubstancesListUpdate()
+        {
+            var list = ActiveSubstancesDict
+                .Select(kvp => new ActiveSubstance
+                {
+                    Name = kvp.Key,
+                    Concentration = kvp.Value
+                })
+                .ToList();
+
+            ActiveSubstancesListUpdate.ItemsSource = list;
+        }
+
+        private void AddSubstanceUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateUpdateItemSubstance())
+            {
+                return;
+            }
+
+            string name = SubstanceNameBox.Text;
+            float concentration = float.Parse(ConcentrationBox.Text);
+
+            ActiveSubstancesDict[name] = concentration;
+
+
+            RefreshActiveSubstancesList();
+
+
+            SubstanceNameBox.Text = string.Empty;
+            ConcentrationBox.Text = string.Empty;
+            ResetUpdateActiveSubstanceErrors();
+        }
+
+        private bool ValidateUpdateItemSubstance()
+        {
+            bool isValid = true;
+            if (SubstanceNameBox.Text == string.Empty)
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                SubstanceNameBox.Text = string.Empty;
+                AddActiveSubstanceMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (ConcentrationBox.Text == string.Empty)
+            {
+                ConcentrationBox.Background = new SolidColorBrush(Colors.LightPink);
+                ConcentrationBox.Text = string.Empty;
+                AddActiveSubstanceMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (!float.TryParse(ConcentrationBox.Text, out float concentration))
+            {
+                ConcentrationBox.Background = new SolidColorBrush(Colors.LightPink);
+                ConcentrationBox.Text = string.Empty;
+                AddActiveSubstanceFormatError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+
+            return isValid;
+        }
+
+        private void RemoveSubstanceUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            string name = SubstanceNameBox.Text;
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                SubstanceNameBox.Background = new SolidColorBrush(Colors.LightPink);
+                RemoveActiveSubstanceError.Visibility = Visibility.Visible;
+                return;
+            }
+
+
+            if (ActiveSubstancesDict.ContainsKey(name))
+            {
+                ActiveSubstancesDict.Remove(name);
+            }
+            else
+            {
+                RemoveActiveSubstanceError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Refresh
+            RefreshActiveSubstancesList();
+
+
+            SubstanceNameBox.Text = string.Empty;
+            ConcentrationBox.Text = string.Empty;
+            ResetUpdateActiveSubstanceErrors();
+        }
+
+        private void ResetUpdateActiveSubstanceErrors()
+        {
+            SubstanceNameBox.Background = new SolidColorBrush(Colors.White);
+            ConcentrationBox.Background = new SolidColorBrush(Colors.White);
+            AddActiveSubstanceMandatoryError.Visibility = Visibility.Collapsed;
+            AddActiveSubstanceFormatError.Visibility = Visibility.Collapsed;
+            RemoveActiveSubstanceError.Visibility = Visibility.Collapsed;
+        }
+
+        //batches
+        private void RefreshBatchesListUpdate()
+        {
+            var list = BatchesDict
+                .Select(kvp => new BatchItem
+                {
+                    Date = kvp.Key,
+                    Packs = kvp.Value
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            BatchesListUpdate.ItemsSource = list;
+        }
+
+        private void AddBatchUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateUpdateBatch())
+            {
+                return;
+            }
+
+            int packs = int.Parse(PacksBox.Text);
+            // Convert DatePicker.Date (DateTimeOffset) to DateOnly
+            DateOnly date = DateOnly.FromDateTime(BatchDatePicker.Date.Date);
+
+            BatchesDict[date] = packs;
+
+            RefreshBatchesList();
+
+            PacksBox.Text = string.Empty;
+            ResetUpdateBatchErrors();
+        }
+
+        private bool ValidateUpdateBatch()
+        {
+            bool isValid = true;
+            if (BatchDatePicker.Date == null)
+            {
+                // Handle error: date not selected
+                AddBatchMandatoryError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            if (PacksBox.Text == string.Empty)
+            {
+                PacksBox.Background = new SolidColorBrush(Colors.LightPink);
+                AddBatchMandatoryError.Visibility = Visibility.Visible;
+                PacksBox.Text = string.Empty;
+                isValid = false;
+            }
+
+            if (!int.TryParse(PacksBox.Text, out int packs))
+            {
+                // Handle error: invalid number format
+                PacksBox.Background = new SolidColorBrush(Colors.LightPink);
+                AddBatchFormatError.Visibility = Visibility.Visible;
+                PacksBox.Text = string.Empty;
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        public void ResetUpdateBatchErrors()
+        {
+            BatchDatePicker.Background = new SolidColorBrush(Colors.White);
+            PacksBox.Background = new SolidColorBrush(Colors.White);
+            AddBatchMandatoryError.Visibility = Visibility.Collapsed;
+            AddBatchFormatError.Visibility = Visibility.Collapsed;
+            RemoveBatchError.Visibility = Visibility.Collapsed;
+        }
+
+        private void RemoveBatchUpdate_Click(object sender, RoutedEventArgs e)
+        {
+
+            var selectedBatch = BatchesList.SelectedItem as BatchItem;
+
+            if (selectedBatch != null)
+            {
+
+                if (BatchesDict.ContainsKey(selectedBatch.Date))
+                {
+                    BatchesDict.Remove(selectedBatch.Date);
+
+                    RefreshBatchesList();
+                }
+            }
+            else
+            {
+                RemoveBatchError.Visibility = Visibility.Visible;
+            }
+        }
+
+
         private void OnSubstanceRemoveClick(object sender, RoutedEventArgs e)
         {
             var selectedItem = SubstanceList.SelectedItem as Substance;
@@ -453,6 +992,8 @@ namespace PharmacyApp.Features.Pharmacy_Management
 
             // Call admin service to remove
             adminService.RemoveSubstance(selectedItem);
+
+            SubstanceList.ItemsSource = substancesRepository.GetAllSubstances();
 
         }
 
@@ -478,10 +1019,12 @@ namespace PharmacyApp.Features.Pharmacy_Management
             Substance newSubstance = new Substance(name, lethalDose, description);
 
 
-            //AdminService.Add(...)
+            adminService.AddSubstance(newSubstance);
+            //Substances.Add(newSubstance);
             System.Diagnostics.Debug.WriteLine("Added substance");
 
             clearSubstanceBoxes();
+            SubstanceList.ItemsSource = substancesRepository.GetAllSubstances();
         }
 
         private void OnUpdateSubstanceClick(object sender, RoutedEventArgs e)
@@ -498,10 +1041,12 @@ namespace PharmacyApp.Features.Pharmacy_Management
             Substance updatedSubstance = new Substance(name, lethalDose, description);
 
 
-            //AdminService.Add(...)
+            adminService.UpdateSubstance(name, updatedSubstance);
+
             System.Diagnostics.Debug.WriteLine("Updated substance");
 
-            clearSubstanceBoxes();
+            clearSubstanceUpdateBoxes();
+            SubstanceList.ItemsSource = substancesRepository.GetAllSubstances();
         }
 
     }

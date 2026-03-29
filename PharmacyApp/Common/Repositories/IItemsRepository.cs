@@ -11,6 +11,13 @@ namespace PharmacyApp.Common.Repositories
                     float price, int nrOfPills,
                     string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
                     float discount = 0f);
+
+        // couldnt update quantity otherwise
+        void AddItemWithQuantity(string name, string producer, string category,
+                    float price, int nrOfPills,
+                    int quantity,
+                    string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+                    float discount = 0f);
         void RemoveItem(int idToBeRemoved);
         Item GetItem(int id);
         List<Item> GetAllItems();

@@ -38,6 +38,24 @@ namespace PharmacyApp.Common.Services
             }
         }
 
+        public void AddItemWithQuantity(Item newItem)
+        {
+            try
+            {
+                validateItemAdd(newItem);
+                itemRepository.AddItemWithQuantity(newItem.Name, newItem.Producer, newItem.Category,
+                                       newItem.Price, newItem.NumberOfPills,
+                                       newItem.Quantity,
+                                       newItem.Label, newItem.Description, newItem.ImagePath,
+                                       newItem.DiscountPercentage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding item: {ex.Message}");
+                return;
+            }
+        }
+
         public void RemoveItem(int id)
         {
             itemRepository.RemoveItem(id);
@@ -55,7 +73,7 @@ namespace PharmacyApp.Common.Services
             {
                 sendNewStockNotification(updatedItem);
             }
-
+            updatedItem.Id = id;
             itemRepository.UpdateItem(updatedItem);
         }
 
@@ -66,14 +84,13 @@ namespace PharmacyApp.Common.Services
 
         public void RemoveSubstance(Substance substance)
         {
-            // TODO: add a if substance exists check
             substanceRepository.RemoveSubstance(substance.Name);
         }
 
         public void UpdateSubstance(string name, Substance substance)
         {
-            //?????????????????????
-            //substanceRepository.UpdateSubstance(name, substance);
+
+            substanceRepository.UpdateSubstance(substance);
         }
 
         public Notification sendNewStockNotification(Item item)
