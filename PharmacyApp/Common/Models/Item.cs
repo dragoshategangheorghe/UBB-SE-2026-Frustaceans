@@ -125,5 +125,21 @@ namespace PharmacyApp.Models
                 throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
             Batches.Remove(expirationDate);
         }
+
+        public int QuantityAtSpecifiedDate(DateOnly date)
+        {
+            int validatedQuantity = 0;
+
+            foreach (KeyValuePair<DateOnly, int> batchEntry in Batches)
+            {
+                DateOnly currentBatchExpirationDate = batchEntry.Key;
+                int currentBatchQuantity = batchEntry.Value;
+
+                if (date < currentBatchExpirationDate)
+                    validatedQuantity += currentBatchQuantity;
+            }
+
+            return validatedQuantity;
+        }
     }
 }
