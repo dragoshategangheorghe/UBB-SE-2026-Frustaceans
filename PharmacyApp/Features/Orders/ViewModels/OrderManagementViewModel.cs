@@ -48,7 +48,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         string orderIDInput;
         string userEmailInput;
-        bool isCompleteCheckbox;
+        bool isIncompleteCheckbox;
         bool isExpiredCheckbox;
 
         // properties for the UI elements to modify
@@ -70,11 +70,11 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 ReapplyFilters();
             }
         }
-        public bool IsCompleteCheckbox 
+        public bool IsIncompleteCheckbox 
         { 
-            get { return isCompleteCheckbox; }
+            get { return isIncompleteCheckbox; }
             set { 
-                isCompleteCheckbox = value; 
+                isIncompleteCheckbox = value; 
                 OnPropertyChanged();
                 ReapplyFilters();
             }
@@ -111,9 +111,69 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         private void ReapplyFilters()
         {
+            List<OrderDetail> intermediateFilteredOrderList = new();
+
+            foreach (OrderDetail iterOrderDetail in baseOrderList)
+                intermediateFilteredOrderList.Add(iterOrderDetail);
+
             // TODO maybe not set the filtered order list
             // after each individual filter
+            // TODO how to do in-place filtering??
 
+            try
+            {
+                int inputtedOrderID = int.Parse(orderIDInput);
+                List<OrderDetail> result = intermediateFilteredOrderList
+                    .Where<OrderDetail>(order => order.OrderID == inputtedOrderID)
+                    .ToList<OrderDetail>();
+
+                intermediateFilteredOrderList.Clear();
+                foreach (OrderDetail resultOrder in result)
+                    intermediateFilteredOrderList.Add(resultOrder);
+            } 
+            catch (Exception e) { }
+
+
+            if (userEmailInput is not null)
+            {
+                if (userEmailInput.Length != 0)
+                {
+                    List<OrderDetail> result = intermediateFilteredOrderList
+                        .Where<OrderDetail>(order => order.UserEmail == userEmailInput)
+                        .ToList<OrderDetail>();
+
+                    intermediateFilteredOrderList.Clear();
+                    foreach (OrderDetail resultOrder in result)
+                        intermediateFilteredOrderList.Add(resultOrder);
+                }
+            }
+
+            if (isIncompleteCheckbox)
+            {
+                List<OrderDetail> result = intermediateFilteredOrderList
+                    .Where<OrderDetail>(order => !order.IsComplete && !order.IsExpired)
+                    .ToList<OrderDetail>();
+
+                intermediateFilteredOrderList.Clear();
+                foreach (OrderDetail resultOrder in result)
+                    intermediateFilteredOrderList.Add(resultOrder);
+            }
+
+            if (isExpiredCheckbox)
+            {
+                List<OrderDetail> result = intermediateFilteredOrderList
+                    .Where<OrderDetail>(order => order.IsExpired)
+                    .ToList<OrderDetail>();
+
+                intermediateFilteredOrderList.Clear();
+                foreach (OrderDetail resultOrder in result)
+                    intermediateFilteredOrderList.Add(resultOrder);
+            }
+
+
+            FilteredOrderList.Clear();
+            foreach (OrderDetail resultOrder in intermediateFilteredOrderList)
+                FilteredOrderList.Add(resultOrder);
 
         }
 

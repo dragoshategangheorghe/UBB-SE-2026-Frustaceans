@@ -145,9 +145,9 @@
             <TextBox Header="User e-mail"
                      PlaceholderText="Enter user e-mail"
                      Text="{x:Bind ViewModel.UserEmailInput, Mode=TwoWay}"/>
-            <CheckBox Content="Complete orders" 
-                      IsChecked="{x:Bind ViewModel.IsCompleteCheckbox, Mode=TwoWay}"/>
-            <CheckBox Content="Expired orders"
+            <CheckBox Content="Only incomplete orders" 
+                      IsChecked="{x:Bind ViewModel.IsIncompleteCheckbox, Mode=TwoWay}"/>
+            <CheckBox Content="Only expired orders"
                       IsChecked="{x:Bind ViewModel.IsExpiredCheckbox, Mode=TwoWay}"/>
 
         </StackPanel>
