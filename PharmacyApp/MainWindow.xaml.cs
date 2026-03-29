@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -6,6 +6,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
+using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Accounts.Views;
 using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Products_Catalogue;
 using PharmacyApp.Models;
@@ -56,13 +58,26 @@ namespace PharmacyApp
             MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
         }
 
-        private void OnAccountClicked(object sender, RoutedEventArgs e)
+        private async void OnAccountClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+
+
+
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                // Not logged in → go to login page
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+            }
+            else
+            {
+                // Logged in → show profile dialog
+                MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
+            }
         }
 
         private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
+
             MainFrame.Navigate(typeof(Features.Pharmacy_Management.EditPage));
         }
 

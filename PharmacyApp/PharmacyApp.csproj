@@ -65,6 +65,8 @@
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
     <None Remove="Features\Orders\Views\OrderHistoryPage.xaml" />
     <None Remove="Features\Orders\Views\OrderManagementPage.xaml" />
+    <None Remove="Features\Accounts\Views\ChangePasswordView.xaml" />
+    <None Remove="Features\Accounts\Views\ProfileManagementView.xaml" />
     <None Remove="Features\Pharmacy_Management\EditPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +99,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Orders\Views\CheckoutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Accounts\Views\ChangePasswordView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Accounts\Views\ProfileManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
