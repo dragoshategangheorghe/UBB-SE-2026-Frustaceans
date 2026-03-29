@@ -22,6 +22,8 @@ namespace PharmacyApp.Features.Accounts.ViewModels
         private string confirmPassword;
         private string username;
         private string phoneNumber;
+
+
         public string Email
         {
             get => email;
@@ -99,14 +101,11 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                     PhoneNumber
                 );
 
-                ErrorMessage = "Registration successful!";
-                System.Diagnostics.Debug.WriteLine(ErrorMessage);
                 RegisterSucceded?.Invoke();
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
-                System.Diagnostics.Debug.WriteLine(ErrorMessage);
             }
         }
 

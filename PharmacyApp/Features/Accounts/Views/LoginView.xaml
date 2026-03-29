@@ -69,7 +69,15 @@
                     </PasswordBox.Resources>
                 </PasswordBox>
 
+                <Border Background="#FFEAEA"
+                        Padding="10"
+                        CornerRadius="6"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
 
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="Red"/>
+                </Border>
+                
                 <Button 
                     
                     Background="#389e7c"

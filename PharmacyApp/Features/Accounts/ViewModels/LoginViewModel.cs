@@ -19,6 +19,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
         public event Action LoginSucceded;
         private string email;
         private string password;
+        private string errorMessage;
 
         public string Email
         {
@@ -39,6 +40,15 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string ErrorMessage
+        {
+            get => errorMessage;
+            set
+            {
+                errorMessage = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand LoginCommand { get; set; }
 
@@ -54,8 +64,7 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                // TODO: show error in UI
-                System.Diagnostics.Debug.WriteLine("Fields cannot be empty");
+                ErrorMessage = "Fields cannot be empty";
                 return;
             }
 
@@ -65,11 +74,11 @@ namespace PharmacyApp.Features.Accounts.ViewModels
             {
 
                 _userAccountService.Login(Email, Password);
-                System.Diagnostics.Debug.WriteLine("Successful login");
+                
                 LoginSucceded?.Invoke();
             }
             catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                ErrorMessage = ex.Message;
             }
             
         }
