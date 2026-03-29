@@ -7,8 +7,11 @@ namespace PharmacyApp.Models
     {
 
         public int Id { get; private set; }
+        public string IdString { get { return "Order#" + Id;  } }
         public int ClientId { get; set; }
         public DateOnly PickUpDate { get; set; }
+        public string PickUpDateString { get { return PickUpDate.ToString("yyyy.MM.dd"); } }
+        public string ExpirationDateString { get { return PickUpDate.AddDays(7).ToString("yyyy.MM.dd"); } }
         public bool IsCompleted { get; set; }
         public bool IsExpired { get; set; }
 

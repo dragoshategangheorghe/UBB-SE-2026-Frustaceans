@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Models;
 using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Orders.ViewModels;
 using System;
@@ -26,7 +27,7 @@ namespace PharmacyApp.Features.Orders.Views;
 public sealed partial class OrderHistoryPage : Page
 {
     UserService userServ;
-    CheckoutViewModel viewModel;
+    OrderHistoryViewModel ViewModel { get; set; }
 
     public OrderHistoryPage()
     {
@@ -37,7 +38,28 @@ public sealed partial class OrderHistoryPage : Page
     {
         // TODO refactor later to have greater separation between 
         userServ = (UserService)e.Parameter;
-        viewModel = new CheckoutViewModel(userServ);
+        ViewModel = new OrderHistoryViewModel(userServ);
+        DataContext = ViewModel;
         base.OnNavigatedTo(e);
+    }
+}
+
+// this is needed as custom logic on the view level to represent
+// expired and not expired orders differently in the order history
+public class OrderTemplateSelector : DataTemplateSelector
+{
+    public DataTemplate CompletedTemplate { get; set; }
+    public DataTemplate IncompletedTemplate { get; set; }
+    public DataTemplate ExpiredTemplate { get; set; }
+
+    protected override DataTemplate SelectTemplateCore(object item)
+    {
+        Order currentOrder = (Order)item;
+
+        if (currentOrder.IsCompleted)
+            return CompletedTemplate;
+        if (currentOrder.IsExpired)
+            return ExpiredTemplate;
+        return IncompletedTemplate;
     }
 }
