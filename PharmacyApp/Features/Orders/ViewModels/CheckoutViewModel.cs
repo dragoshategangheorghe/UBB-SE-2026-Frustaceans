@@ -10,13 +10,13 @@ namespace PharmacyApp.Features.Orders.ViewModels
 {
     public class CheckoutViewModel
     {
-        UserService userServ;
+        OrderService userServ;
         
         public List<BasketItem> BasketItems { get; private set; }
 
         public string TotalPriceString { get; private set; }
 
-        public CheckoutViewModel(UserService userService)
+        public CheckoutViewModel(OrderService userService)
         {
             userServ = userService;
 

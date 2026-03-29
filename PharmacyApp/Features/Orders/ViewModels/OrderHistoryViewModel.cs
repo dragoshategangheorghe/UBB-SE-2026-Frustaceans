@@ -13,12 +13,12 @@ namespace PharmacyApp.Features.Orders.ViewModels
 {
     class OrderHistoryViewModel
     {
-        UserService activeUserServ;
+        OrderService activeUserServ;
         public ICommand CancelCommand { get; private set; }
         public ICommand ResubmitCommand { get; private set; }
         public ObservableCollection<Order> OrderHistory;
 
-        public OrderHistoryViewModel(UserService userService)
+        public OrderHistoryViewModel(OrderService userService)
         {
             activeUserServ = userService;
             CancelCommand = new RelayCommandWithOneParameter<Order>(CancelOrder);

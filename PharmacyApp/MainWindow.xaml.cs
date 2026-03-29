@@ -28,13 +28,16 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
-        private UserService userService;
+        private OrderService userService;
         public MainWindow()
         {
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
+            IUsersRepository usersRepo = new SQLUsersRepository();
             productService = new ProductCatalogueService(repo);
-            userService = new UserService();
+
+            // TODO change the way the order service receives the active user
+            userService = new OrderService(usersRepo.GetUserByEmail("xyz@gmail.com"));
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 

@@ -158,7 +158,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
     public class BasketViewModel : INotifyPropertyChanged
     {
 
-        UserService activeUserService;
+        OrderService activeUserService;
 
         public ICommand RemoveItemCommand { get; set; }
 
@@ -180,7 +180,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
         }
 
 
-        public BasketViewModel(UserService userService)
+        public BasketViewModel(OrderService userService)
         {
             activeUserService = userService;
             RemoveItemCommand = new RelayCommandWithOneParameter<BasketItem>(RemoveItemFromBasket);

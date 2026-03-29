@@ -26,7 +26,7 @@ namespace PharmacyApp.Features.Orders.Views;
 /// </summary>
 public sealed partial class OrderHistoryPage : Page
 {
-    UserService userServ;
+    OrderService userServ;
     OrderHistoryViewModel ViewModel { get; set; }
 
     public OrderHistoryPage()
@@ -37,7 +37,7 @@ public sealed partial class OrderHistoryPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         // TODO refactor later to have greater separation between 
-        userServ = (UserService)e.Parameter;
+        userServ = (OrderService)e.Parameter;
         ViewModel = new OrderHistoryViewModel(userServ);
         DataContext = ViewModel;
         base.OnNavigatedTo(e);

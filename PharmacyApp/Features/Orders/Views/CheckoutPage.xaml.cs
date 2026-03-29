@@ -26,7 +26,7 @@ namespace PharmacyApp.Features.Orders.Views
     /// </summary>
     public sealed partial class CheckoutPage : Page
     {
-        UserService userServ;
+        OrderService userServ;
         CheckoutViewModel viewModel;
 
         public CheckoutPage()
@@ -36,7 +36,7 @@ namespace PharmacyApp.Features.Orders.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            userServ = (UserService)e.Parameter;
+            userServ = (OrderService)e.Parameter;
             viewModel = new CheckoutViewModel(userServ);
             base.OnNavigatedTo(e);
         }

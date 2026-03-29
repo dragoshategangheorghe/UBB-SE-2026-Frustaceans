@@ -7,7 +7,7 @@ using PharmacyApp.Models;
 
 namespace PharmacyApp.Features.Orders.Logic
 {
-    public class UserService
+    public class OrderService
     {
         public ISubstancesRepository SubstancesRepo { get; private set; }
         public IItemsRepository ItemsRepo { get; private set; }
@@ -15,14 +15,13 @@ namespace PharmacyApp.Features.Orders.Logic
         public IOrdersRepository OrdersRepo { get; private set; }
         public User ActiveUser { get; private set; }
 
-        public UserService()
+        public OrderService(User loggedInUser)
         {
             SubstancesRepo = new SQLSubstancesRepository();
             ItemsRepo = new SQLItemsRepository();
             UsersRepo = new SQLUsersRepository();
             OrdersRepo = new SQLOrdersRepository();
-            // TODO add the user parameter to the constructor
-            ActiveUser = UsersRepo.GetUserByEmail("xyz@gmail.com");
+            ActiveUser = loggedInUser;
 
             AddToBasket(5, 1);
             AddToBasket(7, 2);
