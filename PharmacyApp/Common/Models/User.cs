@@ -19,7 +19,6 @@ namespace PharmacyApp.Models
         public int CycleDays { get; set; }
         public int PeriodLasts { get; set; }
         public int PMSOption { get; set; }
-        public bool WantsToBePregnant { get; set; }
         public Dictionary<int, Tuple<string, bool>> PeriodNotes { get; private set; }
 
         public List<int> StockAlerts { get; private set; }
@@ -36,8 +35,7 @@ namespace PharmacyApp.Models
                     string passwordHash, bool isAdmin, bool isDisabled,
                     string userName, bool discountNotifications,
                     int loyaltyPoints, DateOnly startPeriodDate = new DateOnly(),
-                    int cycleDays=28, int periodLasts=5, int pmsOption=0,
-                    bool wantsToBePregnant=false)
+                    int cycleDays=28, int periodLasts=5, int pmsOption=0)
         {
             Id = id;
             Email = email;
@@ -52,7 +50,6 @@ namespace PharmacyApp.Models
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
-            WantsToBePregnant = wantsToBePregnant;
             PeriodNotes = new Dictionary<int, Tuple<string, bool>>();
             StockAlerts = new List<int>();
             FavoriteItems = new List<int>();
@@ -134,18 +131,13 @@ namespace PharmacyApp.Models
             Basket.Remove(itemIdToRemove);
         }
 
-
-        // Note to Alex: sry if the implementation is not good/absent
-        // I'll leave it to you, cuz these functions won't be used elsewhere
-
         public void SetPeriodTracker(DateOnly startPeriodDate, int cycleDays,
-                                     int periodLasts, int pmsOption, bool wantsToBePregnant)
+                                     int periodLasts, int pmsOption)
         {
             StartPeriodDate = startPeriodDate;
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
-            WantsToBePregnant = wantsToBePregnant;
         }
 
         public void AddPeriodNote(int noteId, string noteBody, bool isDone)

@@ -32,12 +32,17 @@ namespace PharmacyApp.Features.Period_Tracker.Views
                 //return;
             }
 
+
+
             InitializeComponent();
         }
-        private void CalculateCycle(object sender, RoutedEventArgs e)
-        {
-            
-        }
 
+        private void OnCalculateCycleClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdatePeriodTracker(StartPeriodDatePicker.Date, CycleDaysNumberBox.Value,
+                PeriodLastsNumberBox.Value, PMSRadioButtons.SelectedIndex);
+
+            ViewModel.CalendarsVisibility = "Visible"; 
+        }
     }
 }

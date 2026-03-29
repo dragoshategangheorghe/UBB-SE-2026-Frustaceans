@@ -92,8 +92,7 @@ namespace PharmacyApp.Common.Repositories
                     resultUser.SetPeriodTracker(
                         DateOnly.FromDateTime((DateTime)userPeriodTrackerRow["startPeriodDate"]),
                         (int)userPeriodTrackerRow["cycleDays"],
-                        (int)userPeriodTrackerRow["periodLasts"], (int)userPeriodTrackerRow["PMSOption"],
-                        (bool)userPeriodTrackerRow["wantsToBePregnant"]);
+                        (int)userPeriodTrackerRow["periodLasts"], (int)userPeriodTrackerRow["PMSOption"]);
                 }
 
 
@@ -217,8 +216,7 @@ namespace PharmacyApp.Common.Repositories
 
                 resultUser.SetPeriodTracker(DateOnly.FromDateTime((DateTime)userPeriodTrackerRow["startPeriodDate"]),
                     (int)userPeriodTrackerRow["cycleDays"],
-                    (int)userPeriodTrackerRow["periodLasts"], (int)userPeriodTrackerRow["PMSOption"],
-                    (bool)userPeriodTrackerRow["wantsToBePregnant"]);
+                    (int)userPeriodTrackerRow["periodLasts"], (int)userPeriodTrackerRow["PMSOption"]);
             }
 
             // now  give them their notifications and discounts
@@ -299,7 +297,7 @@ namespace PharmacyApp.Common.Repositories
                 $"{newUser.StartPeriodDate.Year}-{newUser.StartPeriodDate.Month}-{newUser.StartPeriodDate.Day}";
             string insertPeriodTrackerString =
                 $"INSERT INTO PeriodTrackers " +
-                $"VALUES ({newUser.Id}, '{periodDate}',{newUser.CycleDays},{newUser.PeriodLasts},{newUser.PMSOption},'{newUser.WantsToBePregnant}')";
+                $"VALUES ({newUser.Id}, '{periodDate}',{newUser.CycleDays},{newUser.PeriodLasts},{newUser.PMSOption})";
             SqlCommand insertPeriodTrackerCommand = new SqlCommand(insertPeriodTrackerString, conn);
             insertPeriodTrackerCommand.ExecuteNonQuery();
 
