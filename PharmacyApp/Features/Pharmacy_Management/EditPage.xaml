@@ -41,6 +41,25 @@
                         VerticalAlignment="Top"
                         Margin="10"
                 />
+                <StackPanel x:Name="ShowExpiredItemsToggle"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,10,0,0"
+                            Spacing="10">
+
+                    <TextBlock Text="Show expired items"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"/>
+
+                    <ToggleSwitch x:Name="ShowExpiredToggle"
+                                  OnContent="On"
+                                  OffContent="Off"
+                                  Toggled="ShowExpiredToggle_Toggled"/>
+                </StackPanel>
+                
+                <TextBlock x:Name="RemoveItemError" Visibility="Collapsed" Foreground="Red" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10">Select an Item first!</TextBlock>
+                <TextBlock x:Name="RemoveSubstanceError" Visibility="Collapsed" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="top" Margin="10">Select a substance first!</TextBlock>
             </Grid>
 
 
@@ -50,18 +69,21 @@
                           VerticalAlignment="Center"
                           Spacing="10"
                   >
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Content="Items"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Click="OnItemClick"
+                            Background="#66d4af"></Button>  
 
-                <Button Content="Items"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Click="OnItemClick"
-                        Background="#66d4af"></Button>
-
-                <Button Content="Substance"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Click="OnSubstancesClick"
-                        Background="#66d4af"></Button>
+                    <Button Content="Substance"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Click="OnSubstancesClick"
+                            Background="#66d4af"></Button>
+                </StackPanel>
+                
 
                 <!--search by-->
                 <TextBlock Text="Search by name"
@@ -95,18 +117,21 @@
                             <!-- Name -->
                             <ColumnDefinition Width="*"/>
                             <!-- Producer -->
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="70"/>
                             <!-- Price -->
                             <ColumnDefinition Width="*"/>
                             <!-- Category -->
-                            <ColumnDefinition Width="2*"/>
-                            <!-- Description -->
-                            <ColumnDefinition Width="50"/>
-                            <!-- Pills -->
                             <ColumnDefinition Width="*"/>
+                            <!-- Description -->
+                            <ColumnDefinition Width="70"/>
+                            <!-- Pills -->
+                            <ColumnDefinition Width="70"/>
+                            <!-- Quantity -->
+                            
+                            <ColumnDefinition Width="50"/>
                             <!-- Label -->
                             <ColumnDefinition Width="70"/>
-                            <!-- Discount (wider for header) -->
+                            <!-- Discount -->
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="ID" Grid.Column="0" FontWeight="Bold"/>
@@ -116,8 +141,10 @@
                         <TextBlock Text="Category" Grid.Column="4" FontWeight="Bold"/>
                         <TextBlock Text="Description" Grid.Column="5" FontWeight="Bold"/>
                         <TextBlock Text="Pills" Grid.Column="6" FontWeight="Bold"/>
-                        <TextBlock Text="Label" Grid.Column="7" FontWeight="Bold"/>
-                        <TextBlock Text="Discount" Grid.Column="8" FontWeight="Bold"/>
+                        <TextBlock Text="Quantity" Grid.Column="7" FontWeight="Bold"/>
+                        <TextBlock Text="Label" Grid.Column="8" FontWeight="Bold"/>
+                        <TextBlock Text="Discount" Grid.Column="9" FontWeight="Bold"/>
+                        
                     </Grid>
 
                     <!-- LIST -->
@@ -140,15 +167,18 @@
                                                 <!-- Name -->
                                                 <ColumnDefinition Width="*"/>
                                                 <!-- Producer -->
-                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="70"/>
                                                 <!-- Price -->
                                                 <ColumnDefinition Width="*"/>
                                                 <!-- Category -->
-                                                <ColumnDefinition Width="2*"/>
-                                                <!-- Description -->
-                                                <ColumnDefinition Width="50"/>
-                                                <!-- Pills -->
                                                 <ColumnDefinition Width="*"/>
+                                                <!-- Description -->
+                                                <ColumnDefinition Width="70"/>
+                                                <!-- Pills -->
+                                                <ColumnDefinition Width="70"/>
+                                                <!-- Quantity -->
+                                               
+                                                <ColumnDefinition Width="50"/>
                                                 <!-- Label -->
                                                 <ColumnDefinition Width="50"/>
                                                 <!-- Discount -->
@@ -158,14 +188,15 @@
                                             <TextBlock Grid.Column="0" Text="{x:Bind Id}" VerticalAlignment="Center"/>
                                             <TextBlock Grid.Column="3" Text="{x:Bind Price}" VerticalAlignment="Center"/>
                                             <TextBlock Grid.Column="6" Text="{x:Bind NumberOfPills}" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="8" Text="{x:Bind DiscountPercentage}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="7" Text="{x:Bind Quantity}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="9" Text="{x:Bind DiscountPercentage}" VerticalAlignment="Center"/>
 
                                             <!-- TEXT -->
                                             <TextBlock Grid.Column="1" Text="{x:Bind Name}" VerticalAlignment="Center"/>
                                             <TextBlock Grid.Column="2" Text="{x:Bind Producer}" VerticalAlignment="Center"/>
                                             <TextBlock Grid.Column="4" Text="{x:Bind Category}" VerticalAlignment="Center"/>
                                             <TextBlock Grid.Column="5" Text="{x:Bind Description}" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="7" Text="{x:Bind Label}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="8" Text="{x:Bind Label}" VerticalAlignment="Center"/>
 
                                         </Grid>
                                     </Border>
@@ -181,6 +212,7 @@
 
 
             </StackPanel>
+           
 
             <!--bottom buttons-->
             <Grid x:Name="ItemBottomButtons"
@@ -209,7 +241,7 @@
                 Margin="10"
                 Background="#66d4af"/>
 
-                <TextBlock x:Name="RemoveItemError" Visibility="Collapsed" Foreground="Red" VerticalAlignment="Bottom" HorizontalAlignment="Right">Select an Item first!</TextBlock>
+                
             </Grid>
 
             <!--ADD GRID-->
@@ -429,6 +461,11 @@
 
                         <Button Content="Remove Substance"
                 Click="RemoveSubstanceUpdate_Click"/>
+
+                        <TextBlock x:Name="UpdateActiveSubstanceInvalidError" Visibility="Collapsed" Foreground="Red">Invalid input!</TextBlock>
+                        <TextBlock x:Name="UpdateActiveSubstanceFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
+                        <TextBlock x:Name="UpdateActiveSubstanceMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
+                        <TextBlock x:Name="RemoveUpdateActiveSubstanceError" Visibility="Collapsed" Foreground="Red">Insert the name of a valid substance to remove it!</TextBlock>
                     </StackPanel>
 
                     <!--batch table-->
@@ -470,14 +507,18 @@
                  Header="Number of Packs"
                  Width="150"/>
 
+                        <TextBlock x:Name="UpdateBatchFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
+                        <TextBlock x:Name="UpdateBatchMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
                         <Button Content="Add Batch"
                 Click="AddBatchUpdate_Click"/>
 
                         <Button Content="Remove Batch"
                 Click="RemoveBatchUpdate_Click"/>
+                        <TextBlock x:Name="RemoveUpdateBatchError" Visibility="Collapsed" Foreground="Red">Select a batch first!</TextBlock>
                     </StackPanel>
 
                     <!--<TextBlock x:Name="UpdateItemFormatError" Visibility="Collapsed" Foreground="Red">In</TextBlock>-->
+                    <TextBlock x:Name="UpdateItemGetDataError" Visibility="Collapsed" Foreground="Red">Please click "Get Item Data" before changing anything!</TextBlock>
                     <TextBlock x:Name="UpdateItemFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
                     <TextBlock x:Name="UpdateItemMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
                     <Button Content="Update Item" Click="OnUpdateItemClick"/>
@@ -491,18 +532,20 @@
                   VerticalAlignment="Center"
                   Spacing="10"
                   >
-
-                <Button Content="Items"
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Content="Items"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Click="OnItemClick"
                         Background="#66d4af"></Button>
 
-                <Button Content="Substance"
+                    <Button Content="Substance"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Click="OnSubstancesClick"
                         Background="#66d4af"></Button>
+                </StackPanel>
 
                 <!--search by-->
                 <!--<TextBlock Text="Search by name"
@@ -519,7 +562,7 @@
 
                 <Grid x:Name="SubstanceGrid"
                       Width="1000"
-                      Height="400"
+                      Height="475"
                       BorderBrush="Gray"
                       BorderThickness="1">
 
@@ -598,20 +641,23 @@
                         Background="#66d4af"/>
 
                 <Button Content="Update"
-        Click="OnSubstanceUpdateClick"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Bottom"
-        Margin="10"
+                        Click="OnSubstanceUpdateClick"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="10"
                         Background="#66d4af"/>
 
 
                 <Button Content="Remove"
-        Click="OnSubstanceRemoveClick"
-        HorizontalAlignment="Right"
-        VerticalAlignment="Bottom"
-        Margin="10"
-                        Background="#66d4af"
-        />
+                        Click="OnSubstanceRemoveClick"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="10"
+                        Background="#66d4af" 
+                        />
+
+                
+                
             </Grid>
 
             <!--ADD GRID-->
@@ -630,6 +676,10 @@
                      PlaceholderText="Enter description"
                      Height="100"
                      TextWrapping="Wrap"/>
+    
+                    
+                    <TextBlock x:Name="AddSubstanceFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
+                    <TextBlock x:Name="AddSubstanceMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
 
                     <Button Content="Add Substance" Click="OnAddSubstanceClick" Background="#66d4af"/>
                 </StackPanel>
@@ -652,6 +702,9 @@
                      Height="100"
                      TextWrapping="Wrap"/>
 
+                    <TextBlock x:Name="UpdateSubstanceInvalidError" Visibility="Collapsed" Foreground="Red">Invalid name!</TextBlock>
+                    <TextBlock x:Name="UpdateSubstanceFormatError" Visibility="Collapsed" Foreground="Red">Wrong Format!</TextBlock>
+                    <TextBlock x:Name="UpdateSubstanceMandatoryError" Visibility="Collapsed" Foreground="Red">Mandatory fields are empty!</TextBlock>
                     <Button Content="Update Substance" Click="OnUpdateSubstanceClick" Background="#66d4af"/>
                 </StackPanel>
             </Grid>
