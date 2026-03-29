@@ -408,5 +408,24 @@ namespace PharmacyApp.Common.Repositories
                 return true;
             return false;
         }
+
+        public bool UserHasPeriodTracker(int id)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            string selectUserString = $"SELECT * FROM PeriodTrackers WHERE userId={id}";
+
+            using SqlConnection conn = new SqlConnection(connString);
+
+            SqlDataAdapter selectUserAdapter = new SqlDataAdapter(selectUserString, conn);
+
+            DataSet userDataFromDB = new DataSet();
+
+            conn.Open();
+            selectUserAdapter.Fill(userDataFromDB, "PeriodTrackers");
+
+            if (userDataFromDB.Tables["PeriodTrackers"].Rows.Count > 0)
+                return true;
+            return false;
+        }
     }
 }
