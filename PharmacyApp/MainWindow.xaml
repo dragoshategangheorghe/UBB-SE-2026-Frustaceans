@@ -80,6 +80,16 @@
                                FontWeight="SemiBold"/>
                 </Button>
 
+                <Button x:Name="OrderManagementButton"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnOrderManagementClicked">
+                    <TextBlock Text="Order Management"
+                               Foreground="#389e7c"
+                               FontSize="16"
+                               FontWeight="SemiBold"/>
+                </Button>
+
             </StackPanel>
             <Image Grid.Column="1"
                 Source="ms-appx:///Assets/logo.png"

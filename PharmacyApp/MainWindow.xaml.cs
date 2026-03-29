@@ -28,7 +28,7 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
-        private OrderService userService;
+        private OrderService orderService;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,7 +37,7 @@ namespace PharmacyApp
             productService = new ProductCatalogueService(repo);
 
             // TODO change the way the order service receives the active user
-            userService = new OrderService(usersRepo.GetUserByEmail("xyz@gmail.com"));
+            orderService = new OrderService(usersRepo.GetUserByEmail("xyz@gmail.com"));
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 
@@ -53,7 +53,7 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), userService);
+            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
         }
 
         private void OnAccountClicked(object sender, RoutedEventArgs e)
@@ -73,7 +73,12 @@ namespace PharmacyApp
 
         private void OnOrderHistoryClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Orders.Views.OrderHistoryPage), userService);
+            MainFrame.Navigate(typeof(Features.Orders.Views.OrderHistoryPage), orderService);
+        }
+
+        private void OnOrderManagementClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Orders.Views.OrderManagementPage), orderService);
         }
     }
 }

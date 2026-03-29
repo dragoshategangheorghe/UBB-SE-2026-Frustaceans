@@ -26,7 +26,7 @@ namespace PharmacyApp.Features.Orders.Views
     public sealed partial class BasketPage : Page
     {
         
-        OrderService userServ;
+        OrderService orderServ;
         // does it need to be a property? I don't have time
         public BasketViewModel ViewModel { get; set; }
 
@@ -37,8 +37,8 @@ namespace PharmacyApp.Features.Orders.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            userServ = (OrderService)e.Parameter;
-            ViewModel = new BasketViewModel(userServ);
+            orderServ = (OrderService)e.Parameter;
+            ViewModel = new BasketViewModel(orderServ);
             DataContext = ViewModel;
 
             ViewModel.BasketQuantityRemoved += HandleCheckoutButton;
@@ -50,7 +50,7 @@ namespace PharmacyApp.Features.Orders.Views
 
         private void NavigateToCheckout(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CheckoutPage), userServ);
+            Frame.Navigate(typeof(CheckoutPage), orderServ);
         }
 
         private void HandleCheckoutButton(int quantity)

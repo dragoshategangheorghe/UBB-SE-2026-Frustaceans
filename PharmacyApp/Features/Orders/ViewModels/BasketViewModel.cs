@@ -158,7 +158,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
     public class BasketViewModel : INotifyPropertyChanged
     {
 
-        OrderService activeUserService;
+        OrderService orderService;
 
         public ICommand RemoveItemCommand { get; set; }
 
@@ -180,22 +180,22 @@ namespace PharmacyApp.Features.Orders.ViewModels
         }
 
 
-        public BasketViewModel(OrderService userService)
+        public BasketViewModel(OrderService newOrderService)
         {
-            activeUserService = userService;
+            orderService = newOrderService;
             RemoveItemCommand = new RelayCommandWithOneParameter<BasketItem>(RemoveItemFromBasket);
 
             // get the info for every item (from Items, Users) inside a wrapper class
-            Dictionary<int,int> itemsInBasket = userService.ActiveUser.Basket;
+            Dictionary<int,int> itemsInBasket = newOrderService.ActiveUser.Basket;
             BasketItems = new();
 
             foreach (KeyValuePair<int,int> item in itemsInBasket)
             {
-                Item currentItem = userService.ItemsRepo.GetItem(item.Key);
+                Item currentItem = newOrderService.ItemsRepo.GetItem(item.Key);
 
                 float userDiscount;
-                if (userService.ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
-                    userDiscount = userService.ActiveUser.UserDiscounts[currentItem.Id];
+                if (newOrderService.ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
+                    userDiscount = newOrderService.ActiveUser.UserDiscounts[currentItem.Id];
                 else
                     userDiscount = 0f;
 
@@ -225,7 +225,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         private void RemoveItemFromBasket(BasketItem itemToRemove)
         {
-            activeUserService.RemoveFromBasket(itemToRemove.ItemId);
+            orderService.RemoveFromBasket(itemToRemove.ItemId);
             BasketItems.Remove(itemToRemove);
 
             OnBasketQuantityRemoved();
@@ -236,7 +236,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
         private void UpdateItemInBasket(object item, PropertyChangedEventArgs e)
         {
             BasketItem itemToUpdate = (BasketItem)item;
-            activeUserService.UpdateBasketItemQuantity(itemToUpdate.ItemId, itemToUpdate.ItemQuantityInBasket);
+            orderService.UpdateBasketItemQuantity(itemToUpdate.ItemId, itemToUpdate.ItemQuantityInBasket);
 
             if (itemToUpdate.ItemQuantityInBasket <= 0)
                 BasketItems.Remove(itemToUpdate);
@@ -262,7 +262,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         public void GetPrescription(string prescriptionId)
         {
-            Dictionary<int, int> prescriptionItems = activeUserService.FillBasketFromPrescription(prescriptionId);
+            Dictionary<int, int> prescriptionItems = orderService.FillBasketFromPrescription(prescriptionId);
 
             if (prescriptionItems.Count == 0)
                 throw new ArgumentException("Medicine couldn't be retrieved");
@@ -271,11 +271,11 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
             foreach (KeyValuePair<int, int> itemEntry in prescriptionItems)
             {
-                Item currentItem = activeUserService.ItemsRepo.GetItem(itemEntry.Key);
+                Item currentItem = orderService.ItemsRepo.GetItem(itemEntry.Key);
 
                 float userDiscount;
-                if (activeUserService.ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
-                    userDiscount = activeUserService.ActiveUser.UserDiscounts[currentItem.Id];
+                if (orderService.ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
+                    userDiscount = orderService.ActiveUser.UserDiscounts[currentItem.Id];
                 else
                     userDiscount = 0f;
 

@@ -64,6 +64,7 @@
     <None Remove="Assets\HomePageBackground.jpg" />
     <None Remove="Assets\SurelyAMedicalProfessional.png" />
     <None Remove="Features\Orders\Views\OrderHistoryPage.xaml" />
+    <None Remove="Features\Orders\Views\OrderManagementPage.xaml" />
     <None Remove="Features\Pharmacy_Management\EditPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Features\Pharmacy_Management\StatisticsPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Orders\Views\OrderManagementPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Orders\Views\OrderHistoryPage.xaml">
