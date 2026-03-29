@@ -13,8 +13,8 @@
           ColumnDefinitions="*, Auto">
 
         <ListView Grid.Row="0"
-          Grid.Column="0"
-          ItemsSource="{x:Bind viewModel.BasketItems}">
+                  Grid.Column="0"
+                  ItemsSource="{x:Bind viewModel.BasketItems}">
 
             <ListView.ItemTemplate>
 
