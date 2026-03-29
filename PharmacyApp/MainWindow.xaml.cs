@@ -29,7 +29,7 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
-        ProfileView dialog;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -68,9 +68,7 @@ namespace PharmacyApp
             else
             {
                 // Logged in → show profile dialog
-                dialog = new ProfileView(ServiceWrapper.UserAccountService);
-                dialog.XamlRoot = this.Content.XamlRoot;
-                await dialog.ShowAsync();
+                MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
             }
         }
 

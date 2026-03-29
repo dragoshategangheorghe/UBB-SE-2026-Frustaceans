@@ -1,22 +1,28 @@
-﻿using PharmacyApp.Common.Commands;
-using PharmacyApp.Features.Accounts.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace PharmacyApp.Features.Accounts.ViewModels
 {
-    public class ProfileViewModel : INotifyPropertyChanged
+    using PharmacyApp.Features.Accounts.Logic;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public class ProfileManagementViewModel : INotifyPropertyChanged
     {
         private UserAccountService _userAccountService;
 
         private string username;
         private string phoneNumber;
+        private string errorMessage;
+
+        public ProfileManagementViewModel(UserAccountService userAccountService)
+        {
+            _userAccountService = userAccountService;
+            LoadUserData();
+        }
 
         public string Email => _userAccountService.CurrentUser?.Email ?? "";
 
@@ -39,34 +45,18 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string errorMessage;
+
         public string ErrorMessage
         {
-            get => errorMessage; 
-            set { 
+            get => errorMessage;
+            set
+            {
                 errorMessage = value;
                 OnPropertyChanged();
             }
         }
 
-
-        public ICommand SaveCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
-
-        public ICommand ChangePasswordCommand { get; set; }
-
-        public ProfileViewModel(UserAccountService userAccountService)
-        {
-            _userAccountService = userAccountService;
-
-            LoadUserData();
-
-            SaveCommand = new RelayCommand(SaveChanges);
-            CancelCommand = new RelayCommand(CancelChanges);
-            ChangePasswordCommand = null;
-        }
-
-        private void LoadUserData()
+        public void LoadUserData()
         {
             var user = _userAccountService.CurrentUser;
             if (user == null) return;
@@ -77,22 +67,14 @@ namespace PharmacyApp.Features.Accounts.ViewModels
 
         public void SaveChanges()
         {
-
             _userAccountService.UpdateProfile(Username, PhoneNumber);
-            System.Diagnostics.Debug.WriteLine("Profile updated successfully");
-            //throws error if user input is incorrect => handled in .xaml.cs to be able to show message
-
         }
 
         public void CancelChanges()
         {
             LoadUserData();
-            System.Diagnostics.Debug.WriteLine("Changes canceled");
+            ErrorMessage = null;
         }
-
-        
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

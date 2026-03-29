@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Data.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -24,34 +23,51 @@ namespace PharmacyApp.Features.Accounts.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ProfileView : ContentDialog
+    public sealed partial class ProfileManagementView : Page
     {
+        private UserAccountService _accountService;
         public ProfileViewModel ViewModel { get; }
 
-        public ProfileView(UserAccountService accountService)
+        public ProfileManagementView()
         {
             this.InitializeComponent();
 
-            ViewModel = new ProfileViewModel(accountService);
+            _accountService = ServiceWrapper.UserAccountService;
+            ViewModel = new ProfileViewModel(_accountService);
+
             this.DataContext = ViewModel;
         }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void OnSaveClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                ViewModel.SaveCommand.Execute(null);
+                ViewModel.ErrorMessage = null;
+                ViewModel.SaveChanges();
             }
             catch (Exception ex)
             {
-                args.Cancel = true;
-                ViewModel.ErrorMessage = ex.Message;          
+                ViewModel.ErrorMessage = ex.Message;
             }
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void OnCancelClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.CancelCommand.Execute(null);
+            ViewModel.CancelChanges();
+        }
+
+        private async void OnChangePasswordClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ChangePasswordView(_accountService);
+            dialog.XamlRoot = this.XamlRoot;
+
+            await dialog.ShowAsync();
+        }
+
+        private async void OnOrderHistoryClick(object sender, RoutedEventArgs e)
+        {
+            //put order history here
+
         }
     }
 }
