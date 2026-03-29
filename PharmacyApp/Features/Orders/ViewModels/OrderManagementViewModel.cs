@@ -1,4 +1,6 @@
-﻿using PharmacyApp.Features.Orders.Logic;
+﻿using Microsoft.UI.Xaml.Controls;
+using PharmacyApp.Common.Commands;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace PharmacyApp.Features.Orders.ViewModels
 {
@@ -45,6 +48,8 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         List<OrderDetail> baseOrderList;
         public ObservableCollection<OrderDetail> FilteredOrderList { get; set; }
+
+        public ICommand RedirectToDetailPageCommand { get; set; }
 
         string orderIDInput;
         string userEmailInput;
@@ -95,6 +100,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             orderServ = newOrderServ;
             baseOrderList = new();
             FilteredOrderList = new();
+            RedirectToDetailPageCommand = new RelayCommandWithOneParameter<OrderDetail>(OnClickDetailButton);
             
             // TODO move this segment into service!
             foreach (Order currOrder in orderServ.OrdersRepo.GetAllOrders())
@@ -108,6 +114,17 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 FilteredOrderList.Add(currOrderDetail);
             }
         }
+
+        // TODO refactor ASAP to use rather the static references
+        public delegate void PageChanged(Tuple<OrderService, OrderDetail> args);
+
+        public event PageChanged ClickDetailButton;
+
+        public virtual void OnClickDetailButton(OrderDetail chosenOrder)
+        {
+            ClickDetailButton?.Invoke(new Tuple<OrderService, OrderDetail>(orderServ, chosenOrder));
+        }
+
 
         private void ReapplyFilters()
         {

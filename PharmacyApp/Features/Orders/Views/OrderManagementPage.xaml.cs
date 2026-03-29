@@ -40,6 +40,25 @@ public sealed partial class OrderManagementPage : Page
         orderService = (OrderService)e.Parameter;
         ViewModel = new(orderService);
         DataContext = ViewModel;
+
+        ViewModel.ClickDetailButton += RedirectToPage;
+    }
+
+    private void RedirectToPage(Tuple<OrderService, OrderDetail> args)
+    {
+        bool completeStatus = args.Item2.IsComplete;
+        bool expiredStatus = args.Item2.IsExpired;
+
+        if (!completeStatus && !expiredStatus)
+        {
+            Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.EditableOrderDetailPage),
+                    new Tuple<OrderService, int>(args.Item1, args.Item2.OrderID));
+        }
+        else
+        {
+            Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.NonEditableOrderDetailPage),
+                    new Tuple<OrderService, int>(args.Item1, args.Item2.OrderID));
+        }
     }
 }
 
