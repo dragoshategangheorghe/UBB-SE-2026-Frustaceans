@@ -33,6 +33,7 @@
                            Grid.Column="0"
                            Source="{x:Bind ItemThumbnailImagePath, Mode=OneTime}"
                            Width="150"
+                           Stretch="Uniform"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
 
@@ -43,7 +44,10 @@
 
                         <TextBlock Grid.Row="0"
                                    Grid.Column="0"
-                                   Text="{x:Bind ItemDescription, Mode=OneTime}"/>
+                                   Text="{x:Bind ItemDescription, Mode=OneTime}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="15"/>
                         <Button Grid.Row="0"
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
@@ -76,13 +80,14 @@
                                     VerticalAlignment="Center"
                                     Spacing="10">
 
-                            <TextBlock Text="{x:Bind ItemDiscountString, Mode=OneTime}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ItemUserDiscountString, Mode=OneTime}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ItemDiscountString, Mode=OneTime}" VerticalAlignment="Center" FontStyle="Italic"/>
+                            <TextBlock Text="{x:Bind ItemUserDiscountString, Mode=OneTime}" VerticalAlignment="Center" FontStyle="Italic"/>
                             <StackPanel Orientation="Vertical"
                                         Spacing="5">
 
-                                <TextBlock Text="{x:Bind ItemFinalPriceString, Mode=TwoWay}"/>
-                                <TextBlock Text="{x:Bind ItemFinalDiscountedPriceString, Mode=TwoWay}"/>
+                                <TextBlock Text="{x:Bind ItemFinalPriceString, Mode=TwoWay}" TextDecorations="Strikethrough"/>
+                                <TextBlock Text="{x:Bind ItemFinalDiscountedPriceString, Mode=TwoWay}"
+                                           FontWeight="Bold" Foreground="Red"/>
 
                             </StackPanel>
 
@@ -104,7 +109,8 @@
             <!-- prescription input -->
             <StackPanel Grid.Row="0"
                         Grid.Column="0"
-                        Spacing="10">
+                        Spacing="15"
+                        Padding="12">
 
                 <TextBlock Text="If you have a valid prescription on your name, you can automatically put in your medicine"
                            TextWrapping="WrapWholeWords"/>
@@ -118,11 +124,14 @@
             <!-- display total prices, discounted and not -->
             <StackPanel Grid.Row="1"
                         Grid.Column="0"
-                        Spacing="10">
+                        Spacing="10"
+                        Padding="12">
 
-                <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"/>
+                <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"
+                           FontSize="15" Foreground="Gray" TextDecorations="Strikethrough"/>
                 <TextBlock Text="after discounts:"/>
-                <TextBlock Text="{x:Bind ViewModel.TotalDiscountedPriceString, Mode=OneWay}"/>
+                <TextBlock Text="{x:Bind ViewModel.TotalDiscountedPriceString, Mode=OneWay}"
+                           FontSize="30" Foreground="Red" FontWeight="Bold"/>
                 <Button Content="Checkout" Name="CheckoutButton" Click="NavigateToCheckout"/>
 
             </StackPanel>

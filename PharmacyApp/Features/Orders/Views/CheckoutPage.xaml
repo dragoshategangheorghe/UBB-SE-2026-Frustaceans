@@ -34,7 +34,10 @@
 
                         <TextBlock Grid.Row="0"
                                    Grid.Column="1"
-                                   Text="{x:Bind ItemDescription, Mode=OneTime}"/>
+                                   Text="{x:Bind ItemDescription, Mode=OneTime}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="15"/>
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="2"
@@ -44,7 +47,8 @@
                                     Spacing="10">
 
                             <TextBlock Text="{x:Bind ItemQuantityString, Mode=OneTime}"/>
-                            <TextBlock Text="{x:Bind ItemFinalDiscountedPriceString, Mode=OneTime}"/>
+                            <TextBlock Text="{x:Bind ItemFinalDiscountedPriceString, Mode=OneTime}"
+                                       FontWeight="Bold" Foreground="Red"/>
 
                         </StackPanel>
 
@@ -61,7 +65,9 @@
                   Grid.Column="1">
 
             <TextBlock Text="Total price:"/>
-            <TextBlock Text="{x:Bind viewModel.TotalPriceString}"/>
+            <TextBlock Text="{x:Bind viewModel.TotalPriceString}"
+                       FontSize="30" Foreground="Red" FontWeight="Bold"
+                       Padding="15"/>
 
             <CalendarView Name="PickUpDateSelector"
                           SelectionMode="Single"
@@ -71,7 +77,8 @@
                           Loaded="SetDefaultPickUpDate"
                           SelectedDatesChanged="CheckUnselectedDate"/>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Padding="15">
 
                 <Button Content="Place Order"
                         Click="PlaceOrder"/>
