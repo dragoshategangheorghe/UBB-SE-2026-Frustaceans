@@ -220,6 +220,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             activeUserService.RemoveFromBasket(itemToRemove.ItemId);
             BasketItems.Remove(itemToRemove);
 
+            OnBasketQuantityChanged();
             UpdateTotalPrices();
         }
 
@@ -232,6 +233,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             if (itemToUpdate.ItemQuantityInBasket <= 0)
                 BasketItems.Remove(itemToUpdate);
 
+            OnBasketQuantityChanged();
             UpdateTotalPrices();
         }
 
@@ -256,6 +258,20 @@ namespace PharmacyApp.Features.Orders.ViewModels
         private void OnPropertyChanged([CallerMemberName] String propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        // custom delegate and event for handling disabled state for checkout button
+        public delegate void QuantityChanged(int quantity);
+
+        public event QuantityChanged BasketQuantityChanged;
+
+        protected virtual void OnBasketQuantityChanged()
+        {
+            int totalQuantity = 0;
+            foreach (BasketItem basketEntry in BasketItems)
+                totalQuantity += basketEntry.ItemQuantityInBasket;
+            BasketQuantityChanged?.Invoke(totalQuantity);
         }
     }
 }

@@ -121,7 +121,7 @@
                 <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"/>
                 <TextBlock Text="after discounts:"/>
                 <TextBlock Text="{x:Bind ViewModel.TotalDiscountedPriceString, Mode=OneWay}"/>
-                <Button Content="Checkout" Click="NavigateToCheckout"/>
+                <Button Content="Checkout" Name="CheckoutButton" Click="NavigateToCheckout"/>
 
             </StackPanel>
             

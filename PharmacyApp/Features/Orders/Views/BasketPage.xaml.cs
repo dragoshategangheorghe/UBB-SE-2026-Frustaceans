@@ -40,12 +40,23 @@ namespace PharmacyApp.Features.Orders.Views
             userServ = (UserService)e.Parameter;
             ViewModel = new BasketViewModel(userServ);
             DataContext = ViewModel;
+
+            ViewModel.BasketQuantityChanged += HandleCheckoutButton;
+
             base.OnNavigatedTo(e);
         }
 
         private void NavigateToCheckout(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(CheckoutPage), userServ);
+        }
+
+        private void HandleCheckoutButton(int quantity)
+        {
+            if (quantity > 0)
+                CheckoutButton.Visibility = Visibility.Visible;
+            else
+                CheckoutButton.Visibility = Visibility.Collapsed;
         }
     }
 }
