@@ -1,8 +1,9 @@
-﻿using PharmacyApp.Models;
+﻿using Microsoft.Data.SqlClient;
+using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace PharmacyApp.Common.Repositories
 {
@@ -32,6 +33,54 @@ namespace PharmacyApp.Common.Repositories
             // from what I saw in the docs, the program leaving
             // the using block automatically closes the open connection
             // and disposes of it
+        }
+
+        // only used when adding batches from the ui, so we can set the initial quantity of the item in the store
+        public void AddItemWithQuantity(string name, string producer, string category,
+            float price, int nrOfPills,
+            int quantity, Dictionary<string, float> activeSubstances, Dictionary<DateOnly, int> batches,
+            string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+            float discount = 0f)
+        {
+            string connString = SQLUtility.GetConnectionString();
+            System.Diagnostics.Debug.WriteLine($"Connection string in SQLItemsRepository.AddItemWithQuantity: {connString}");
+            string insertNewItemString =
+                "INSERT INTO Items (name, price, category, numberOfPills, producer, imagePath, quantity, label, description, discountPercentage) " +
+                $"VALUES ('{name}', {price}, '{category}', {nrOfPills}, '{producer}', '{imagePath}', {quantity}, '{label}', '{description}', {discount})";
+
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlCommand insertNewItemCommand = new SqlCommand(insertNewItemString, conn);
+            conn.Open();
+            insertNewItemCommand.ExecuteNonQuery();
+
+            string insertActiveSubstancesString = $"INSERT INTO ItemSubstances (itemId, name, concentration) VALUES ";
+            for (int i = 0; i < activeSubstances.Count; i++)
+            {
+                if(i== activeSubstances.Count - 1)
+                    insertActiveSubstancesString +=
+                        $"((SELECT MAX(itemId) FROM Items),'{activeSubstances.ElementAt(i).Key}', {activeSubstances.ElementAt(i).Value});";
+                 else
+                     insertActiveSubstancesString +=
+                         $"((SELECT MAX(itemId) FROM Items),'{activeSubstances.ElementAt(i).Key}', {activeSubstances.ElementAt(i).Value}), ";
+            }
+
+            SqlCommand insertActiveSubstancesCommand = new SqlCommand(insertActiveSubstancesString, conn);
+            insertActiveSubstancesCommand.ExecuteNonQuery();
+
+            string insertBatchesString = $"INSERT INTO ItemExpirationDates (itemId, expirationDate, numberOfPacks) VALUES ";
+            for(int i = 0;i < batches.Count; i++) {
+                //string insertBatchExpirationDate = $"{batches.ElementAt(i).Key.Year}-{batches.ElementAt(i).Key.Month}-{batches.ElementAt(i).Key.Day}";
+                if (i == batches.Count - 1)
+                    insertBatchesString +=
+                        $"((SELECT MAX(itemId) FROM Items), '{batches.ElementAt(i).Key}', {batches.ElementAt(i).Value});";
+                else
+                    insertBatchesString +=
+                        $"((SELECT MAX(itemId) FROM Items), '{batches.ElementAt(i).Key}', {batches.ElementAt(i).Value}), ";
+            }
+            SqlCommand insertBatchesCommand = new SqlCommand(insertBatchesString, conn);
+            insertBatchesCommand.ExecuteNonQuery();
+
+
         }
 
         public void RemoveItem(int idToBeRemoved)
