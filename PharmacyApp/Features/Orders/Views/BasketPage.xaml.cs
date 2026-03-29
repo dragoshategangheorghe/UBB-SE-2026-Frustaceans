@@ -60,5 +60,21 @@ namespace PharmacyApp.Features.Orders.Views
             else
                 CheckoutButton.Visibility = Visibility.Collapsed;
         }
+
+        private void EnterPrescriptionID(object sender, RoutedEventArgs e)
+        {
+            PrescriptionWarning.Visibility = Visibility.Collapsed;
+            string prescriptionId = PrescriptionInputBox.Text;
+            
+            try
+            {
+                throw new ArgumentException("invalid prescription ID");
+            } 
+            catch (ArgumentException exception)
+            {
+                PrescriptionWarning.Text = exception.Message;
+                PrescriptionWarning.Visibility = Visibility.Visible;
+            }
+        }
     }
 }

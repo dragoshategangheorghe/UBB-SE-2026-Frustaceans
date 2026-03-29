@@ -104,11 +104,13 @@
             <!-- prescription input -->
             <StackPanel Grid.Row="0"
                         Grid.Column="0"
-                        Spacing="5">
+                        Spacing="10">
 
                 <TextBlock Text="If you have a valid prescription on your name, you can automatically put in your medicine"
                            TextWrapping="WrapWholeWords"/>
-                <TextBox PlaceholderText="Enter prescription ID"/>
+                <TextBox Name="PrescriptionInputBox" PlaceholderText="Enter prescription ID"/>
+                <Button Content="Add Products" Click="EnterPrescriptionID"/>
+                <TextBlock Name="PrescriptionWarning" Foreground="Red" Visibility="Collapsed"/>
 
             </StackPanel>
             
@@ -116,7 +118,7 @@
             <!-- display total prices, discounted and not -->
             <StackPanel Grid.Row="1"
                         Grid.Column="0"
-                        Spacing="5">
+                        Spacing="10">
 
                 <TextBlock Text="{x:Bind ViewModel.TotalPriceString, Mode=OneWay}"/>
                 <TextBlock Text="after discounts:"/>
