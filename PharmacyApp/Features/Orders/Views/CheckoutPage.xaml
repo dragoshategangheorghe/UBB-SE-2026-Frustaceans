@@ -68,11 +68,13 @@
                           IsGroupLabelVisible="True"
                           Language="en"
                           CalendarIdentifier="GregorianCalendar"
-                          Loaded="SetDefaultPickUpDate"/>
+                          Loaded="SetDefaultPickUpDate"
+                          SelectedDatesChanged="CheckUnselectedDate"/>
 
             <StackPanel Orientation="Horizontal">
 
-                <Button Content="Place Order"/>
+                <Button Content="Place Order"
+                        Click="PlaceOrder"/>
                 <Button Content="Cancel"
                         Click="NavigateToBasket"/>
 

@@ -152,11 +152,8 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
         UserService activeUserService;
 
-
         public ICommand RemoveItemCommand { get; set; }
 
-
-        //public List<BasketItem> BasketItems { get; }
         public ObservableCollection<BasketItem> BasketItems { get; private set; }
 
 
