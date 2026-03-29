@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using PharmacyApp.Common.Commands;
 using PharmacyApp.Common.Repositories;
+using PharmacyApp.Common.Services;
 using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
 using System;
@@ -17,7 +18,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
 {
 
     // TODO maybe refactor access modifiers
-    public class BasketItem : INotifyPropertyChanged
+    public class BasketItem : INotifyPropertyChanged, IEquatable<BasketItem>
     {
         float finalPrice;
         float priceDiscountsApplied;
@@ -137,6 +138,13 @@ namespace PharmacyApp.Features.Orders.ViewModels
         }
 
 
+        public bool Equals(BasketItem other)
+        {
+            if (other is null) return false;
+            return this.ItemId == other.ItemId;
+        }
+
+
         // for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -220,7 +228,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             activeUserService.RemoveFromBasket(itemToRemove.ItemId);
             BasketItems.Remove(itemToRemove);
 
-            OnBasketQuantityChanged();
+            OnBasketQuantityRemoved();
             UpdateTotalPrices();
         }
 
@@ -233,7 +241,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             if (itemToUpdate.ItemQuantityInBasket <= 0)
                 BasketItems.Remove(itemToUpdate);
 
-            OnBasketQuantityChanged();
+            OnBasketQuantityRemoved();
             UpdateTotalPrices();
         }
 
@@ -252,6 +260,64 @@ namespace PharmacyApp.Features.Orders.ViewModels
             TotalDiscountedPriceString = newTotalDiscountedPrice.ToString("0.00") + " RON";
         }
 
+        public void GetPrescription(string prescriptionId)
+        {
+            Dictionary<int, int> prescriptionItems = activeUserService.FillBasketFromPrescription(prescriptionId);
+
+            if (prescriptionItems.Count == 0)
+                throw new ArgumentException("Medicine couldn't be retrieved");
+
+            // same procedure as in the constructor
+
+            foreach (KeyValuePair<int, int> itemEntry in prescriptionItems)
+            {
+                Item currentItem = activeUserService.ItemsRepo.GetItem(itemEntry.Key);
+
+                float userDiscount;
+                if (activeUserService.ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
+                    userDiscount = activeUserService.ActiveUser.UserDiscounts[currentItem.Id];
+                else
+                    userDiscount = 0f;
+
+                // TODO figure out, why does the image in XAML take FORWARD slashes
+                // instead of BACKWARD slashes, like everything else in Windows
+                int startingIndexOfImagePathSubstring = currentItem.ImagePath.IndexOf("\\Assets");
+                string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
+                string alteredImagePath = backwardSlashedImagePath.Replace("\\", "/");
+
+                BasketItem newBasketItem = new(
+                    currentItem.Id,
+                    alteredImagePath,
+                    currentItem.Name,
+                    currentItem.Producer,
+                    itemEntry.Value,  // the quantity inside the basket for said item
+                    currentItem.DiscountPercentage,
+                    userDiscount,
+                    currentItem.Price);
+
+                // we have to verify if the item doesn't already exist in the basket
+                if (BasketItems.Contains(newBasketItem))
+                {
+                    foreach (BasketItem currentBasketItem in BasketItems)
+                    {
+                        if (newBasketItem.Equals(currentBasketItem))
+                        {
+                            currentBasketItem.ItemQuantityInBasket += itemEntry.Value;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    newBasketItem.PropertyChanged += UpdateItemInBasket;
+                    BasketItems.Add(newBasketItem);
+                }
+            }
+
+            UpdateTotalPrices();
+        }
+
+
         // for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -264,15 +330,15 @@ namespace PharmacyApp.Features.Orders.ViewModels
         // custom delegate and event for handling disabled state for checkout button
         public delegate void QuantityChanged(int quantity);
 
-        public event QuantityChanged BasketQuantityChanged;
+        public event QuantityChanged BasketQuantityRemoved;
 
         // TODO maybe a bad idea to expose the function like this
-        public virtual void OnBasketQuantityChanged()
+        public virtual void OnBasketQuantityRemoved()
         {
             int totalQuantity = 0;
             foreach (BasketItem basketEntry in BasketItems)
                 totalQuantity += basketEntry.ItemQuantityInBasket;
-            BasketQuantityChanged?.Invoke(totalQuantity);
+            BasketQuantityRemoved?.Invoke(totalQuantity);
         }
     }
 }

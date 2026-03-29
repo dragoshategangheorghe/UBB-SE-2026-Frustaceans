@@ -41,9 +41,9 @@ namespace PharmacyApp.Features.Orders.Views
             ViewModel = new BasketViewModel(userServ);
             DataContext = ViewModel;
 
-            ViewModel.BasketQuantityChanged += HandleCheckoutButton;
+            ViewModel.BasketQuantityRemoved += HandleCheckoutButton;
 
-            ViewModel.OnBasketQuantityChanged();
+            ViewModel.OnBasketQuantityRemoved();
 
             base.OnNavigatedTo(e);
         }
@@ -68,7 +68,7 @@ namespace PharmacyApp.Features.Orders.Views
             
             try
             {
-                throw new ArgumentException("invalid prescription ID");
+                ViewModel.GetPrescription(prescriptionId);
             } 
             catch (ArgumentException exception)
             {

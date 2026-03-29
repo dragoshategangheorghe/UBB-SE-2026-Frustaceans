@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Models;
 
@@ -81,9 +83,127 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.Basket.Clear();
         }
 
-        public void FillBasketFromPrescription(string prescriptionId)
+        public Dictionary<int, int> FillBasketFromPrescription(string prescriptionId)
         {
-            // implement
+            float error = 5f;
+            Dictionary<int, int> items = new();
+
+            // here we are supposed to query for the prescription, but
+            // for now we're gonna check it against one id, and we're
+            // supposed to receive the same item name and number of pills
+            if (!prescriptionId.Equals("testPrescription"))
+                throw new ArgumentException("Invalid prescription ID");
+
+            string itemName = "prescript1";
+            int nrOfRequiredPills = 40;
+
+            Dictionary<string, float> searchedActiveSubstances = new();
+            string connString = SQLUtility.GetConnectionString();
+            string selectExactItemsCommandString =
+                $"SELECT * FROM Items " +
+                $"WHERE name = '{itemName}' " +
+                $"AND numberOfPills = {nrOfRequiredPills} " +
+                $"ORDER BY price";
+
+            /*$"SELECT ISub.name, concentration " +
+            $"FROM ItemSubstances ISub " +
+            $"INNER JOIN Items I ON ISub.itemId = I.itemId " +
+            $"WHERE I.name = '{itemName}'";*/
+
+            DataSet resultsAcrossQueries = new();
+
+            using SqlConnection conn = new(connString);
+            SqlDataAdapter exactFinderAdapter = new(selectExactItemsCommandString, conn);
+
+            // we verify if we get a result right away, exact name and pills
+            conn.Open();
+            exactFinderAdapter.Fill(resultsAcrossQueries, "ExactNameAndPills");
+            if (resultsAcrossQueries.Tables["ExactNameAndPills"].Rows.Count != 0)
+            {
+                DataRow entryRow = resultsAcrossQueries.Tables["ExactNameAndPills"].Rows[0];
+                if ((int)entryRow["quantity"] != 0)
+                {
+                    items.Add((int)entryRow["itemId"], 1);
+                    return items;
+                }
+            }
+
+
+            // then we have to see, same concentration and pills
+            string selectExactSubstitutesCommandString =
+                "SELECT * FROM Items I " +
+                "WHERE I.itemId IN (" +
+                    "SELECT DISTINCT ISub.itemId " +
+                    "FROM ItemSubstances ISub " +
+                    "WHERE NOT EXISTS ( " +
+                        "(SELECT ISub1.name, ISub1.concentration FROM ItemSubstances ISub1 " +
+                        "INNER JOIN Items I ON ISub1.itemId = I.itemId " +
+                        $"WHERE I.name = '{itemName}') " +
+                        "EXCEPT " +
+                        "(SELECT ISub2.name, ISub2.concentration FROM ItemSubstances ISub2 " +
+                        "WHERE ISub.itemId = ISub2.itemId)" +
+                    ")" +
+                $") AND I.numberOfPills = {nrOfRequiredPills} " +
+                "ORDER BY I.price";
+
+            SqlDataAdapter substituteFinderAdapter = new(selectExactSubstitutesCommandString, conn);
+            substituteFinderAdapter.Fill(resultsAcrossQueries, "Substitutes");
+
+            if (resultsAcrossQueries.Tables["Substitutes"].Rows.Count != 0)
+            {
+                DataRow entryRow = resultsAcrossQueries.Tables["Substitutes"].Rows[0];
+                if ((int)entryRow["quantity"] != 0)
+                {
+                    items.Add((int)entryRow["itemId"], 1);
+                    return items;
+                }
+            }
+
+
+            // then we have to see, same concentration and less pills (calculating price with multipliers)
+            string selectMultipliedSubstitutesCommandString =
+                "SELECT * FROM Items I " +
+                "WHERE I.itemId IN (" +
+                    "SELECT DISTINCT ISub.itemId " +
+                    "FROM ItemSubstances ISub " +
+                    "WHERE NOT EXISTS ( " +
+                        "(SELECT ISub1.name, ISub1.concentration FROM ItemSubstances ISub1 " +
+                        "INNER JOIN Items I ON ISub1.itemId = I.itemId " +
+                        $"WHERE I.name = '{itemName}') " +
+                        "EXCEPT " +
+                        "(SELECT ISub2.name, ISub2.concentration FROM ItemSubstances ISub2 " +
+                        "WHERE ISub.itemId = ISub2.itemId)" +
+                    ")" +
+                $") AND I.numberOfPills < {nrOfRequiredPills} " +
+                "ORDER BY I.price";
+
+            SqlDataAdapter multipliedSubstituteFinderAdapter = new(selectMultipliedSubstitutesCommandString, conn);
+            multipliedSubstituteFinderAdapter.Fill(resultsAcrossQueries, "Multiplies");
+
+            if (resultsAcrossQueries.Tables["Multiplies"].Rows.Count != 0)
+            {
+                int bestItemId = -1;
+                int bestItemQuantity = -1;
+                float bestPrice = 10000000f;
+
+                foreach (DataRow entryRow in resultsAcrossQueries.Tables["Multiplies"].Rows)
+                {
+                    int iterQuantity = (int)Math.Ceiling((decimal)nrOfRequiredPills / (int)entryRow["numberOfPills"]);
+
+                    float iterPrice = iterQuantity * (float)(decimal)entryRow["price"];
+                    if (iterPrice < bestPrice)
+                    {
+                        bestPrice = iterPrice;
+                        bestItemId = (int)entryRow["itemId"];
+                        bestItemQuantity = iterQuantity;
+                    }
+                }
+
+                items.Add(bestItemId, bestItemQuantity);
+                return items;
+            }
+
+            throw new ArgumentException("No adequate medicine found");
         }
     }
 }
