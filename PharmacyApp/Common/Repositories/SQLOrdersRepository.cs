@@ -44,9 +44,9 @@ namespace PharmacyApp.Common.Repositories
             List<Order> ordersAfterAdd = GetOrdersOfClient(clientId);
 
             IEnumerable<Order> difference = ordersAfterAdd.Except<Order>(ordersBeforeAdd);
-            Order newOrder = difference.First;
+            Order newOrder = difference.First();
 
-            for (KeyValuePair<int, Tuple<int, float>> item in items)
+            foreach (KeyValuePair<int, Tuple<int, float>> item in items)
             {
                 int itemId = item.Key;
                 int itemQuantity = item.Value.Item1;
