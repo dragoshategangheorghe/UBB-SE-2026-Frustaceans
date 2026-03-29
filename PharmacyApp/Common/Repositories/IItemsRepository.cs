@@ -4,7 +4,7 @@ using PharmacyApp.Models;
 
 namespace PharmacyApp.Common.Repositories
 {
-    internal interface IItemsRepository
+    public interface IItemsRepository
     {
      
         void AddItem(string name, string producer, string category,
