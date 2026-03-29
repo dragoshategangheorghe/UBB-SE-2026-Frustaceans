@@ -9,178 +9,42 @@ using System.Text;
 using System.Threading.Tasks;
 using PharmacyApp.Common.Repositories;
 
+using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Models;
+
 namespace PharmacyApp.Features.Period_Tracker.ViewModels
 {
+    public class PeriodTrackerUserModel
+    {
+        public static IUsersRepository UsersRepository { get; set; } = new SQLUsersRepository(); // initialize repo at compile-time
+        public static User CurrentUser =>  UsersRepository.GetUserById(1); //TODO FOR TESTING //ServiceWrapper.UserAccountService.CurrentUser;
+
+        public static DateTimeOffset ToDateTimeOffset(DateOnly dateOnly, TimeZoneInfo zone)
+        {
+            var dateTime = dateOnly.ToDateTime(new TimeOnly(0)); // get a datetime from DateOnly
+            return new DateTimeOffset(dateTime,
+                zone.GetUtcOffset(dateTime)); // get a DateTimeOffset from a DateTime and a time zone
+        }
+
+        //TODO only for testing:
+        public DateTimeOffset StartPeriodDate =>
+            ToDateTimeOffset(CurrentUser.StartPeriodDate, TimeZoneInfo.Local); // acts like a get { return ... } 
+        public int CycleDays => CurrentUser.CycleDays;
+        public int PeriodLasts => CurrentUser.PeriodLasts;
+        public int PMSOption => CurrentUser.PMSOption;
+
+        public PeriodTrackerUserModel()
+        {
+        }
+    }
+
     public class PeriodTrackerViewModel
     {
-        public IUsersRepository UsersRepository { get; set; } = new SQLUsersRepository();
+        public PeriodTrackerUserModel PeriodTrackerUser { get; set; }
 
-        public PeriodTrackerViewModel() {}
-
-
-
-    }
-
-    public class Calendar1Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar1Converter()
+        public PeriodTrackerViewModel()
         {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
-        }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
-
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
-            {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
-            }
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
-        }
-    }
-
-    public class Calendar2Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar2Converter()
-        {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
-        }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
-
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
-            {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
-            }
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
-        }
-    }
-
-    public class Calendar3Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar3Converter()
-        {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
-        }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
-
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
-            {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
-            }
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
+            PeriodTrackerUser = new PeriodTrackerUserModel();
         }
     }
 }
-

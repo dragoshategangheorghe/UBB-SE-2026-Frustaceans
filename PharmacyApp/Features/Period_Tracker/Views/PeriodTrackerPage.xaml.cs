@@ -6,8 +6,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Accounts.Views;
 using PharmacyApp.Features.Period_Tracker.ViewModels;
-using Syncfusion.UI.Xaml.Calendar;
+using PharmacyApp.Models;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -20,12 +22,17 @@ namespace PharmacyApp.Features.Period_Tracker.Views
     /// </summary>
     public sealed partial class PeriodTrackerPage : Page
     {
-        public PeriodTrackerViewModel ViewModel { get; set; } = new PeriodTrackerViewModel();
+        public PeriodTrackerViewModel ViewModel { get; } = new PeriodTrackerViewModel();
         public PeriodTrackerPage()
         {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                //todo activate this IF after testing
+                //(this.Parent as Frame)?.Navigate(typeof(LoginView)); // go to log in forcefully
+                //return;
+            }
+
             InitializeComponent();
-            //CalendarsStackPanel.Visibility=Visibility.Collapsed;
-            //CalendarLegendStackPanel.Visibility = Visibility.Collapsed;
         }
         private void CalculateCycle(object sender, RoutedEventArgs e)
         {

@@ -38,55 +38,55 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         x:Name="ImportantDatesStackPanel">
-                <Grid Padding="40 " ColumnSpacing="40" Background="DarkGray" Opacity="0.9">
+                <Grid Padding="30 " ColumnSpacing="30" Background="DarkGray" CornerRadius="20" Opacity="0.9">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10" Background="DarkGray">
-                        <TextBlock Text="Today" Opacity="0.7" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " VerticalAlignment="Bottom"></TextBlock>
+                    <StackPanel Grid.Column="0"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
+                        <TextBlock Text="Today" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
+                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10" Background="DarkGray">
-                        <TextBlock Text="Today" Opacity="0.7" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " VerticalAlignment="Bottom"></TextBlock>
+                    <StackPanel Grid.Column="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
+                        <TextBlock Text="Today" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
+                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="2"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10" Background="DarkGray">
-                        <TextBlock Text="Today" Opacity="0.7" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " VerticalAlignment="Bottom"></TextBlock>
+                    <StackPanel Grid.Column="2"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
+                        <TextBlock Text="Today" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top" Margin="0 0 0 30"></TextBlock>
+                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
                 </Grid>
             </StackPanel>
 
-            <!-- second row: Calendar labels -->
+            <!-- second row: Calendars -->
             <StackPanel Grid.Row="1"
-                        Orientation="Horizontal"
-                        Spacing="30"
+                        Orientation="Vertical"
+                        Spacing="20"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         x:Name="CalendarLegendStackPanel">
                 <StackPanel Orientation="Horizontal" Spacing="3">
                     <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
-                    <TextBlock Text="Period Days"></TextBlock>
+                    <TextBlock FontSize="17" Foreground="Pink" FontWeight="Bold" Text="Period Days"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="3">
                     <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
-                    <TextBlock Text="Ovulation Days"></TextBlock>
+                    <TextBlock FontSize="16" Foreground="LightGreen" Text="Ovulation Days"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="3">
                     <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
-                    <TextBlock Text="Low Fertility Days"></TextBlock>
+                    <TextBlock FontSize="16" Foreground="LightYellow" Text="Low Fertility Days"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="Red" Stroke="Black"></Rectangle>
-                    <TextBlock Text="PMS Days"></TextBlock>
+                    <Rectangle Width="10" Height="10" Fill="OrangeRed" Stroke="Black"></Rectangle>
+                    <TextBlock FontSize="16" Foreground="OrangeRed" Text="PMS Days"></TextBlock>
                 </StackPanel>
 
             </StackPanel>
@@ -100,19 +100,18 @@
                         HorizontalAlignment="Center"
                         x:Name="DataInputsStackPanel">
                 
-                <DatePicker x:Name="LastPeriodDate" Header="Start Date of Last Period" DayFormat="{}{day.integer} ({dayofweek.abbreviated})"></DatePicker>
+                <DatePicker Date="{x:Bind ViewModel.PeriodTrackerUser.StartPeriodDate}" Header="Start Date of Last Period" DayFormat="{}{day.integer} ({dayofweek.abbreviated})"></DatePicker>
                 <NumberBox
-                    x:Name="PeriodDaysNumberBox"
+                    x:Name="PeriodLastsNumberBox"
                     Header="How much did your last period last:"
-                    Value="5"
+                    Value="{x:Bind ViewModel.PeriodTrackerUser.PeriodLasts}"
                     SpinButtonPlacementMode="Inline"
                     SmallChange="1"
                     Height="80"
                     Width="160"/>
-                <NumberBox
-                    x:Name="CycleDaysNumberBox"
+                <NumberBox 
                     Header="How much does your average cycle last:"
-                    Value="28"
+                    Value="{x:Bind ViewModel.PeriodTrackerUser.CycleDays}"
                     SpinButtonPlacementMode="Inline"
                     SmallChange="1"
                     Height="80"
@@ -121,7 +120,7 @@
                             Spacing="20"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center">
-                    <RadioButtons Header="When do PMS symptoms appear:">
+                    <RadioButtons Header="When do PMS symptoms appear:" SelectedIndex="{x:Bind ViewModel.PeriodTrackerUser.PMSOption}">
                         <RadioButton Content="Not applicable"/>
                         <RadioButton Content="1-3 days before period"/>
                         <RadioButton Content="4-7 days before period"/>

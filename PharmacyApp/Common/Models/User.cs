@@ -35,8 +35,8 @@ namespace PharmacyApp.Models
         public User(int id, string email, string phoneNumber,
                     string passwordHash, bool isAdmin, bool isDisabled,
                     string userName, bool discountNotifications,
-                    int loyaltyPoints, DateOnly startPeriodDate= new DateOnly(),
-                    int cycleDays=0, int periodLasts=0, int pmsOption=0,
+                    int loyaltyPoints, DateOnly startPeriodDate = new DateOnly(),
+                    int cycleDays=28, int periodLasts=5, int pmsOption=0,
                     bool wantsToBePregnant=false)
         {
             Id = id;
@@ -48,7 +48,7 @@ namespace PharmacyApp.Models
             Username = userName;
             DiscountNotifications = discountNotifications;
             LoyaltyPoints = loyaltyPoints;
-            StartPeriodDate = startPeriodDate;
+            StartPeriodDate = startPeriodDate.Year == 1 ? DateOnly.FromDateTime(DateTime.Now) : startPeriodDate; // if its default give it the current date
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
