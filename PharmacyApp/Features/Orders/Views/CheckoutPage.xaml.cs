@@ -50,7 +50,7 @@ namespace PharmacyApp.Features.Orders.Views
         private void CheckUnselectedDate(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs e)
         {
             if (PickUpDateSelector.SelectedDates.Count == 0)
-                PickUpDateSelector.SelectedDates.Add(PickUpDateSelector.MinDate.AddDays(1));
+                PickUpDateSelector.SelectedDates.Add(PickUpDateSelector.MinDate);
         }
 
         private async void PlaceOrder(object sender, RoutedEventArgs e)
