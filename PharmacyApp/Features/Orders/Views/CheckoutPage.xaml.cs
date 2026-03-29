@@ -58,7 +58,7 @@ namespace PharmacyApp.Features.Orders.Views
             DateOnly selectedDate = DateOnly.FromDateTime(PickUpDateSelector.SelectedDates[0].Date);
 
             // TODO not get the function directly from the user service
-            // maybe get it through the view model? but na
+            // maybe get it through the view model? but na, no time
             try
             {
                 userServ.PlaceOrderFromBasket(selectedDate);

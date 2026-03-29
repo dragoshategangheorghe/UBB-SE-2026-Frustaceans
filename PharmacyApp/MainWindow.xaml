@@ -69,6 +69,17 @@
                                FontWeight="SemiBold"/>
                 </Button>
 
+                <!-- JUST FOR TESTING, DELETE LATER -->
+                <Button x:Name="OrderHistoryButton"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnOrderHistoryClicked">
+                    <TextBlock Text="Order History"
+                               Foreground="#389e7c"
+                               FontSize="16"
+                               FontWeight="SemiBold"/>
+                </Button>
+
             </StackPanel>
             <Image Grid.Column="1"
                 Source="ms-appx:///Assets/logo.png"

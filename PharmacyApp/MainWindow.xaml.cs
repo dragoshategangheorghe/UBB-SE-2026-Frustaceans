@@ -67,5 +67,10 @@ namespace PharmacyApp
         {
             MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
         }
+
+        private void OnOrderHistoryClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Orders.Views.OrderHistoryPage), userService);
+        }
     }
 }
