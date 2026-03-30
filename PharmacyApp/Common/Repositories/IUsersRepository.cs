@@ -19,7 +19,6 @@ namespace PharmacyApp.Common.Repositories
         void UpdateUser(User user);
 
         List<User> GetAllUsers();
-
-
+        bool UserHasPeriodTracker(int id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using PharmacyApp.Common.Repositories;
 using PharmacyApp.Models;
 using System;
+using System.Collections.Generic;
 
 namespace PharmacyApp.Common.Services
 {
@@ -25,8 +26,8 @@ namespace PharmacyApp.Common.Services
             try
             {
                 validateItemAdd(newItem);
-                itemRepository.AddItem(newItem.Name, newItem.Producer, newItem.Category,
-                                       newItem.Price, newItem.NumberOfPills,
+                itemRepository.AddItemWithQuantity(newItem.Name, newItem.Producer, newItem.Category,
+                                       newItem.Price, newItem.NumberOfPills, newItem.Quantity, newItem.ActiveSubstances, newItem.Batches,
                                        newItem.Label, newItem.Description, newItem.ImagePath,
                                        newItem.DiscountPercentage);
             }
@@ -35,6 +36,24 @@ namespace PharmacyApp.Common.Services
                 Console.WriteLine($"Error adding item: {ex.Message}");
                 return;
 
+            }
+        }
+
+        public void AddItemWithQuantity(Item newItem)
+        {
+            try
+            {
+                validateItemAdd(newItem);
+                itemRepository.AddItemWithQuantity(newItem.Name, newItem.Producer, newItem.Category,
+                                       newItem.Price, newItem.NumberOfPills,
+                                       newItem.Quantity, newItem.ActiveSubstances, newItem.Batches,
+                                       newItem.Label, newItem.Description, newItem.ImagePath,
+                                       newItem.DiscountPercentage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding item: {ex.Message}");
+                return;
             }
         }
 
@@ -55,7 +74,7 @@ namespace PharmacyApp.Common.Services
             {
                 sendNewStockNotification(updatedItem);
             }
-
+            updatedItem.Id = id;
             itemRepository.UpdateItem(updatedItem);
         }
 
@@ -66,14 +85,13 @@ namespace PharmacyApp.Common.Services
 
         public void RemoveSubstance(Substance substance)
         {
-            // TODO: add a if substance exists check
             substanceRepository.RemoveSubstance(substance.Name);
         }
 
         public void UpdateSubstance(string name, Substance substance)
         {
-            //?????????????????????
-            //substanceRepository.UpdateSubstance(name, substance);
+
+            substanceRepository.UpdateSubstance(substance);
         }
 
         public Notification sendNewStockNotification(Item item)
@@ -87,13 +105,40 @@ namespace PharmacyApp.Common.Services
             return notification;
         }
 
+        public List<Item> GetExpiredItems()
+        {
+            List<Item> expiredItems = new List<Item>();
+            List<Item> allItems = itemRepository.GetAllItems();
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+            foreach (Item item in allItems)
+            {
+                foreach (var batch in item.Batches)
+                {
+                    if (batch.Key < currentDate)
+                    {
+                        expiredItems.Add(item);
+                        break; // No need to check other batches for this item
+                    }
+                }
+            }
+            sendAboutToExprNotification();
+            return expiredItems;
+        }
+
         //change return to: list of notifications 
         public Notification sendAboutToExprNotification()
         {
 
-            //getall items
-            //sort by date ascending
-            // while loop through items and check if the date is still valid, if not send notification
+            //List<Item> expiredItems = GetExpiredItems();
+            //if (expiredItems.Count > 0) { 
+            //    // send notification for each expired item
+            //    foreach (Item item in expiredItems)
+            //    {
+            //        string message = $"Item with ID {item.Id} is about to expire!";
+            //        Notification notification = new Notification("Expiration Alert", message);
+            //        // send notification to the user (e.g., display it in the UI, send an email, etc.)
+            //    }
+            //}
 
             //string message = $"Item with ID {items[i].id} is about to expire!";
             //Notification notification = new Notification("Expiration Alert", message);
