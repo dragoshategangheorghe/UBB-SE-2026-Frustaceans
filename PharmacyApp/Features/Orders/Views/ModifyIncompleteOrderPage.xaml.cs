@@ -78,13 +78,18 @@ namespace PharmacyApp.Features.Orders.Views
 
         private async void ModifyOrder(object sender, RoutedEventArgs e)
         {
+            Dictionary<int, Tuple<int, float>> updatedQuantities = new();
+
+            foreach (var entry in ViewModel.OrderItems)
+                updatedQuantities.Add(entry.ItemID, new Tuple<int, float>(entry.ItemQuantity, entry.ItemFinalPrice));
+
             DateOnly selectedDate = DateOnly.FromDateTime(PickUpDateSelector.SelectedDates[0].Date);
 
             // TODO not get the function directly from the user service
             // maybe get it through the view model? but na, no time
             try
             {
-                // insert service function here
+                orderServ.ModifyIncompleteOrder(ViewModel.currentOrderID, updatedQuantities, selectedDate);
 
                 ContentDialog confirmationMessage = new ContentDialog();
 

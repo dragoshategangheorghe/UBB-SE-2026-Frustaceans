@@ -92,6 +92,54 @@ namespace PharmacyApp.Features.Orders.Logic
             }
         }
 
+        public void ModifyIncompleteOrder(int orderIDToModify,
+            Dictionary<int, Tuple<int, float>> updatedQuantities, 
+            DateOnly updatedPickUpDate)
+        {
+
+            Order orderToModify = OrdersRepo.GetOrder(orderIDToModify);
+
+            // all this copy-pasting might kick me in the ass
+
+            // first we have to validate the updated pick up date
+            // (later than the current date or on the current date)
+
+            DateOnly today = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            if (updatedPickUpDate <= today)
+                throw new ArgumentException("The new pick-up date must be later than the current date");
+
+
+            // then we have to validate the updated quantities
+            // if we have enough of everything, otherwise error
+            foreach (var itemQuantityEntry in updatedQuantities)
+            {
+                int itemID = itemQuantityEntry.Key;
+                int preferredItemQuantity = itemQuantityEntry.Value.Item1;
+                Item itemToVerify = ItemsRepo.GetItem(itemID);
+                int availableItemQuantityOnDate = itemToVerify.QuantityAtSpecifiedDate(updatedPickUpDate);
+
+                if (availableItemQuantityOnDate < preferredItemQuantity)
+                    throw new ArgumentException("On " + updatedPickUpDate.ToString("yyyy.MM.dd") + ", " +
+                                                "we will have only " + availableItemQuantityOnDate + " boxes " +
+                                                "of " + itemToVerify.Name + " by " + itemToVerify.Producer + " " +
+                                                "instead of " + preferredItemQuantity + ".");
+            }
+
+
+            // after validation, we have to modify the Order object
+            // and send the updates to the database (items associated with it AND new pick up date)
+            foreach (var itemEntryInOrder in orderToModify.ItemQuantitiesWithFinalPrice)
+                orderToModify.RemoveItemFromOrder(itemEntryInOrder.Key);
+
+            foreach (var itemQuantityEntry in updatedQuantities)
+                orderToModify.AddItemToOrder(itemQuantityEntry.Key,
+                                             itemQuantityEntry.Value.Item1,
+                                             itemQuantityEntry.Value.Item2);
+
+            orderToModify.PickUpDate = updatedPickUpDate;
+            OrdersRepo.UpdateOrder(orderToModify);
+        }
+
         public void PlaceOrderFromBasket(DateOnly chosenPickUpDate)
         {
             // for every item inside the basket, we have to verify
