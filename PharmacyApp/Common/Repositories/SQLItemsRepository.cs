@@ -36,6 +36,8 @@ namespace PharmacyApp.Common.Repositories
         }
 
         // only used when adding batches from the ui, so we can set the initial quantity of the item in the store
+        
+        // actually modifies all tables not just the item tables
         public void AddItemWithQuantity(string name, string producer, string category,
             float price, int nrOfPills,
             int quantity, Dictionary<string, float> activeSubstances, Dictionary<DateOnly, int> batches,
