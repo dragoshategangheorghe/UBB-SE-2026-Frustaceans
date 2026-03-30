@@ -43,12 +43,32 @@ public sealed partial class OrderHistoryPage : Page
         base.OnNavigatedTo(e);
 
         ViewModel.ClickDetailButton += RedirectToPage;
+        ViewModel.ClickCancelButton += AskCancelOrderConfirmation;
     }
 
     private void RedirectToPage(Tuple<OrderService, Order> args)
     {
         Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.ModifyIncompleteOrderPage),
                     new Tuple<OrderService, int>(args.Item1, args.Item2.Id));
+    }
+
+    private async void AskCancelOrderConfirmation(Tuple<OrderService, Order> args)
+    {
+        Order currOrder = args.Item2;
+
+        ContentDialog dialog = new ContentDialog();
+
+        dialog.XamlRoot = this.XamlRoot;
+        dialog.Title = "Cancel?";
+        dialog.PrimaryButtonText = "Yes";
+        dialog.SecondaryButtonText = "No";
+        dialog.DefaultButton = ContentDialogButton.None;
+        dialog.Content = $"Do you want to cancel Order#{currOrder.Id}?";
+
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+            ViewModel.CancelOrder(currOrder);
     }
 }
 
