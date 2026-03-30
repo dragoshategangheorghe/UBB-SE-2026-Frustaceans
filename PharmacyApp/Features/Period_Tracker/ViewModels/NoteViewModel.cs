@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Syncfusion.UI.Xaml.Core;
 
 namespace PharmacyApp.Features.Period_Tracker.ViewModels
 {
@@ -18,6 +20,8 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
                 new PropertyChangedEventArgs(propertyName));
             UpdateNote();
         }
+
+        public ICommand DeleteNoteCommand { get; set; }
 
         public int NoteId {get; set;}
 
@@ -48,12 +52,19 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             NoteId = noteId;
             NoteBody = noteBody;
             NoteIsDone = noteIsDone;
+            DeleteNoteCommand = new DelegateCommand(OnDeleteNoteCommandExecuted); //execute this function that command (like a Function)
         }
 
         public void UpdateNote()
         {
             PeriodTrackerUser.CurrentUser.PeriodNotes[NoteId] = new Tuple<string, bool>(NoteBody, NoteIsDone);
             PeriodTrackerUser.UpdateUser();
+        }
+
+        public void OnDeleteNoteCommandExecuted(object obj) // i have no parameter
+        {
+            PeriodTrackerUser.CurrentUser.PeriodNotes.Remove(NoteId);
+            PeriodTrackerUser.UpdateUser(); // update in the DB
         }
 
 

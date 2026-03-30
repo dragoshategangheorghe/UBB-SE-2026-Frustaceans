@@ -163,7 +163,6 @@
                         <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
                             <Setter Property="Margin" Value="10, 10, 10, 10"/>
                             <Setter Property="MaxWidth" Value="250"></Setter>
-                            <Setter Property="MinWidth" Value="250"></Setter>
                         </Style>
                     </GridView.ItemContainerStyle>
 
@@ -176,14 +175,15 @@
                     <!-- Now for the individual notes -->
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:NoteViewModel">
-                            <StackPanel Orientation="Horizontal" Spacing="-10">
-                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" Width="30" Height="30" VerticalAlignment="Top"></CheckBox>
-                                <TextBox Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" ></TextBox>
+                            <StackPanel Orientation="Horizontal" Spacing="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="100">
+                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Right" MaxWidth="20" Margin="0 -5 -98 0"></CheckBox>
+                                <TextBox Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Width="150" Height="100" MaxLength="100"></TextBox>
+                                <Button Command="{x:Bind DeleteNoteCommand}" Click="OnRemoveNoteClicked" Content="x" VerticalAlignment="Top"  Style="{StaticResource SubtleButtonStyle}" Margin="-8 0 0 0"  Width="30"></Button>
                             </StackPanel>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                <Button x:Name="AddNoteButton" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
+                <Button x:Name="AddNoteButton" Margin="0 10 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
             </StackPanel>
 
             <!-- Sixth row: Products recommendation -->

@@ -46,5 +46,11 @@ namespace PharmacyApp.Features.Period_Tracker.Views
         {
             ViewModel.UpdatePeriodTracker(false);
         }
+
+        private void OnRemoveNoteClicked(object sender, RoutedEventArgs e)
+        {
+            // the data context in which the model is, is the note VM
+            ViewModel.Notes.Remove((NoteViewModel)((Button)sender).DataContext);
+        }
     }
 }
