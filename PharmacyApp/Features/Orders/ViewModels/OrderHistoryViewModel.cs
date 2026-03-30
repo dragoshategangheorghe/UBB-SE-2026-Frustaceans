@@ -16,6 +16,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
         OrderService activeUserServ;
         public ICommand CancelCommand { get; private set; }
         public ICommand ResubmitCommand { get; private set; }
+        public ICommand GoToDetailPageCommand { get; private set; }
         public ObservableCollection<Order> OrderHistory;
 
         public OrderHistoryViewModel(OrderService userService)
@@ -23,6 +24,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
             activeUserServ = userService;
             CancelCommand = new RelayCommandWithOneParameter<Order>(CancelOrder);
             ResubmitCommand = new RelayCommandWithOneParameter<Order>(ResubmitExpiredOrder);
+            GoToDetailPageCommand = new RelayCommandWithOneParameter<Order>(DisplayOrderDetail);
             OrderHistory = new();
 
             int clientId = activeUserServ.ActiveUser.Id;
@@ -41,6 +43,11 @@ namespace PharmacyApp.Features.Orders.ViewModels
         private void ResubmitExpiredOrder(Order orderToResubmit)
         {
             System.Diagnostics.Debug.WriteLine("Resubmitted order #" + orderToResubmit.Id);
+        }
+
+        private void DisplayOrderDetail(Order orderToResubmit)
+        {
+            System.Diagnostics.Debug.WriteLine("Go to order #" + orderToResubmit.Id);
         }
     }
 }
