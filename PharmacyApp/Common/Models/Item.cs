@@ -7,7 +7,7 @@ namespace PharmacyApp.Models
     public class Item
     {
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string Name { get; set; }
         public string Producer { get; set; }
         public float Price { get; set; }
@@ -49,7 +49,7 @@ namespace PharmacyApp.Models
 
         public Item(string name, string producer, string category,
             float price, int nrOfPills,
-            int quantity=0,
+             Dictionary<DateOnly, int> batches, Dictionary<string, float> activeSubstances,
             string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
             float discount = 0f)
         {
@@ -59,12 +59,12 @@ namespace PharmacyApp.Models
             NumberOfPills = nrOfPills;
             Category = category;
             ImagePath = imagePath;
-            Quantity = quantity;
+            Quantity = 0;
             Label = label;
             Description = description;
             DiscountPercentage = discount;
-            ActiveSubstances = new Dictionary<string, float>();
-            Batches = new Dictionary<DateOnly, int>();
+            ActiveSubstances = activeSubstances;
+            Batches = batches;
         }
 
         public void addActiveSubstance(string newSubstanceName, float concentration)
@@ -92,7 +92,6 @@ namespace PharmacyApp.Models
         {
             if (Batches.ContainsKey(newExpirationDate)) {
                 Batches[newExpirationDate] += nrOfPacks;
-                //Quantity += nrOfPacks;
                 return;
             }
 
@@ -100,7 +99,7 @@ namespace PharmacyApp.Models
 
             // because we aren't supposed to modify Quantity directly
             // and let the batches automatically modify the Quantity property
-            this.Quantity += nrOfPacks;
+            Quantity += nrOfPacks;
         }
 
         public void changeBatchNrOfPacks(DateOnly expirationDate, int newNrOfPacks)

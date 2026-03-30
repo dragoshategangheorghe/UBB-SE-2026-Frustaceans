@@ -28,9 +28,7 @@ namespace PharmacyApp.Features.Accounts.Views
         public LoginView()
         {
             this.InitializeComponent();
-            var viewModel = new LoginViewModel(ServiceWrapper.UserAccountService);
-            viewModel.LoginSucceded += OnLoginSucceeded;
-            this.DataContext = viewModel;
+            this.DataContext = new LoginViewModel(ServiceWrapper.UserAccountService);
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
@@ -42,10 +40,6 @@ namespace PharmacyApp.Features.Accounts.Views
         private void Register_Click(object sender, RoutedEventArgs e)
         {
             (this.Parent as Frame)?.Navigate(typeof(RegisterView));
-        }
-        private void OnLoginSucceeded()
-        {
-            (this.Parent as Frame)?.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
         }
     }
 }
