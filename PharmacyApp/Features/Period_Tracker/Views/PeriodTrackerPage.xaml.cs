@@ -36,5 +36,15 @@ namespace PharmacyApp.Features.Period_Tracker.Views
 
             ViewModel.CalendarsVisibility = "Visible"; 
         }
+
+        private void OnNextCycleMonthClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdatePeriodTracker(true); 
+        }
+
+        private void OnPreviousCycleMonthClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdatePeriodTracker(false);
+        }
     }
 }

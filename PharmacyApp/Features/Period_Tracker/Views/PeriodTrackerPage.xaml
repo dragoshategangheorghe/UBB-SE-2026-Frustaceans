@@ -32,7 +32,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- first row: Calendars-->
+            <!-- first row: Important Dates -->
             <StackPanel Orientation="Horizontal"
                         Spacing="15"
                         VerticalAlignment="Center"
@@ -80,28 +80,36 @@
             </StackPanel>
 
             <!-- second row: Calendars -->
-            <StackPanel Grid.Row="1"
-                        Orientation="Vertical"
-                        Spacing="20"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}"> <!--OneWay updates the target, TwoWay the source from the target too-->
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="17" Foreground="Pink" FontWeight="Bold" Text="{x:Bind ViewModel.Calendars.PeriodInterval,Mode=OneWay}"></TextBlock>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}">
+                <Button Click="OnPreviousCycleMonthClicked" Style="{StaticResource SubtleButtonStyle}" Content="&lt;"  Width="40" Height="40" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 0 0 10"></Button>
+                <StackPanel Grid.Row="1"
+                            Orientation="Vertical"
+                            Spacing="20"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            MinWidth="500">
+                    <!--OneWay updates the target, TwoWay the source from the target too-->
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="17" Foreground="Pink" FontWeight="Bold" Text="{x:Bind ViewModel.Calendars.PeriodInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="LightGreen" Text="{x:Bind ViewModel.Calendars.LowFertilityInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="LightYellow" Text="{x:Bind ViewModel.Calendars.OvulationInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="OrangeRed" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="OrangeRed" Text="{x:Bind ViewModel.Calendars.PmsInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="LightGreen" Text="{x:Bind ViewModel.Calendars.LowFertilityInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="LightYellow" Text="{x:Bind ViewModel.Calendars.OvulationInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="OrangeRed" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="OrangeRed" Text="{x:Bind ViewModel.Calendars.PmsInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
+                <Button Click="OnNextCycleMonthClicked" Style="{StaticResource SubtleButtonStyle}" Content="&gt;"  Width="40" Height="40" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 0 0 10"></Button>
+
 
             </StackPanel>
 
@@ -121,9 +129,13 @@
                     SpinButtonPlacementMode="Inline"
                     SmallChange="1"
                     Height="80"
+                    Minimum="1"
+                    Maximum="9"
                     Width="160"/>
                 <NumberBox 
                     x:Name="CycleDaysNumberBox"
+                    Minimum="20"
+                    Maximum="45"
                     Header="How much does your average cycle last:"
                     Value="{x:Bind viewModels:PeriodTrackerUser.CycleDays}"
                     SpinButtonPlacementMode="Inline"

@@ -117,18 +117,19 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
         internal void CalculatePeriodTracker(DateTime startPeriodDate)
         {
             StartPeriodDate = startPeriodDate.Date;
-            CurrentBeginningPeriodDate = StartPeriodDate; //begin from the start at first, then update based on arrows
+            CurrentBeginningPeriodDate = StartPeriodDate.AddDays(-PeriodTrackerUser.CycleDays); //begin from the start at first, then update based on arrows
             CurrentDate = DateTime.Today; 
 
-            UpdatePeriodTracker(StartPeriodDate <= CurrentDate); //if the start is lower than the current, then we go right to update
+            UpdatePeriodTracker(true); //if the start is lower than the current, then we go right to update
         }
 
         internal void UpdatePeriodTracker(bool goRight)
         {
             // now I realised I can just add cycle days to the current Date until I reach the desired month/year based on the direction
-            while (CurrentBeginningPeriodDate.Month != CurrentDate.Month &&
-                   CurrentBeginningPeriodDate.Year != CurrentDate.Year)
-                CurrentBeginningPeriodDate = CurrentBeginningPeriodDate.AddDays(goRight ? (int)PeriodTrackerUser.CycleDays : -(int)PeriodTrackerUser.CycleDays);
+            // NOTE for the above comment: not really.. so i give up, dates are harder than olympiad problems
+
+            // go in that direction
+            CurrentBeginningPeriodDate = CurrentBeginningPeriodDate.AddDays(goRight ? (int)PeriodTrackerUser.CycleDays : -(int)PeriodTrackerUser.CycleDays);
 
             CurrentMonth = CurrentBeginningPeriodDate.ToString("MMMM");
 
@@ -172,7 +173,7 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
                 // PMS before the NEXT period
 
                 CurrentBeginningPMSDate = new DateTime(CurrentBeginningPeriodDate.Year, CurrentBeginningPeriodDate.Month,
-                    CurrentBeginningPeriodDate.Day).AddDays(27);
+                    CurrentBeginningPeriodDate.Day).AddDays(PeriodTrackerUser.CycleDays-1);
                 // now subtract days based on the option selected
                 if (PeriodTrackerUser.PMSOption == 1)
                     CurrentBeginningPMSDate =  CurrentBeginningPMSDate.AddDays(-rng.Next(1, 4)); // 1-3
@@ -182,7 +183,7 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
                     CurrentBeginningPMSDate = CurrentBeginningPMSDate.AddDays(-rng.Next(7, 14)); // 7-14
 
                 CurrentEndPMSDate = new DateTime(CurrentBeginningPeriodDate.Year, CurrentBeginningPeriodDate.Month,
-                    CurrentBeginningPeriodDate.Day).AddDays(27); // stops right before the next period
+                    CurrentBeginningPeriodDate.Day).AddDays(PeriodTrackerUser.CycleDays); // stops right before the next period
 
                 PmsInterval = "PMS Days: " +
                     $"{CurrentBeginningPMSDate.Day} {CurrentBeginningPMSDate.ToString("MMMM")} {CurrentBeginningPMSDate.Year} - " +
@@ -309,6 +310,12 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             // After that, update the calendars' properties, which will automatically notify the UI
             Calendars.CalculatePeriodTracker(startPeriodDate.Date);
 
+        }
+
+        internal void UpdatePeriodTracker(bool goRight)
+        {
+            Calendars.CurrentDate = Calendars.CurrentDate.AddMonths(goRight ? 1 : -1); // go in this month's direction
+            Calendars.UpdatePeriodTracker(goRight);
         }
 
     }
