@@ -46,6 +46,25 @@ namespace PharmacyApp.Models
             ActiveSubstances = new Dictionary<string, float>();
             Batches = new Dictionary<DateOnly, int>();
         }
+        public Item(int id, string name, string producer, string category,
+                    float price, int nrOfPills,
+                    string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+                    float discount = 0f, int quantity = 0)
+        {
+            Id = id;
+            Name = name;
+            Producer = producer;
+            Price = price;
+            NumberOfPills = nrOfPills;
+            Category = category;
+            ImagePath = imagePath;
+            Quantity = quantity;
+            Label = label;
+            Description = description;
+            DiscountPercentage = discount;
+            ActiveSubstances = new Dictionary<string, float>();
+            Batches = new Dictionary<DateOnly, int>();
+        }
 
         public Item(string name, string producer, string category,
             float price, int nrOfPills,

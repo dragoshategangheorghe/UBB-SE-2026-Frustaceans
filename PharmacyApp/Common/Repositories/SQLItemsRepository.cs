@@ -166,7 +166,9 @@ namespace PharmacyApp.Common.Repositories
                     (string)itemRow["label"],
                     (string)itemRow["description"],
                     (string)itemRow["imagePath"],
-                    (float)(decimal)itemRow["discountPercentage"]);
+                    (float)(decimal)itemRow["discountPercentage"],
+                    (int)itemRow["quantity"]);
+                    
 
 
                 // for every item we need to get its substances and batches
