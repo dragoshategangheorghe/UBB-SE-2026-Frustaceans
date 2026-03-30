@@ -45,9 +45,51 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.RemoveItemFromBasket(itemIdToRemove);
         }
 
-        public void CompleteOrder(int orderID)
+        public void CompleteOrder(int orderID, Dictionary<int, Tuple<int, float>> updatedQuantities)
         {
+            Order orderToComplete = OrdersRepo.GetOrder(orderID);
+            DateTime timeNow = DateTime.Now;
+            DateOnly currentDate = new DateOnly(timeNow.Year, timeNow.Month, timeNow.Day);
 
+            // first we have to validate the updated quantities
+            // if we have enough of everything, otherwise error
+            foreach (var itemQuantityEntry in updatedQuantities)
+            {
+                int itemID = itemQuantityEntry.Key;
+                int preferredItemQuantity = itemQuantityEntry.Value.Item1;
+                Item itemToVerify = ItemsRepo.GetItem(itemID);
+
+                // I guess we check for batches using the current date...?
+                if (itemToVerify.QuantityAtSpecifiedDate(currentDate) < preferredItemQuantity)
+                    throw new ArgumentException("We don't have enough of " + itemToVerify.Name + 
+                        " - " + itemToVerify.Producer + "; " +
+                        "delete the item from the order if you wish to complete it");
+            }
+
+            // after validation we need to update the Order entity, and save
+            // its changes into the database
+            orderToComplete.IsCompleted = true;
+
+            foreach (var itemEntryInOrder in orderToComplete.ItemQuantitiesWithFinalPrice)
+                orderToComplete.RemoveItemFromOrder(itemEntryInOrder.Key);
+
+            foreach (var itemQuantityEntry in updatedQuantities)
+                orderToComplete.AddItemToOrder(itemQuantityEntry.Key,
+                                                itemQuantityEntry.Value.Item1,
+                                                itemQuantityEntry.Value.Item2);
+
+            OrdersRepo.UpdateOrder(orderToComplete);
+
+            // after this we have to subtract the quantities from each item
+            foreach (var itemQuantityEntry in updatedQuantities)
+            {
+                int itemID = itemQuantityEntry.Key;
+                int itemQuantityToSubtract = itemQuantityEntry.Value.Item1;
+                Item itemToUpdate = ItemsRepo.GetItem(itemID);
+
+                itemToUpdate.RemoveQuantity(itemQuantityToSubtract, currentDate);
+                ItemsRepo.UpdateItem(itemToUpdate);
+            }
         }
 
         public void PlaceOrderFromBasket(DateOnly chosenPickUpDate)
