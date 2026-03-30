@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Accounts.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -47,7 +48,9 @@ namespace PharmacyApp
         {
             ServiceWrapper.Initialize();
             _window = new MainWindow();
+
             _window.Activate();
+
         }
     }
 }
