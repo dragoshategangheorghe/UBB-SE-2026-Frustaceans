@@ -16,7 +16,7 @@
         <viewModels:PeriodTrackerViewModel/> <!--to add the view model as data context-->
     </Page.DataContext>
 
-    <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto">
+    <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto" Background="White">
 
         <Grid RowSpacing="20" Padding="25" CanBeScrollAnchor="True">
             <Grid.RowDefinitions>
@@ -38,7 +38,7 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}">
-                <Grid Padding="30 " ColumnSpacing="30" Background="DarkGray" CornerRadius="20" Opacity="0.9">
+                <Grid Padding="30 " ColumnSpacing="30" CornerRadius="20"  Opacity="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -48,33 +48,30 @@
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind ViewModel.Calendars.CurrentMonth,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                    <StackPanel Grid.Column="0" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Spacing="20" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
+                    <TextBlock Grid.ColumnSpan="3" Padding="0 0 0 20" Text="{x:Bind ViewModel.Calendars.CurrentMonth,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" Foreground="DarkSlateGray " FontWeight="Bold"></TextBlock>
+                    <StackPanel Grid.Column="0" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Spacing="10" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
                             <SymbolIcon Symbol="Calendar"></SymbolIcon>
                             <TextBlock Text="Today" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.LiterallyTodayString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Pink" Text="{x:Bind ViewModel.Calendars.CurrentPhaseString, Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30" Spacing="20">
+                    <StackPanel Grid.Column="1" Grid.Row="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30" Spacing="10">
                             <SymbolIcon Symbol="Favorite"></SymbolIcon>
                             <TextBlock Text="Next Period" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.NextPeriodDateString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Pink" Text="{x:Bind ViewModel.Calendars.NextPeriodDistanceString, Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="2" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Spacing="20" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
+                    <StackPanel Grid.Column="2" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Spacing="10" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
                             <SymbolIcon Symbol="Share"></SymbolIcon>
                             <TextBlock Text="Ovulation" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.CurrentOvulationDateString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="LightYellow"  Text="{x:Bind ViewModel.Calendars.PastOvulationString,Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
                 </Grid>
             </StackPanel>
