@@ -61,12 +61,12 @@ namespace PharmacyApp
 
             if (ServiceWrapper.UserAccountService.CurrentUser == null)
             {
-                // Not logged in → go to login page
+                // Not logged in -> go to login page
                 MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
             }
             else
             {
-                // Logged in → show profile dialog
+                // Logged in -> show profile dialog
                 MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
             }
         }
@@ -74,7 +74,7 @@ namespace PharmacyApp
         private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
 
-            MainFrame.Navigate(typeof(Features.Pharmacy_Management.EditPage));
+            MainFrame.Navigate(typeof(Features.Accounts.Views.AdminAccountsManagementView));
         }
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
