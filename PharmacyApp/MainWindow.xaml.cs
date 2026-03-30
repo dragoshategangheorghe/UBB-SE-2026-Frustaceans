@@ -74,7 +74,7 @@ namespace PharmacyApp
         private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
 
-            MainFrame.Navigate(typeof(Features.Accounts.Views.AdminAccountsManagementView));
+            MainFrame.Navigate(typeof(Features.Pharmacy_Management.EditPage));
         }
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
