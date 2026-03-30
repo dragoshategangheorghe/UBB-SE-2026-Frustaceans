@@ -41,6 +41,14 @@ public sealed partial class OrderHistoryPage : Page
         ViewModel = new OrderHistoryViewModel(userServ);
         DataContext = ViewModel;
         base.OnNavigatedTo(e);
+
+        ViewModel.ClickDetailButton += RedirectToPage;
+    }
+
+    private void RedirectToPage(Tuple<OrderService, Order> args)
+    {
+        Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.ModifyIncompleteOrderPage),
+                    new Tuple<OrderService, int>(args.Item1, args.Item2.Id));
     }
 }
 

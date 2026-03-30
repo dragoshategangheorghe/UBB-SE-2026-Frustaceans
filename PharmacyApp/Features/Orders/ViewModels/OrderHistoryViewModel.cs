@@ -1,6 +1,6 @@
-﻿using PharmacyApp.Features.Orders.Logic;
+﻿using PharmacyApp.Common.Commands;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
-using PharmacyApp.Common.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static PharmacyApp.Features.Orders.ViewModels.OrderManagementViewModel;
 
 namespace PharmacyApp.Features.Orders.ViewModels
 {
@@ -45,9 +46,19 @@ namespace PharmacyApp.Features.Orders.ViewModels
             System.Diagnostics.Debug.WriteLine("Resubmitted order #" + orderToResubmit.Id);
         }
 
-        private void DisplayOrderDetail(Order orderToResubmit)
+        private void DisplayOrderDetail(Order orderToModify)
         {
-            System.Diagnostics.Debug.WriteLine("Go to order #" + orderToResubmit.Id);
+            OnClickDetailButton(orderToModify);
+        }
+
+
+        public delegate void SelectedOrder(Tuple<OrderService, Order> args);
+
+        public event SelectedOrder ClickDetailButton;
+
+        public virtual void OnClickDetailButton(Order chosenOrder)
+        {
+            ClickDetailButton?.Invoke(new Tuple<OrderService, Order>(activeUserServ, chosenOrder));
         }
     }
 }

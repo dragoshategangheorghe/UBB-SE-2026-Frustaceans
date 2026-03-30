@@ -104,7 +104,7 @@
                        Padding="15"/>
 
             <Button Content="Complete"
-                        Click="CompleteOrder"/>
+                    Click="CompleteOrder"/>
 
         </ListView>
 
