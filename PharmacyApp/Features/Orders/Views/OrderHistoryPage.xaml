@@ -151,7 +151,8 @@
     
     
     <Grid Padding="100, 30, 100, 30" 
-          RowDefinitions="Auto, *">
+          RowDefinitions="Auto, *"
+          ColumnDefinitions="*, Auto">
 
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
@@ -159,8 +160,14 @@
                    FontSize="30"
                    FontWeight="Bold"/>
 
+        <CheckBox Grid.Row="0"
+                  Grid.Column="1"
+                  Content="Only expired orders"
+                  IsChecked="{x:Bind ViewModel.IsExpiredCheckbox, Mode=TwoWay}"/>
+
         <ListView Grid.Row="1"
                   Grid.Column="0"
+                  Grid.ColumnSpan="2"
                   x:Name="OrderListView"
                   ItemsSource="{x:Bind ViewModel.OrderHistory}"
                   ItemTemplateSelector="{StaticResource OrderTemplateSelector}">

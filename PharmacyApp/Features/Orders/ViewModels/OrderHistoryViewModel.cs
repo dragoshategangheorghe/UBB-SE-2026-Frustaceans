@@ -15,10 +15,19 @@ namespace PharmacyApp.Features.Orders.ViewModels
     class OrderHistoryViewModel
     {
         OrderService activeUserServ;
+        List<Order> baseOrderList;
+
         public ICommand CancelCommand { get; private set; }
         public ICommand ResubmitCommand { get; private set; }
         public ICommand GoToDetailPageCommand { get; private set; }
         public ObservableCollection<Order> OrderHistory;
+
+        bool isExpiredCheckbox;
+        public bool IsExpiredCheckbox 
+        { 
+            get { return isExpiredCheckbox; } 
+            set { isExpiredCheckbox = value; ReapplyFilters(); }
+        }
 
         public OrderHistoryViewModel(OrderService userService)
         {
@@ -27,12 +36,14 @@ namespace PharmacyApp.Features.Orders.ViewModels
             ResubmitCommand = new RelayCommandWithOneParameter<Order>(ResubmitExpiredOrder);
             GoToDetailPageCommand = new RelayCommandWithOneParameter<Order>(DisplayOrderDetail);
             OrderHistory = new();
+            baseOrderList = new();
 
             int clientId = activeUserServ.ActiveUser.Id;
             List<Order> userOrders = activeUserServ.OrdersRepo.GetOrdersOfClient(clientId);
             foreach (Order currentOrder in userOrders)
             {
                 OrderHistory.Add(currentOrder);
+                baseOrderList.Add(currentOrder);
             }
         }
 
@@ -49,6 +60,29 @@ namespace PharmacyApp.Features.Orders.ViewModels
         private void DisplayOrderDetail(Order orderToModify)
         {
             OnClickDetailButton(orderToModify);
+        }
+
+        private void ReapplyFilters()
+        {
+            List<Order> intermediateFilteredOrderList = new();
+
+            foreach (Order order in baseOrderList)
+                intermediateFilteredOrderList.Add(order);
+
+            if (isExpiredCheckbox)
+            {
+                List<Order> result = intermediateFilteredOrderList
+                    .Where<Order>(order => order.IsExpired)
+                    .ToList<Order>();
+
+                intermediateFilteredOrderList.Clear();
+                foreach (Order resultOrder in result)
+                    intermediateFilteredOrderList.Add(resultOrder);
+            }
+
+            OrderHistory.Clear();
+            foreach (Order resultOrder in intermediateFilteredOrderList)
+                OrderHistory.Add(resultOrder);
         }
 
 
