@@ -25,21 +25,13 @@ namespace PharmacyApp.Features.Period_Tracker.Views
         public PeriodTrackerViewModel ViewModel { get; } = new PeriodTrackerViewModel();
         public PeriodTrackerPage()
         {
-            if (ServiceWrapper.UserAccountService.CurrentUser == null)
-            {
-                //todo activate this IF after testing
-                //(this.Parent as Frame)?.Navigate(typeof(LoginView)); // go to log in forcefully
-                //return;
-            }
-
-
-
             InitializeComponent();
+            
         }
 
         private void OnCalculateCycleClicked(object sender, RoutedEventArgs e)
         {
-            ViewModel.UpdatePeriodTracker(StartPeriodDatePicker.Date, CycleDaysNumberBox.Value,
+            ViewModel.CalculatePeriodTracker(StartPeriodDatePicker.Date, CycleDaysNumberBox.Value,
                 PeriodLastsNumberBox.Value, PMSRadioButtons.SelectedIndex);
 
             ViewModel.CalendarsVisibility = "Visible"; 

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,11 +5,17 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Accounts.Views;
 using PharmacyApp.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,7 +47,6 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void OnAccountClicked(object sender, RoutedEventArgs e)
@@ -56,11 +56,16 @@ namespace PharmacyApp
 
         private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
         {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                //MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+                //return;
+            }
+
             MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
         }
     }

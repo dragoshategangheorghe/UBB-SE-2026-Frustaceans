@@ -46,7 +46,7 @@ namespace PharmacyApp.Models
             Username = userName;
             DiscountNotifications = discountNotifications;
             LoyaltyPoints = loyaltyPoints;
-            StartPeriodDate = startPeriodDate.Year == 1 ? DateOnly.FromDateTime(DateTime.Now) : startPeriodDate; // if its default give it the current date
+            StartPeriodDate = startPeriodDate.Year == new DateOnly().Year ? DateOnly.FromDateTime(DateTime.Now) : startPeriodDate; // if its default give it the current date
             CycleDays = cycleDays;
             PeriodLasts = periodLasts;
             PMSOption = pmsOption;
