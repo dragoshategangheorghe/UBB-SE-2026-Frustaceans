@@ -16,14 +16,11 @@ namespace PharmacyApp.Features.Accounts.ViewModels
     public class RegisterViewModel : INotifyPropertyChanged
     {
         private UserAccountService _userAccountService;
-        public event Action RegisterSucceded;
         private string email;
         private string password;
         private string confirmPassword;
         private string username;
         private string phoneNumber;
-
-
         public string Email
         {
             get => email;
@@ -101,11 +98,14 @@ namespace PharmacyApp.Features.Accounts.ViewModels
                     PhoneNumber
                 );
 
-                RegisterSucceded?.Invoke();
+                ErrorMessage = "Registration successful!";
+                System.Diagnostics.Debug.WriteLine(ErrorMessage);
+                // TODO: go to next page
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+                System.Diagnostics.Debug.WriteLine(ErrorMessage);
             }
         }
 

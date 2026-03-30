@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -8,7 +8,6 @@ using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.Views;
-using PharmacyApp.Features.Products_Catalogue;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -26,17 +25,11 @@ namespace PharmacyApp
 
     public sealed partial class MainWindow : Window
     {
-        private ProductCatalogueService productService;
-
         public MainWindow()
         {
             ServiceWrapper.Initialize();
 
             InitializeComponent();
-            IItemsRepository repo = new SQLItemsRepository();
-            productService = new ProductCatalogueService(repo);
-            
-            
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 
@@ -54,27 +47,13 @@ namespace PharmacyApp
         {
         }
 
-        private async void OnAccountClicked(object sender, RoutedEventArgs e)
+        private void OnAccountClicked(object sender, RoutedEventArgs e)
         {
-
-
-
-            if (ServiceWrapper.UserAccountService.CurrentUser == null)
-            {
-                // Not logged in → go to login page
-                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
-            }
-            else
-            {
-                // Logged in → show profile dialog
-                MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
-            }
+            MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
 
         private void OnAdminClicked(object sender, RoutedEventArgs e)
         {
-
-            MainFrame.Navigate(typeof(Features.Pharmacy_Management.EditPage));
         }
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
