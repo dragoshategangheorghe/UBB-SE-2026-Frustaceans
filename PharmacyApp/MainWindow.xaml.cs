@@ -23,9 +23,7 @@ using Windows.Foundation.Collections;
 
 namespace PharmacyApp
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
@@ -63,12 +61,12 @@ namespace PharmacyApp
 
             if (ServiceWrapper.UserAccountService.CurrentUser == null)
             {
-                // Not logged in → go to login page
+                // Not logged in -> go to login page
                 MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
             }
             else
             {
-                // Logged in → show profile dialog
+                // Logged in -> show profile dialog
                 MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
             }
         }
