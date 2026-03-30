@@ -96,7 +96,7 @@
                          TextChanged="SearchBox_TextChanged"/>
 
                 <!--list of items-->
-                <Grid Width="1000"
+                <Grid Width="1300"
       Height="400"
       BorderBrush="Gray"
       BorderThickness="1">
@@ -113,22 +113,22 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
                             <!-- ID -->
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
                             <!-- Name -->
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
                             <!-- Producer -->
                             <ColumnDefinition Width="70"/>
                             <!-- Price -->
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
                             <!-- Category -->
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="300"/>
                             <!-- Description -->
                             <ColumnDefinition Width="70"/>
                             <!-- Pills -->
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="80"/>
                             <!-- Quantity -->
                             
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="150"/>
                             <!-- Label -->
                             <ColumnDefinition Width="70"/>
                             <!-- Discount -->
@@ -157,30 +157,30 @@
 
                                     <Border BorderBrush="Gray"
                                         BorderThickness="0,0,0,1"
-                                        Padding="5">
+                                        >
 
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="50"/>
                                                 <!-- ID -->
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="150"/>
                                                 <!-- Name -->
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="150"/>
                                                 <!-- Producer -->
                                                 <ColumnDefinition Width="70"/>
                                                 <!-- Price -->
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="150"/>
                                                 <!-- Category -->
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="300"/>
                                                 <!-- Description -->
                                                 <ColumnDefinition Width="70"/>
                                                 <!-- Pills -->
-                                                <ColumnDefinition Width="70"/>
+                                                <ColumnDefinition Width="80"/>
                                                 <!-- Quantity -->
                                                
-                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="150"/>
                                                 <!-- Label -->
-                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="70"/>
                                                 <!-- Discount -->
                                             </Grid.ColumnDefinitions>
 
