@@ -51,7 +51,22 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
         public static int PMSOption => CurrentUser?.PMSOption ?? 0;
         public static bool HasPeriodTracker => CurrentUser != null ? UsersRepository.UserHasPeriodTracker(CurrentUser.Id) : false;
 
+        public static int MaxNoteId
+        {
+            get
+            {
+                if (CurrentUser == null) return -1;
+                if (CurrentUser.PeriodNotes.Count == 0) return 0; // create their first note
+                int maxNoteId = -1;
+                foreach (int key in CurrentUser.PeriodNotes.Keys)
+                {
+                    if (key > maxNoteId)
+                        maxNoteId = key;
+                }
 
+                return maxNoteId;
+            }
+        }
         public static void UpdatePeriodTracker(DateTimeOffset startPeriodDate, double cycleDays, double periodLasts, int pmsOption)
         {
             // update the user in RAM and also in the SQL

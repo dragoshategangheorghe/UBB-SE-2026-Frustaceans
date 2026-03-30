@@ -176,71 +176,88 @@
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:NoteViewModel">
                             <StackPanel Orientation="Horizontal" Spacing="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="100">
-                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Right" MaxWidth="20" Margin="0 -5 -98 0"></CheckBox>
-                                <TextBox Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Width="150" Height="100" MaxLength="100"></TextBox>
+                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" Checked="OnNoteIsDoneChecked" Unchecked="OnNoteIsDoneUnchecked" VerticalAlignment="Top" HorizontalAlignment="Right" MaxWidth="20" Margin="0 -5 -98 0"></CheckBox>
+                                <TextBox x:Name="NoteBodyTextBox"  Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Width="150" Height="100" MaxLength="100"></TextBox>
                                 <Button Command="{x:Bind DeleteNoteCommand}" Click="OnRemoveNoteClicked" Content="x" VerticalAlignment="Top"  Style="{StaticResource SubtleButtonStyle}" Margin="-8 0 0 0"  Width="30"></Button>
-                            </StackPanel>
+                            </StackPanel> 
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                <Button x:Name="AddNoteButton" Margin="0 10 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
+                <Button Click="OnAddNoteClicked" Margin="0 10 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
             </StackPanel>
 
             <!-- Sixth row: Products recommendation -->
-            <StackPanel Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="50">
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-            </StackPanel>
+            
+            <FlipView SelectedIndex="0" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists}" Height="120" Width="800"> <!-- TODO see if I can have a gridview inside t--> 
+                <FlipView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:ItemListViewModel">
+                        <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[0].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[0].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[0].PriceColor}" Text="{x:Bind Items[0].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[0].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                            </Grid>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[1].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[1].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[1].PriceColor}" Text="{x:Bind Items[1].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[1].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                            </Grid>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[2].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[2].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[2].PriceColor}" Text="{x:Bind Items[2].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[2].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                            </Grid>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[3].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[3].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[3].PriceColor}" Text="{x:Bind Items[3].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[3].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                            </Grid>
+                        </StackPanel>
+                        
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+            </FlipView>
+            
         </Grid>
     </ScrollViewer>
 </Page>
