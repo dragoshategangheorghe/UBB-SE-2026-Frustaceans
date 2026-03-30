@@ -7,7 +7,7 @@ namespace PharmacyApp.Models
     public class Item
     {
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Producer { get; set; }
         public float Price { get; set; }
@@ -49,7 +49,7 @@ namespace PharmacyApp.Models
 
         public Item(string name, string producer, string category,
             float price, int nrOfPills,
-             Dictionary<DateOnly, int> batches, Dictionary<string, float> activeSubstances,
+            int quantity=0,
             string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
             float discount = 0f)
         {
@@ -59,7 +59,28 @@ namespace PharmacyApp.Models
             NumberOfPills = nrOfPills;
             Category = category;
             ImagePath = imagePath;
-            Quantity = 0;
+            Quantity = quantity;
+            Label = label;
+            Description = description;
+            DiscountPercentage = discount;
+            ActiveSubstances = new Dictionary<string, float>();
+            Batches = new Dictionary<DateOnly, int>();
+        }
+
+        public Item(string name, string producer, string category,
+                    float price, int nrOfPills,
+                    Dictionary<string, float> activeSubstances, Dictionary<DateOnly, int> batches,
+                    int quantity = 0,
+                    string label = "", string description = "", string imagePath = "..\\..\\Assets\\placeholder.png",
+                    float discount = 0f)
+        {
+            Name = name;
+            Producer = producer;
+            Price = price;
+            NumberOfPills = nrOfPills;
+            Category = category;
+            ImagePath = imagePath;
+            Quantity = quantity;
             Label = label;
             Description = description;
             DiscountPercentage = discount;
@@ -92,6 +113,7 @@ namespace PharmacyApp.Models
         {
             if (Batches.ContainsKey(newExpirationDate)) {
                 Batches[newExpirationDate] += nrOfPacks;
+                //Quantity += nrOfPacks;
                 return;
             }
 
@@ -99,7 +121,7 @@ namespace PharmacyApp.Models
 
             // because we aren't supposed to modify Quantity directly
             // and let the batches automatically modify the Quantity property
-            Quantity += nrOfPacks;
+            this.Quantity += nrOfPacks;
         }
 
         public void changeBatchNrOfPacks(DateOnly expirationDate, int newNrOfPacks)
