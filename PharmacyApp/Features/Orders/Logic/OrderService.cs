@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using PharmacyApp.Common.Repositories;
+using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Models;
 
 namespace PharmacyApp.Features.Orders.Logic
@@ -13,18 +14,14 @@ namespace PharmacyApp.Features.Orders.Logic
         public IItemsRepository ItemsRepo { get; private set; }
         public IUsersRepository UsersRepo { get; private set; }
         public IOrdersRepository OrdersRepo { get; private set; }
-        public User ActiveUser { get; private set; }
+        public User ActiveUser { get { return ServiceWrapper.UserAccountService.CurrentUser; } }
 
-        public OrderService(User loggedInUser)
+        public OrderService()
         {
             SubstancesRepo = new SQLSubstancesRepository();
             ItemsRepo = new SQLItemsRepository();
             UsersRepo = new SQLUsersRepository();
             OrdersRepo = new SQLOrdersRepository();
-            ActiveUser = loggedInUser;
-
-            AddToBasket(5, 1);
-            AddToBasket(7, 2);
         }
 
         public void AddToBasket(int itemId, int quantityToBuy)

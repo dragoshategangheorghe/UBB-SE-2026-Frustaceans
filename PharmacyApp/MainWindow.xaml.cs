@@ -38,8 +38,8 @@ namespace PharmacyApp
             IUsersRepository usersRepo = new SQLUsersRepository();
             productService = new ProductCatalogueService(repo);
 
-            // TODO change the way the order service receives the active user
-            orderService = new OrderService(usersRepo.GetUserByEmail("xyz@gmail.com"));
+            // TODO make OrderService static (or inside ServiceWrapper)
+            orderService = new OrderService();
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 
