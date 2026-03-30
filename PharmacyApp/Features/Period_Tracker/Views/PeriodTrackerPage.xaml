@@ -16,7 +16,7 @@
         <viewModels:PeriodTrackerViewModel/> <!--to add the view model as data context-->
     </Page.DataContext>
 
-    <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto" Background="White">
+    <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto">
 
         <Grid RowSpacing="20" Padding="25" CanBeScrollAnchor="True">
             <Grid.RowDefinitions>
@@ -156,12 +156,34 @@
             <!-- fourth row: The CALCULATE BUTTON -->
             <Button Grid.Row="3" Click="OnCalculateCycleClicked" HorizontalAlignment="Center" VerticalAlignment="Center">CALCULATE</Button>
             <!-- fifth row: NOTES -->
-            <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <RichEditBox x:Name="PeriodNote1" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote2" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote3" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote4" Width="200" Height="300"></RichEditBox>
-                <Button x:Name="AddNoteButton" VerticalAlignment="Top" HorizontalAlignment="Left">+</Button> <!-- Gets hidden after all 4 notes are shown -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <GridView SelectionMode="None" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{x:Bind ViewModel.Notes,Mode=OneWay}">
+
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                            <Setter Property="Margin" Value="10, 10, 10, 10"/>
+                            <Setter Property="MaxWidth" Value="250"></Setter>
+                            <Setter Property="MinWidth" Value="250"></Setter>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal"/> <!-- Wrap it horizontally with 4 max on a row -->
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+
+                    <!-- Now for the individual notes -->
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:NoteViewModel">
+                            <StackPanel Orientation="Horizontal" Spacing="-10">
+                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" Width="30" Height="30" VerticalAlignment="Top"></CheckBox>
+                                <TextBox Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" ></TextBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <Button x:Name="AddNoteButton" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
             </StackPanel>
 
             <!-- Sixth row: Products recommendation -->
