@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Orders.Logic;
+using PharmacyApp.Features.Orders.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +25,31 @@ namespace PharmacyApp.Features.Orders.Views
     /// </summary>
     public sealed partial class EditableOrderDetailPage : Page
     {
+        OrderService orderServ;
+        public EditDetailViewModel ViewModel { get; set; }
+
         public EditableOrderDetailPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var extractedArgs = (Tuple<OrderService, int>)(e.Parameter);
+
+            orderServ = extractedArgs.Item1;
+            int orderID = extractedArgs.Item2;
+            ViewModel = new(orderServ, orderID);
+            DataContext = ViewModel;
+
+            base.OnNavigatedTo(e);
+        }
+
+        private void CompleteOrder(object sender, RoutedEventArgs e)
+        {
+            int orderID = ViewModel.shownOrderID;
+            //Dictionary<int, Tuple<int, float>>
+            //orderServ.CompleteOrder(orderID, );
         }
     }
 }

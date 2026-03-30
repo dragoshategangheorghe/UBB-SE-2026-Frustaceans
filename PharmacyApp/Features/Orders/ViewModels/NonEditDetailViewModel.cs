@@ -12,17 +12,20 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
     public class ItemDetail
     {
-        public string ItemThumbnailImagePath { get; set; }
-        public string ItemDescription { get; set; }
-        public string ItemQuantityString { get; set; }
-        public string ItemFinalPriceString { get; set; }
+        public int ItemID { get; private set; }
+        public string ItemThumbnailImagePath { get; private set; }
+        public string ItemDescription { get; private set; }
+        public string ItemQuantityString { get; private set; }
+        public string ItemFinalPriceString { get { return ItemFinalPrice.ToString("0.00") + " RON"; } }
+        public float ItemFinalPrice { get; private set; } 
 
-        public ItemDetail(string imagePath, string description, int quantity, float finalPrice)
+        public ItemDetail(int itemID, string imagePath, string description, int quantity, float finalPrice)
         {
+            ItemID = itemID;
             ItemThumbnailImagePath = imagePath;
             ItemDescription = description;
             ItemQuantityString = "Quantity: " + quantity;
-            ItemFinalPriceString = finalPrice.ToString("0.00") + " RON";
+            ItemFinalPrice = finalPrice;
         }
     }
 
@@ -63,7 +66,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 string itemDescription = currentItem.Name + " - " + currentItem.Producer;
 
                 OrderItems.Add(
-                    new ItemDetail(alteredImagePath, itemDescription,
+                    new ItemDetail(itemID, alteredImagePath, itemDescription,
                                     itemQuantity, itemTotalPrice)
                 );
 

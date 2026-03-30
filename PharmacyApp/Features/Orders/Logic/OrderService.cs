@@ -45,6 +45,11 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.RemoveItemFromBasket(itemIdToRemove);
         }
 
+        public void CompleteOrder(int orderID)
+        {
+
+        }
+
         public void PlaceOrderFromBasket(DateOnly chosenPickUpDate)
         {
             // for every item inside the basket, we have to verify
