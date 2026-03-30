@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PharmacyApp.Common.Repositories;
+using PharmacyApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -166,13 +168,34 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
         private void ConstructCurrentPhaseString()
         {
             if (DateTime.Today >= CurrentBeginningPeriodDate && DateTime.Today <= CurrentEndPeriodDate)
+            {
                 CurrentPhaseString = "Menstrual Phase";
-            if (DateTime.Today > CurrentEndPeriodDate && DateTime.Today < CurrentBeginningOvulationDate)
+                GiveUserWellnessDiscounts();
+            }
+            else if (DateTime.Today > CurrentEndPeriodDate && DateTime.Today < CurrentBeginningOvulationDate)
                 CurrentPhaseString = "Follicular Phase";
-            if (DateTime.Today >= CurrentBeginningOvulationDate && DateTime.Today <= CurrentEndOvulationDate)
+            else if (DateTime.Today >= CurrentBeginningOvulationDate && DateTime.Today <= CurrentEndOvulationDate)
                 CurrentPhaseString = "Ovulation Phase";
-            if (DateTime.Today > CurrentEndOvulationDate && DateTime.Today < CurrentBeginningPeriodDate.AddDays(PeriodTrackerUser.CycleDays))
+            else if (DateTime.Today > CurrentEndOvulationDate && DateTime.Today < CurrentBeginningPeriodDate.AddDays(PeriodTrackerUser.CycleDays))
                 CurrentPhaseString = "Luteal Phase"; // before next period
+            else
+            {
+                CurrentPhaseString = "Not calculated for this month";
+            }
+        }
+
+        private void GiveUserWellnessDiscounts()
+        {
+            IItemsRepository itemsRepository = new SQLItemsRepository();
+            List<Item> items = itemsRepository.GetAllItems();
+            List<String> categories = new List<string>();
+            categories.Add("wellness");
+            items = items.Where(item => categories.Contains(item.Category)).ToList();
+            foreach (Item item in items)
+            {
+                PeriodTrackerUser.CurrentUser.UserDiscounts[item.Id]=  20.0f; // give for each item a 20% discount
+            }
+            PeriodTrackerUser.UpdateUser();
         }
 
         //NOW the actual data that changes and is the viewmodel

@@ -35,7 +35,7 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
         public CalendarsViewModel Calendars { get; set; }
         public ObservableCollection<NoteViewModel> Notes { get; }
 
-        public List<ItemListViewModel> ItemsLists { get; set; }
+        public ObservableCollection<ItemListViewModel> ItemsLists { get; set; }
 
         private string _calendarsVisibility;
 
@@ -50,6 +50,14 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             }
         }
 
+        private string _shopVisibility;
+        [DefaultValue("Collapsed")]
+        public string ShopVisibility
+        {
+            get { return _shopVisibility; }
+            set { _shopVisibility = value; OnPropertyChanged(); }
+        }
+
 
         // constructor + methods
         public PeriodTrackerViewModel()
@@ -57,9 +65,9 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             //PeriodTrackerUser = new PeriodTrackerUserModel();
             Calendars = new CalendarsViewModel();
             Notes = new ObservableCollection<NoteViewModel>();
-            ItemsLists = new List<ItemListViewModel>();
+            ItemsLists = new ObservableCollection<ItemListViewModel>();
             CreateNotes();
-            CreateItems();
+            //CreateItems();
             ShowCalendars();
         }
 
@@ -75,6 +83,9 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
 
         private void CreateItems()
         {
+            ItemsLists.Clear(); // reset items
+            ShopVisibility = "Visible";
+
             IItemsRepository itemsRepository = new SQLItemsRepository();
             List<Item> items = itemsRepository.GetAllItems();
             List<String> categories = new List<string>();
@@ -119,6 +130,8 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
 
             // After that, update the calendars' properties, which will automatically notify the UI
             Calendars.CalculatePeriodTracker(startPeriodDate.Date);
+
+            CreateItems();
         }
 
         internal void UpdatePeriodTracker(bool goRight)

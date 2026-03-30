@@ -36,7 +36,8 @@ namespace PharmacyApp.Features.Period_Tracker.Views
             ViewModel.CalculatePeriodTracker(StartPeriodDatePicker.Date, CycleDaysNumberBox.Value,
                 PeriodLastsNumberBox.Value, PMSRadioButtons.SelectedIndex);
 
-            ViewModel.CalendarsVisibility = "Visible"; 
+            ViewModel.CalendarsVisibility = "Visible";
+            ViewModel.ShopVisibility = "Visible";
         }
 
         private void OnNextCycleMonthClicked(object sender, RoutedEventArgs e)

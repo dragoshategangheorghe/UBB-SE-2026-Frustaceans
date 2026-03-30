@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -83,11 +84,11 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             Name = item.Name;
             Price = item.Price * (1.0f - item.DiscountPercentage/100.0f);
             if (PeriodTrackerUser.CurrentUser.UserDiscounts.ContainsKey(item.Id)) //user has discount for this item
-                Price *= (1.0f - PeriodTrackerUser.CurrentUser.UserDiscounts[item.Id]);
+                Price *= (1.0f - PeriodTrackerUser.CurrentUser.UserDiscounts[item.Id]/100.0f);
 
             if (Price != item.Price) // it is discounted
             {
-                PriceDiscountedString = $"{item.Price}"; //the original price striked through
+                PriceDiscountedString = $"{item.Price.ToString("C", CultureInfo.CurrentCulture)}"; //the original price striked through
                 PriceColor = "Red";
             }
             else
@@ -97,12 +98,13 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             }
 
 
-            PriceString = $"{Price} RON";
+            PriceString = $"{Price.ToString("C", CultureInfo.CurrentCulture)}";
 
             
-            ImagePath = $"ms-appx:///Assets/{item.ImagePath}";
+            ImagePath = $"ms-appx:\\\\" +
+                        $"\\Assets\\{item.ImagePath}";
             if (!File.Exists(ImagePath))
-                ImagePath = "ms-appx:///Assets/placeholder.png";
+                ImagePath = "\\Assets\\placeholder.png";
 
         }
     }
