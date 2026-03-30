@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Orders.ViewModels;
 using System;
@@ -44,6 +45,58 @@ namespace PharmacyApp.Features.Orders.Views
             DataContext = viewModel;
 
             base.OnNavigatedTo(e);
+        }
+
+        private void SetDefaultPickUpDate(object sender, RoutedEventArgs e)
+        {
+            PickUpDateSelector.MinDate = new System.DateTimeOffset(DateTime.Now.Date.AddDays(1));
+            PickUpDateSelector.SelectedDates.Add(PickUpDateSelector.MinDate);
+        }
+
+        private void CheckUnselectedDate(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs e)
+        {
+            if (PickUpDateSelector.SelectedDates.Count == 0)
+                PickUpDateSelector.SelectedDates.Add(PickUpDateSelector.MinDate);
+        }
+
+        private async void ResubmitOrder(object sender, RoutedEventArgs e)
+        {
+            DateOnly selectedDate = DateOnly.FromDateTime(PickUpDateSelector.SelectedDates[0].Date);
+            int orderIDToResubmit = viewModel.shownOrderID;
+
+            // TODO not get the function directly from the user service
+            // maybe get it through the view model? but na, no time
+            try
+            {
+                orderService.ResubmitExpiredOrder(orderIDToResubmit, selectedDate);
+
+                ContentDialog confirmationMessage = new ContentDialog();
+
+                confirmationMessage.XamlRoot = this.XamlRoot;
+                confirmationMessage.Title = "Success";
+                confirmationMessage.Content = "A new order has been created identical to the previously selected expired order";
+                confirmationMessage.CloseButtonText = "Ok";
+
+                // TODO rewrite the parameter, so that it's connected nicely
+                Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.OrderHistoryPage), orderService);
+                var result = await confirmationMessage.ShowAsync();
+            }
+            catch (ArgumentException exception)
+            {
+                ContentDialog causeOfErrorDialog = new ContentDialog();
+
+                causeOfErrorDialog.XamlRoot = this.XamlRoot;
+                causeOfErrorDialog.Title = "Error";
+                causeOfErrorDialog.Content = exception.Message;
+                causeOfErrorDialog.CloseButtonText = "Ok";
+
+                var result = await causeOfErrorDialog.ShowAsync();
+            }
+        }
+
+        private void NavigateToOrderHistory(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(OrderHistoryPage), orderService);
         }
     }
 }

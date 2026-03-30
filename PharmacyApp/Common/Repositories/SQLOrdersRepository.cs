@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using Windows.UI.WebUI;
 
 namespace PharmacyApp.Common.Repositories
 {
@@ -43,8 +44,26 @@ namespace PharmacyApp.Common.Repositories
             AddOrder(clientId, pickUpDate, isCompleted, isExpired);
             List<Order> ordersAfterAdd = GetOrdersOfClient(clientId);
 
-            IEnumerable<Order> difference = ordersAfterAdd.Except<Order>(ordersBeforeAdd);
-            Order newOrder = difference.First();
+
+
+            // WTF WHY WOULDN'T YOU WORK
+            //IEnumerable<Order> difference = ordersAfterAdd.Except<Order>(ordersBeforeAdd);
+            //Order newOrder = difference.First();
+
+            // since apparently the code up top wouldn't calculate the SET DIFFERENCE
+            // I'm gonna do it manually for now
+
+            // it's fine? cuz every order is unique by its ID, by which we compare
+
+            List<Order> result = new();
+            foreach (Order order in ordersAfterAdd)
+            {
+                if (!ordersBeforeAdd.Contains(order))
+                    result.Add(order);
+            }
+            Order newOrder = result[0];
+
+
 
             foreach (KeyValuePair<int, Tuple<int, float>> item in items)
             {

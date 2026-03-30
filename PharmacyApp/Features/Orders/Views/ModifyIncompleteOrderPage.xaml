@@ -100,7 +100,7 @@
             <StackPanel Orientation="Horizontal"
                         Padding="15">
 
-                <Button Content="Cancel"
+                <Button Content="Go back"
                         Click="CancelChanges"/>
                 <Button Content="Save changes"
                         Click="ModifyOrder"/>

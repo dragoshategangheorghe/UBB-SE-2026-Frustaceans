@@ -177,6 +177,34 @@ namespace PharmacyApp.Features.Orders.Logic
             ActiveUser.Basket.Clear();
         }
 
+
+        public void ResubmitExpiredOrder(int orderIDToResubmit, DateOnly chosenPickUpDate)
+        {
+            // we have to verify if we have enough boxes on stock
+            // that expire after the chosen pick-up date
+
+            Order expiredOrder = OrdersRepo.GetOrder(orderIDToResubmit);
+            Dictionary<int, Tuple<int, float>> itemInfoForOrder = expiredOrder.ItemQuantitiesWithFinalPrice;
+
+            foreach (KeyValuePair<int, Tuple<int, float>> orderItemEntry in itemInfoForOrder)
+            {
+                Item currentItem = ItemsRepo.GetItem(orderItemEntry.Key);
+                int currentItemQuantity = orderItemEntry.Value.Item1;
+                int itemQuantityAtPickUpDate = currentItem.QuantityAtSpecifiedDate(chosenPickUpDate);
+
+                if (currentItemQuantity > itemQuantityAtPickUpDate)
+                    throw new ArgumentException("On " + chosenPickUpDate.ToString("yyyy.MM.dd") + ", " +
+                                                "we will have only " + itemQuantityAtPickUpDate + " boxes " +
+                                                "of " + currentItem.Name + " by " + currentItem.Producer + " " +
+                                                "instead of " + currentItemQuantity + ".");
+
+            }
+
+            OrdersRepo.AddOrderWithItems(ActiveUser.Id, chosenPickUpDate, itemInfoForOrder);
+
+        }
+
+
         public Dictionary<int, int> FillBasketFromPrescription(string prescriptionId)
         {
             float error = 5f;
