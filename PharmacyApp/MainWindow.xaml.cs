@@ -47,7 +47,7 @@ namespace PharmacyApp
 
         private void OnProductsClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage));
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), productService);
         }
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
