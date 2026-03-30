@@ -42,11 +42,12 @@ public sealed partial class OrderHistoryPage : Page
         DataContext = ViewModel;
         base.OnNavigatedTo(e);
 
-        ViewModel.ClickDetailButton += RedirectToPage;
+        ViewModel.ClickDetailButton += RedirectToDetailPage;
         ViewModel.ClickCancelButton += AskCancelOrderConfirmation;
+        ViewModel.ClickResubmitButton += RedirectToResubmitPage;
     }
 
-    private void RedirectToPage(Tuple<OrderService, Order> args)
+    private void RedirectToDetailPage(Tuple<OrderService, Order> args)
     {
         Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.ModifyIncompleteOrderPage),
                     new Tuple<OrderService, int>(args.Item1, args.Item2.Id));
@@ -69,6 +70,12 @@ public sealed partial class OrderHistoryPage : Page
 
         if (result == ContentDialogResult.Primary)
             ViewModel.CancelOrder(currOrder);
+    }
+
+    private void RedirectToResubmitPage(Tuple<OrderService, Order> args)
+    {
+        Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.ResubmitOrderPage),
+                    new Tuple<OrderService, int>(args.Item1, args.Item2.Id));
     }
 }
 
