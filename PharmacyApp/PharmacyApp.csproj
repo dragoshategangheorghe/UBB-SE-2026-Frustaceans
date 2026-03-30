@@ -12,6 +12,9 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Assets\testimage.jpg" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -68,6 +71,7 @@
     <None Remove="Features\Orders\Views\NonEditableOrderDetailPage.xaml" />
     <None Remove="Features\Orders\Views\OrderHistoryPage.xaml" />
     <None Remove="Features\Orders\Views\OrderManagementPage.xaml" />
+    <None Remove="Features\Accounts\Views\AdminAccountsManagementView.xaml" />
     <None Remove="Features\Accounts\Views\ChangePasswordView.xaml" />
     <None Remove="Features\Accounts\Views\ProfileManagementView.xaml" />
     <None Remove="Features\Orders\Views\ResubmitOrderPage.xaml" />
@@ -123,6 +127,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Features\Orders\Views\CheckoutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\Accounts\Views\AdminAccountsManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

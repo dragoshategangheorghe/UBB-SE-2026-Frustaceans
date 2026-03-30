@@ -24,15 +24,15 @@ using Windows.Foundation.Collections;
 
 namespace PharmacyApp
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
         private OrderService orderService;
         public MainWindow()
         {
+            ServiceWrapper.Initialize();
+
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
             IUsersRepository usersRepo = new SQLUsersRepository();
@@ -45,12 +45,12 @@ namespace PharmacyApp
 
         private void OnHomeClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage), productService);
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
 
         private void OnProductsClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), productService);
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage));
         }
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
@@ -65,12 +65,12 @@ namespace PharmacyApp
 
             if (ServiceWrapper.UserAccountService.CurrentUser == null)
             {
-                // Not logged in → go to login page
+                // Not logged in -> go to login page
                 MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
             }
             else
             {
-                // Logged in → show profile dialog
+                // Logged in -> show profile dialog
                 MainFrame.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
             }
         }
@@ -83,6 +83,12 @@ namespace PharmacyApp
 
         private void OnPeriodTrackerClicked(object sender, RoutedEventArgs e)
         {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                //MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+                //return;
+            }
+
             MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
         }
 

@@ -2,185 +2,156 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
+using PharmacyApp.Common.Repositories;
+using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using PharmacyApp.Common.Repositories;
 
 namespace PharmacyApp.Features.Period_Tracker.ViewModels
 {
-    public class PeriodTrackerViewModel
+    public class PeriodTrackerViewModel : INotifyPropertyChanged
     {
-        public IUsersRepository UsersRepository { get; set; } = new SQLUsersRepository();
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        public PeriodTrackerViewModel() {}
-
-
-
-    }
-
-    public class Calendar1Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar1Converter()
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
+            // call the method for this event (event handler) stored in the PropertyChanged delegate using this property
+            // to notify the View that the ViewModel has updated (call down, notify up)
+            PropertyChanged?.Invoke(this,
+                new PropertyChangedEventArgs(propertyName)); // the method is not called if PropertyChanged is null
         }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
 
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
+
+        //DATA about the Calendars
+        public CalendarsViewModel Calendars { get; set; }
+        public ObservableCollection<NoteViewModel> Notes { get; }
+
+        public ObservableCollection<ItemListViewModel> ItemsLists { get; set; }
+
+        private string _calendarsVisibility;
+
+        [DefaultValue("Collapsed")] // set its default value to "Collapsed"
+        public string CalendarsVisibility
+        {
+            get { return _calendarsVisibility; }
+            set
             {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
+                _calendarsVisibility = value;
+                OnPropertyChanged();
             }
-            return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        private string _shopVisibility;
+        [DefaultValue("Collapsed")]
+        public string ShopVisibility
         {
-            return null;
+            get { return _shopVisibility; }
+            set { _shopVisibility = value; OnPropertyChanged(); }
         }
-    }
 
-    public class Calendar2Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar2Converter()
+
+        // constructor + methods
+        public PeriodTrackerViewModel()
         {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
+            //PeriodTrackerUser = new PeriodTrackerUserModel();
+            Calendars = new CalendarsViewModel();
+            Notes = new ObservableCollection<NoteViewModel>();
+            ItemsLists = new ObservableCollection<ItemListViewModel>();
+            CreateNotes();
+            //CreateItems();
+            ShowCalendars();
         }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
 
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
+        private void CreateNotes()
+        {
+            foreach (KeyValuePair<int, Tuple<string, bool>> periodNote in PeriodTrackerUser.CurrentUser.PeriodNotes)
             {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
+                NoteViewModel periodNoteVM =
+                    new NoteViewModel(periodNote.Key, periodNote.Value.Item1, periodNote.Value.Item2);
+                Notes.Add(periodNoteVM);
             }
-            return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        private void CreateItems()
         {
-            return null;
-        }
-    }
+            ItemsLists.Clear(); // reset items
+            ShopVisibility = "Visible";
 
-    public class Calendar3Converter : IValueConverter
-    {
-        Dictionary<DateTimeOffset, string> SpecialDates;
-        public Calendar3Converter()
-        {
-            SpecialDates = new Dictionary<DateTimeOffset, string>();
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(1), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(5), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(-1).AddDays(-2), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(1), "TripleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(5), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(7), "DoubleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(9), "SingleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(12), "TripleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddDays(-4), "DoubleEvent_1");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(1), "DoubleEvent_3");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(3), "SingleEvent_2");
-            SpecialDates.Add(DateTimeOffset.Now.AddMonths(1).AddDays(-5), "DoubleEvent_2");
-        }
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            DateTimeOffset dateTimeOffset = SpecialDates.Keys.FirstOrDefault(x => x.Date == (DateTime)value);
+            IItemsRepository itemsRepository = new SQLItemsRepository();
+            List<Item> items = itemsRepository.GetAllItems();
+            List<String> categories = new List<string>();
+            categories.Add("wellness");
+            items = items.Where(item => categories.Contains(item.Category)).ToList();
 
-            if (dateTimeOffset != DateTimeOffset.MinValue) // MinValue is the default value
+            int i = 0;
+            while (i != items.Count)
             {
-                string template = SpecialDates[dateTimeOffset];
-                StackPanel stackPanel;
-                switch (template)
-                {
-                    case "SingleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.DeepPink) };
-                    case "SingleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Cyan) };
-                    case "DoubleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Violet), new SolidColorBrush(Colors.Orange) };
-                    case "DoubleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Gold), new SolidColorBrush(Colors.Green) };
-                    case "DoubleEvent_3":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Brown), new SolidColorBrush(Colors.Blue) };
-                    case "TripleEvent_1":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.DeepSkyBlue), new SolidColorBrush(Colors.Orange) };
-                    case "TripleEvent_2":
-                        return new List<Brush>() { new SolidColorBrush(Colors.Red), new SolidColorBrush(Colors.Green), new SolidColorBrush(Colors.Gold) };
-                }
+                ItemListViewModel itemListVM = new ItemListViewModel();
+
+                int j = i + 4; // stops here
+                while (i != items.Count && i != j)
+                    itemListVM.Items.Add(new ItemViewModel(items[i++]));
+
+                ItemsLists.Add(itemListVM);
             }
-            return null;
+
+            int remaining = 0;
+            while (i % 4 != 0)
+            {
+                // the last list is not full 
+                ItemsLists[ItemsLists.Count - 1].Items.Add(new ItemViewModel(items[remaining++]));
+                i++; // items are repeating from the beginning
+            }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        private void ShowCalendars()
         {
-            return null;
+            if (PeriodTrackerUser.HasPeriodTracker)
+                CalculatePeriodTracker(PeriodTrackerUser.StartPeriodDate, PeriodTrackerUser.CycleDays,
+                    PeriodTrackerUser.PeriodLasts, PeriodTrackerUser.PMSOption);
+
+            CalendarsVisibility = PeriodTrackerUser.HasPeriodTracker ? "Visible" : "Collapsed";
+        }
+
+        internal void CalculatePeriodTracker(DateTimeOffset startPeriodDate, double cycleDays, double periodLasts,
+            int pmsOption)
+        {
+            // After clicking, first of all update the user's period tracker
+            PeriodTrackerUser.UpdatePeriodTracker(startPeriodDate, cycleDays, periodLasts, pmsOption);
+
+            // After that, update the calendars' properties, which will automatically notify the UI
+            Calendars.CalculatePeriodTracker(startPeriodDate.Date);
+
+            CreateItems();
+        }
+
+        internal void UpdatePeriodTracker(bool goRight)
+        {
+            Calendars.CurrentDate = Calendars.CurrentDate.AddMonths(goRight ? 1 : -1); // go in this month's direction
+            Calendars.UpdatePeriodTracker(goRight);
+        }
+
+        internal void RemoveNote(NoteViewModel noteVM)
+        {
+            Notes.Remove(noteVM);
+        }
+
+        internal void AddNewNote()
+        {
+            NoteViewModel newNote = new NoteViewModel(PeriodTrackerUser.MaxNoteId + 1, "", false);
+            PeriodTrackerUser.CurrentUser.PeriodNotes[newNote.NoteId] =
+                new Tuple<string, bool>("", false); // update the user 
+            PeriodTrackerUser.UpdateUser(); //add changes to DB
+            Notes.Add(newNote); // notify the View
         }
     }
 }
-

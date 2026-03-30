@@ -1,6 +1,7 @@
 ﻿using PharmacyApp.Common.Repositories;
 using PharmacyApp.Models;
 using System;
+using System.Collections.Generic;
 
 namespace PharmacyApp.Common.Services
 {
@@ -104,13 +105,40 @@ namespace PharmacyApp.Common.Services
             return notification;
         }
 
+        public List<Item> GetExpiredItems()
+        {
+            List<Item> expiredItems = new List<Item>();
+            List<Item> allItems = itemRepository.GetAllItems();
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+            foreach (Item item in allItems)
+            {
+                foreach (var batch in item.Batches)
+                {
+                    if (batch.Key < currentDate)
+                    {
+                        expiredItems.Add(item);
+                        break; // No need to check other batches for this item
+                    }
+                }
+            }
+            sendAboutToExprNotification();
+            return expiredItems;
+        }
+
         //change return to: list of notifications 
         public Notification sendAboutToExprNotification()
         {
 
-            //getall items
-            //sort by date ascending
-            // while loop through items and check if the date is still valid, if not send notification
+            //List<Item> expiredItems = GetExpiredItems();
+            //if (expiredItems.Count > 0) { 
+            //    // send notification for each expired item
+            //    foreach (Item item in expiredItems)
+            //    {
+            //        string message = $"Item with ID {item.Id} is about to expire!";
+            //        Notification notification = new Notification("Expiration Alert", message);
+            //        // send notification to the user (e.g., display it in the UI, send an email, etc.)
+            //    }
+            //}
 
             //string message = $"Item with ID {items[i].id} is about to expire!";
             //Notification notification = new Notification("Expiration Alert", message);
