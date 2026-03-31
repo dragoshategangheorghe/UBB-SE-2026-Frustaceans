@@ -24,5 +24,7 @@ namespace PharmacyApp.Common.Repositories
         List<Item> GetItemsByName(string name);
         void UpdateItem(Item newItem);
         bool ItemExists(int id);
+
+        public List<Tuple<int, string, int>> GetTop30Items();
     }
 }

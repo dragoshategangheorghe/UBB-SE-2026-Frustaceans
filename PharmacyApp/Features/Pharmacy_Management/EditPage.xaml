@@ -40,6 +40,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Margin="10"
+                        Click="GoToStatisticsClick"
                 />
                 <StackPanel x:Name="ShowExpiredItemsToggle"
                             Orientation="Horizontal"

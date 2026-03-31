@@ -71,7 +71,14 @@ namespace PharmacyApp.Features.Pharmacy_Management
             UpdateSubstanceGrid.Visibility = Visibility.Collapsed;
         }
 
-        //search box -------------------------------------------------------------------
+        //funcs -------------------------------------------------------------------
+        
+        private void GoToStatisticsClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(StatisticsPage));
+        }
+
+
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string query = SearchBox.Text.ToLower();
