@@ -7,7 +7,7 @@ using PharmacyApp.Models;
 
 namespace PharmacyApp.Common.Repositories
 {
-    internal interface ISubstancesRepository
+    public interface ISubstancesRepository
     {
         void AddSubstance(string name, float lethalDose, string description);
         void RemoveSubstance(string name);

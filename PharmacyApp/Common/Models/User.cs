@@ -24,6 +24,9 @@ namespace PharmacyApp.Models
         public List<int> StockAlerts { get; private set; }
         public List<int> FavoriteItems { get; private set; }
         public Dictionary<int, float> UserDiscounts { get; private set; }
+        /// <summary>
+        /// key is itemId, value is quantity of said item
+        /// </summary>
         public Dictionary<int, int> Basket { get; private set; }
 
         public bool DiscountNotifications { get; set; }

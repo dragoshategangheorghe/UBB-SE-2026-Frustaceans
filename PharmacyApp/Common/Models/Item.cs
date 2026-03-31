@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PharmacyApp.Models
 {
@@ -134,18 +135,72 @@ namespace PharmacyApp.Models
 
             if (!Batches.ContainsKey(expirationDate))
                 throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
-            Batches[expirationDate] = newNrOfPacks;
 
+            Batches[expirationDate] = newNrOfPacks;
             Quantity += (newNrOfPacks - oldNrOfPacks);
         }
 
         public void removeBatch(DateOnly expirationDate)
         {
-            Quantity -= Batches[expirationDate];
-
             if (!Batches.ContainsKey(expirationDate))
                 throw new ArgumentException("A batch with expiration date " + expirationDate.ToString() + " doesn't exist");
+
+            Quantity -= Batches[expirationDate];
             Batches.Remove(expirationDate);
+        }
+
+        // no error checking here cuz this is called only when we
+        // already know that we can remove this amount
+        public void RemoveQuantity(int quantityToRemove, DateOnly dateAfter)
+        {
+            // get dates that have batches associated with it
+            List<DateOnly> sortedExpirationDates = Batches.Keys.ToList<DateOnly>();
+            sortedExpirationDates.Sort();
+
+            int indexForDate = 0;
+            int remainingQuantity = quantityToRemove;
+            while (remainingQuantity > 0)
+            {
+                // we skip the batches that are already expired
+                if (sortedExpirationDates[indexForDate] < dateAfter)
+                {
+                    indexForDate++;
+                    continue;
+                }
+
+                // if the batch has less than the remaining quantity
+                // to remove then the whole batch is removed
+                if (remainingQuantity > Batches[sortedExpirationDates[indexForDate]])
+                {
+                    remainingQuantity -= Batches[sortedExpirationDates[indexForDate]];
+                    removeBatch(sortedExpirationDates[indexForDate]);
+                    indexForDate++;
+                    continue;
+                }
+
+                // we only remove part of the batch (as the remaining
+                // quantity to be removed goes to zero)
+                int newBatchQuantity = Batches[sortedExpirationDates[indexForDate]] - remainingQuantity;
+                changeBatchNrOfPacks(sortedExpirationDates[indexForDate], newBatchQuantity);
+                remainingQuantity = 0;
+                indexForDate++;
+            }
+        }
+
+        public int QuantityAtSpecifiedDate(DateOnly date)
+        {
+            int validatedQuantity = 0;
+
+            foreach (KeyValuePair<DateOnly, int> batchEntry in Batches)
+            {
+                DateOnly currentBatchExpirationDate = batchEntry.Key;
+                int currentBatchQuantity = batchEntry.Value;
+
+                if (date < currentBatchExpirationDate)
+                    validatedQuantity += currentBatchQuantity;
+            }
+
+            return validatedQuantity;
         }
     }
 }

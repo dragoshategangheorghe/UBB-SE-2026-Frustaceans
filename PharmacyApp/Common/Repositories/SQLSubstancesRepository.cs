@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PharmacyApp.Common.Repositories
 {
-    internal class SQLSubstancesRepository : ISubstancesRepository
+    public class SQLSubstancesRepository : ISubstancesRepository
     {
         public void AddSubstance(string name, float lethalDose, string description)
         {

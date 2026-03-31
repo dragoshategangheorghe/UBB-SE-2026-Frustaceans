@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Accounts.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -66,8 +67,7 @@ namespace PharmacyApp.Features.Accounts.Views
 
         private async void OnOrderHistoryClick(object sender, RoutedEventArgs e)
         {
-            //put order history here
-
+            Frame.Navigate(typeof(PharmacyApp.Features.Orders.Views.OrderHistoryPage), new OrderService());
         }
     }
 }
