@@ -151,5 +151,15 @@ namespace PharmacyApp
         {
             MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
+
+        private void OnNotificationsClicked(object sender, RoutedEventArgs e)
+        {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+                return;
+            }
+            MainFrame.Navigate(typeof(Features.Pharmacy_Management.Notifications));
+        }
     }
 }

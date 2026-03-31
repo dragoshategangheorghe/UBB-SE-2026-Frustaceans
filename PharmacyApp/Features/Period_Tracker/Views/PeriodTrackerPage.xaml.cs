@@ -1,3 +1,4 @@
+using System;
 using Windows.UI.Text;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -28,6 +29,7 @@ namespace PharmacyApp.Features.Period_Tracker.Views
         public PeriodTrackerViewModel ViewModel { get; } = new PeriodTrackerViewModel();
         public PeriodTrackerPage()
         {
+            ViewModel.CalculatePeriodTracker(DateTime.Today, 28, 5, 0);
             InitializeComponent();
             
         }

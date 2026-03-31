@@ -133,7 +133,7 @@ namespace PharmacyApp.Models
         {
             if (Batches.ContainsKey(newExpirationDate)) {
                 Batches[newExpirationDate] += nrOfPacks;
-                //Quantity += nrOfPacks;
+                Quantity += nrOfPacks;
                 return;
             }
 

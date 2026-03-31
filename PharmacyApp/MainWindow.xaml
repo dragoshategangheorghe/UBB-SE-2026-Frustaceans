@@ -92,6 +92,14 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right">
 
+                <Button Content="🔔"
+                        Click="OnNotificationsClicked"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        FontFamily="Segoe UI"
+                        Background="Transparent"
+                        Foreground="#4CAF50"
+                        BorderBrush="Transparent"/>
                 <Button Content="🛒"
                 Click="OnCartClicked"
                 FontSize="16"
