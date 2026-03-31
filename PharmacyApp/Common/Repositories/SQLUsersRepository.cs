@@ -278,7 +278,7 @@ namespace PharmacyApp.Common.Repositories
             // first for the period tracker, delete + insert, IF it exists
             // in some cases, it just doesn't exist (for example the user is updated when they click Calculate the first time in the period tracker)
 
-            DataSet userDataFromDB = new DataSet(); 
+            DataSet userDataFromDB = new DataSet();
 
             // query their period tracker
             string selectPeriodTrackersString = $"SELECT * FROM PeriodTrackers WHERE userId={newUser.Id}";
