@@ -161,8 +161,10 @@ namespace PharmacyApp.Features.Orders.Logic
                                                 "instead of " + currentItemQuantity + ".");
 
                 float finalPrice = currentItemQuantity * currentItem.Price *
-                    (1 - currentItem.DiscountPercentage) *
-                    (1 - ActiveUser.UserDiscounts[currentItem.Id]);
+                    (1 - currentItem.DiscountPercentage);
+
+                if (ActiveUser.UserDiscounts.ContainsKey(currentItem.Id))
+                    finalPrice = finalPrice * (1 - ActiveUser.UserDiscounts[currentItem.Id]);
 
                 itemInfoForOrder.Add(currentItem.Id, new Tuple<int, float>(currentItemQuantity, finalPrice));
             }
