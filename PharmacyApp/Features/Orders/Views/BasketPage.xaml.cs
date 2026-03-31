@@ -64,12 +64,13 @@ namespace PharmacyApp.Features.Orders.Views
         private void EnterPrescriptionID(object sender, RoutedEventArgs e)
         {
             PrescriptionWarning.Visibility = Visibility.Collapsed;
+
             string prescriptionId = PrescriptionInputBox.Text;
-            
+
             try
             {
                 ViewModel.GetPrescription(prescriptionId);
-            } 
+            }
             catch (ArgumentException exception)
             {
                 PrescriptionWarning.Text = exception.Message;

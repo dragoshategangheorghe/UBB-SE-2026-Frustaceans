@@ -36,9 +36,9 @@ namespace PharmacyApp.Features.Pharmacy_Management
         {
             string buttonContent = (string)((Button)sender).Content;
             if (buttonContent == "Go to products")
-                Frame.Navigate(typeof(CatalogPage));
-            if (buttonContent == "Go fix it")
                 Frame.Navigate(typeof(HomePage));
+            if (buttonContent == "Go fix it")
+                Frame.Navigate(typeof(EditPage));
         }
     }
 }

@@ -46,8 +46,16 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 {
                     // Convert from Windows path to ms-appx:// (juste added ms-appx:// in the alteredImagePath)
                     int startingIndexOfImagePathSubstring = currentItem.ImagePath.IndexOf("\\Assets");
-                    string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
-                    alteredImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
+                    if (startingIndexOfImagePathSubstring != -1)
+                    {
+                        string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
+                        alteredImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
+                    }
+                    else
+                    {
+                        alteredImagePath = "ms-appx:///Assets/logo.png";
+                    }
+
                 }
                 //modified by Isac
                 BasketItem basketItem = new(
