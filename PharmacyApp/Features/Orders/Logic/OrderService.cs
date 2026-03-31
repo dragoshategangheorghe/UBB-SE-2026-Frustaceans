@@ -206,7 +206,6 @@ namespace PharmacyApp.Features.Orders.Logic
 
         public Dictionary<int, int> FillBasketFromPrescription(string prescriptionId)
         {
-            float error = 5f;
             Dictionary<int, int> items = new();
 
             // here we are supposed to query for the prescription, but
@@ -239,6 +238,14 @@ namespace PharmacyApp.Features.Orders.Logic
             // we verify if we get a result right away, exact name and pills
             conn.Open();
             exactFinderAdapter.Fill(resultsAcrossQueries, "ExactNameAndPills");
+
+
+            // I only need this right now for testing
+            // assuming that the item is always going to be found
+            Item preferredItem = ItemsRepo.GetItemsByName(itemName)[0];
+            int numberOfRequiredSubstances = preferredItem.ActiveSubstances.Count;
+
+
             if (resultsAcrossQueries.Tables["ExactNameAndPills"].Rows.Count != 0)
             {
                 DataRow entryRow = resultsAcrossQueries.Tables["ExactNameAndPills"].Rows[0];
@@ -247,6 +254,7 @@ namespace PharmacyApp.Features.Orders.Logic
                     items.Add((int)entryRow["itemId"], 1);
                     return items;
                 }
+
             }
 
 
@@ -272,11 +280,54 @@ namespace PharmacyApp.Features.Orders.Logic
 
             if (resultsAcrossQueries.Tables["Substitutes"].Rows.Count != 0)
             {
-                DataRow entryRow = resultsAcrossQueries.Tables["Substitutes"].Rows[0];
-                if ((int)entryRow["quantity"] != 0)
+                // we have to filter out the results where there are
+                // other substances besides the ones we searched for,
+                // meaning we have to filter out the results where
+                // the number of substances inside them are more than the
+                // the number of substances for the original
+
+                // TODO do something with these initial numbers
+                int cheapestItemID = -1;
+                float cheapestPrice = 99999999f;
+
+                foreach (DataRow substituteCandidateEntry in resultsAcrossQueries.Tables["Substitutes"].Rows)
                 {
-                    items.Add((int)entryRow["itemId"], 1);
-                    return items;
+                    int currItemID = (int)substituteCandidateEntry["itemId"];
+                    Item currItem = ItemsRepo.GetItem(currItemID);
+
+                    // this means that the item contains ONLY the required substances
+                    // and nothing more
+                    if (currItem.ActiveSubstances.Count == numberOfRequiredSubstances &&
+                        currItem.Quantity != 0)
+                    {
+                        // calculate the price with discounts
+                        float initialPrice = currItem.Price;
+                        float itemDiscount = currItem.DiscountPercentage;
+                        float userDiscount;
+                        if (ActiveUser.UserDiscounts.ContainsKey(currItem.Id))
+                            userDiscount = ActiveUser.UserDiscounts[currItem.Id];
+                        else
+                            userDiscount = 0f;
+
+                        float finalPrice = initialPrice * (1 - itemDiscount) * (1 - userDiscount);
+
+
+                        if (finalPrice < cheapestPrice)
+                        {
+                            cheapestPrice = finalPrice;
+                            cheapestItemID = currItem.Id;
+                        }
+                    }
+
+                }
+
+                if (cheapestItemID != -1)
+                {
+                    if (ItemsRepo.GetItem(cheapestItemID).Quantity != 0)
+                    {
+                        items.Add(cheapestItemID, 1);
+                        return items;
+                    }
                 }
             }
 
@@ -303,29 +354,54 @@ namespace PharmacyApp.Features.Orders.Logic
 
             if (resultsAcrossQueries.Tables["Multiplies"].Rows.Count != 0)
             {
-                int bestItemId = -1;
-                int bestItemQuantity = -1;
-                float bestPrice = 10000000f;
+                // same here, we have to filter out the results
+                // that contain other substances alongside the desired ones
 
-                foreach (DataRow entryRow in resultsAcrossQueries.Tables["Multiplies"].Rows)
+                int cheapestItemId = -1;
+                int cheapestItemQuantity = -1;
+                float cheapestPrice = 10000000f;
+
+                foreach (DataRow substituteCandidateEntry in resultsAcrossQueries.Tables["Multiplies"].Rows)
                 {
-                    int iterQuantity = (int)Math.Ceiling((decimal)nrOfRequiredPills / (int)entryRow["numberOfPills"]);
+                    int currItemID = (int)substituteCandidateEntry["itemId"];
+                    Item currItem = ItemsRepo.GetItem(currItemID);
 
-                    float iterPrice = iterQuantity * (float)(decimal)entryRow["price"];
-                    if (iterPrice < bestPrice)
+                    if (currItem.ActiveSubstances.Count == numberOfRequiredSubstances)
                     {
-                        bestPrice = iterPrice;
-                        bestItemId = (int)entryRow["itemId"];
-                        bestItemQuantity = iterQuantity;
+                        // calculate the prices with discounts
+                        int requiredQuantity = (int)Math.Ceiling((decimal)nrOfRequiredPills / currItem.NumberOfPills);
+
+                        float initialPrice = currItem.Price * requiredQuantity;
+                        float itemDiscount = currItem.DiscountPercentage;
+                        float userDiscount;
+                        if (ActiveUser.UserDiscounts.ContainsKey(currItem.Id))
+                            userDiscount = ActiveUser.UserDiscounts[currItem.Id];
+                        else
+                            userDiscount = 0f;
+
+                        float finalPrice = initialPrice * (1 - itemDiscount) * (1 - userDiscount);
+
+
+                        if (finalPrice < cheapestPrice &&
+                            requiredQuantity <= currItem.Quantity)
+                        {
+                            cheapestPrice = finalPrice;
+                            cheapestItemId = currItem.Id;
+                            cheapestItemQuantity = requiredQuantity;
+                        }
                     }
                 }
 
-                Item bestItem = ItemsRepo.GetItem(bestItemId);
-
-                if (bestItem.Quantity >= bestItemQuantity)
+                
+                if (cheapestItemId != -1)
                 {
-                    items.Add(bestItemId, bestItemQuantity);
-                    return items;
+                    Item cheapestItem = ItemsRepo.GetItem(cheapestItemId);
+
+                    if (cheapestItem.Quantity >= cheapestItemQuantity)
+                    {
+                        items.Add(cheapestItemId, cheapestItemQuantity);
+                        return items;
+                    }
                 }
             }
 

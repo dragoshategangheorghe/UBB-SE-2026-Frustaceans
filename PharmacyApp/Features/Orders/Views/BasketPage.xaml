@@ -114,9 +114,14 @@
 
                 <TextBlock Text="If you have a valid prescription on your name, you can automatically put in your medicine"
                            TextWrapping="WrapWholeWords"/>
-                <TextBox Name="PrescriptionInputBox" PlaceholderText="Enter prescription ID"/>
-                <Button Content="Add Products" Click="EnterPrescriptionID"/>
-                <TextBlock Name="PrescriptionWarning" Foreground="Red" Visibility="Collapsed"/>
+                <TextBox Name="PrescriptionInputBox" 
+                         PlaceholderText="Enter prescription ID"/>
+                <Button Content="Add Products" 
+                        Click="EnterPrescriptionID"/>
+                <TextBlock Name="PrescriptionWarning" 
+                           Foreground="Red" 
+                           Visibility="Collapsed"
+                           TextWrapping="WrapWholeWords"/>
 
             </StackPanel>
             

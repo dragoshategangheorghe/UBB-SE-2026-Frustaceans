@@ -310,6 +310,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
                 else
                 {
                     newBasketItem.PropertyChanged += UpdateItemInBasket;
+                    orderService.AddToBasket(itemEntry.Key, itemEntry.Value);
                     BasketItems.Add(newBasketItem);
                 }
             }
