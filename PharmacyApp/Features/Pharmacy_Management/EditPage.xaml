@@ -82,6 +82,12 @@
                             VerticalAlignment="Top"
                             Click="OnSubstancesClick"
                             Background="#66d4af"></Button>
+
+                    <Button Content="Orders"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Click="OnOrdersClick"
+                            Background="#66d4af"></Button>
                 </StackPanel>
                 
 
@@ -545,6 +551,13 @@
                         VerticalAlignment="Top"
                         Click="OnSubstancesClick"
                         Background="#66d4af"></Button>
+
+                    <Button Content="Orders"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Click="OnOrdersClick"
+                            Background="#66d4af"></Button>
+                    
                 </StackPanel>
 
                 <!--search by-->

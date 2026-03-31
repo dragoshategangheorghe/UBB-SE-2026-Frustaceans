@@ -55,7 +55,16 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                // Not logged in -> go to login page
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+            }
+            else
+            {
+                // Logged in -> show profile dialog
+                MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
+            }
         }
 
         private async void OnAccountClicked(object sender, RoutedEventArgs e)
@@ -90,16 +99,6 @@ namespace PharmacyApp
             }
 
             MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
-        }
-
-        private void OnOrderHistoryClicked(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(Features.Orders.Views.OrderHistoryPage), orderService);
-        }
-
-        private void OnOrderManagementClicked(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(Features.Orders.Views.OrderManagementPage), orderService);
         }
     }
 }
