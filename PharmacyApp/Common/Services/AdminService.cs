@@ -62,15 +62,16 @@ namespace PharmacyApp.Common.Services
             itemRepository.RemoveItem(id);
         }
 
-       public void UpdateItem(int id, Item updatedItem)
+        public void UpdateItem(int id, Item updatedItem)
         {
-            if (!itemRepository.ItemExists(id)) { 
+            if (!itemRepository.ItemExists(id))
+            {
                 throw new ArgumentException("Item with the specified ID does not exist.");
             }
 
             // notification functionality
             Item prevItem = itemRepository.GetItem(id);
-            if(prevItem.Quantity == 0 && updatedItem.Quantity>0)
+            if (prevItem.Quantity == 0 && updatedItem.Quantity > 0)
             {
                 sendNewStockNotification(updatedItem);
             }
@@ -161,6 +162,16 @@ namespace PharmacyApp.Common.Services
                 throw new ArgumentException("Invalid item data. Please check the input and try again.");
             }
         }
-        
+
+        public List<Tuple<int, string, int>> GetTop30Items()
+        {
+            return itemRepository.GetTop30Items();
+        }
+
+        public Dictionary<string, int> GetTop20Substances()
+        {
+            return substanceRepository.GetTop20Substances();
+
+        }
     }
 }

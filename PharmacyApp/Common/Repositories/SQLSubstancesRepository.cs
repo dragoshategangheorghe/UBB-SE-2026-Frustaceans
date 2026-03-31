@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.UI.Xaml.Controls;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PharmacyApp.Common.Repositories
@@ -133,6 +135,25 @@ namespace PharmacyApp.Common.Repositories
             if (substanceDataFromDB.Tables["Substances"].Rows.Count > 0)
                 return true;
             return false;
+        }
+
+        public Dictionary<string, int> GetTop20Substances()
+        {
+            Dictionary<string, int> top20Substances = new Dictionary<string, int>();
+            string connString = SQLUtility.GetConnectionString();
+            string selectTop20SubstancesQueryString = $"SELECT TOP 20 s.name, COUNT(orderId) as nbOrders FROM Substances s INNER JOIN ItemSubstances its ON s.name = its.name INNER JOIN OrderItems oi ON its.itemId = oi.itemId GROUP BY s.name ORDER BY COUNT(orderId) DESC";
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlDataAdapter selectTop20SubstancesAdapter = new SqlDataAdapter(selectTop20SubstancesQueryString, conn);
+            DataSet top20SubstancesDataFromDB = new DataSet();
+            conn.Open();
+            selectTop20SubstancesAdapter.Fill(top20SubstancesDataFromDB, "Substances");
+            foreach (DataRow substanceDataRow in top20SubstancesDataFromDB.Tables["Substances"].Rows)
+            {
+                string substanceName = (string)substanceDataRow["name"];
+                int itemCount = (int)substanceDataRow["nbOrders"];
+                top20Substances[substanceName] = itemCount;
+            }
+            return top20Substances;
         }
 
     }
