@@ -40,9 +40,9 @@ namespace PharmacyApp.Features.Accounts.Logic
         public void Register(string email, string password, string confirmPassword, string username = "", string phoneNumber = "")
         {
             if (!UserValidationService.isCorrectEmailFormat(email))
-                throw new Exception("Not a valid email");
+                throw new Exception("Not a valid email format\nmust be <text>@<text>.<text>");
             if (!UserValidationService.isCorrectPasswordFormat(password))
-                throw new Exception("Incorrect format");
+                throw new Exception("Incorrect format, must have: min 8 chars\n -1 symbol from {!,@,#,%,^,*}\n -1 capital and 1 small letter");
             if (password != confirmPassword)
                 throw new Exception("Passwords don't match");
 
