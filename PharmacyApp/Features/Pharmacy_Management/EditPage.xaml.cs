@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Common.Services;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
 using System;
 using System.Collections;
@@ -122,6 +123,11 @@ namespace PharmacyApp.Features.Pharmacy_Management
             SubstanceListButtons.Visibility = Visibility.Visible;
             SubstanceBottomButtons.Visibility = Visibility.Visible;
             RemoveItemError.Visibility = Visibility.Collapsed;
+        }
+
+        private void OnOrdersClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Features.Orders.Views.OrderManagementPage), new OrderService());
         }
 
         private void ShowExpiredToggle_Toggled(object sender, RoutedEventArgs e)

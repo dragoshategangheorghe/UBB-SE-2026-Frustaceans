@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.Views;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Products_Catalogue;
 using PharmacyApp.Models;
 using System;
@@ -27,13 +28,14 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
-
-    public MainWindow()
+        private OrderService orderService;
+        public MainWindow()
         {
             ServiceWrapper.Initialize();
 
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
+            IUsersRepository usersRepo = new SQLUsersRepository();
             productService = new ProductCatalogueService(repo);
             Features.Accounts.Views.LoginView.UserLoggedIn += () =>
             {
@@ -62,6 +64,16 @@ namespace PharmacyApp
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                // Not logged in -> go to login page
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+            }
+            else
+            {
+                // Logged in -> show profile dialog
+                MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
+            }
         }
 
         private async void OnAccountClicked(object sender, RoutedEventArgs e)

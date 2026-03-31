@@ -1,3 +1,4 @@
+using Windows.UI.Text;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,6 +11,7 @@ using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.Views;
 using PharmacyApp.Features.Period_Tracker.ViewModels;
 using PharmacyApp.Models;
+using Syncfusion.UI.Xaml.Core;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -34,7 +36,41 @@ namespace PharmacyApp.Features.Period_Tracker.Views
             ViewModel.CalculatePeriodTracker(StartPeriodDatePicker.Date, CycleDaysNumberBox.Value,
                 PeriodLastsNumberBox.Value, PMSRadioButtons.SelectedIndex);
 
-            ViewModel.CalendarsVisibility = "Visible"; 
+            ViewModel.CalendarsVisibility = "Visible";
+            ViewModel.ShopVisibility = "Visible";
+        }
+
+        private void OnNextCycleMonthClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdatePeriodTracker(true); 
+        }
+
+        private void OnPreviousCycleMonthClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdatePeriodTracker(false);
+        }
+
+        private void OnRemoveNoteClicked(object sender, RoutedEventArgs e)
+        {
+            // the data context in which the model is, is the note VM
+            ViewModel.RemoveNote((NoteViewModel)((Button)sender).DataContext);
+        }
+
+        private void OnAddNoteClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddNewNote();
+        }
+
+        private void OnNoteIsDoneChecked(object sender, RoutedEventArgs e)
+        {
+            StackPanel parent = (StackPanel)((CheckBox)sender).Parent;
+            ((TextBox)parent.FindChildByName("NoteBodyTextBox")).FontStyle = FontStyle.Italic;
+        }
+
+        private void OnNoteIsDoneUnchecked(object sender, RoutedEventArgs e)
+        {
+            StackPanel parent = (StackPanel)((CheckBox)sender).Parent;
+            ((TextBox)parent.FindChildByName("NoteBodyTextBox")).FontStyle = FontStyle.Normal;
         }
     }
 }
