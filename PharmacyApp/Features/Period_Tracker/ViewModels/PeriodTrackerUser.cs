@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Notifications;
+using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Models;
 
 namespace PharmacyApp.Features.Period_Tracker.ViewModels
@@ -16,19 +17,7 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
 
         //public static User? CurrentUser => ServiceWrapper.UserAccountService.CurrentUser; 
         private static User? _currentUser = null;
-        public static User? CurrentUser
-        {
-            get
-            {
-                if (_currentUser == null) _currentUser = UsersRepository.GetUserById(1);
-
-                return _currentUser;
-            }
-            set
-            {
-                _currentUser = value;
-            }
-        }
+        public static User? CurrentUser => ServiceWrapper.UserAccountService.CurrentUser;
 
         public static void UpdateUser()
         {

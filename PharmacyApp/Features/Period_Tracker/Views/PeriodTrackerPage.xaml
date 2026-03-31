@@ -13,7 +13,8 @@
 
 
     <Page.DataContext>
-        <viewModels:PeriodTrackerViewModel/> <!--to add the view model as data context-->
+        <viewModels:PeriodTrackerViewModel/>
+        <!--to add the view model as data context-->
     </Page.DataContext>
 
     <ScrollViewer VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled" Width="Auto" Height="Auto">
@@ -32,13 +33,13 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- first row: Calendars-->
+            <!-- first row: Important Dates -->
             <StackPanel Orientation="Horizontal"
                         Spacing="15"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}">
-                <Grid Padding="30 " ColumnSpacing="30" Background="DarkGray" CornerRadius="20" Opacity="0.9">
+                <Grid Padding="30 " ColumnSpacing="30" CornerRadius="20"  Opacity="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -48,60 +49,65 @@
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind ViewModel.Calendars.CurrentMonth,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                    <StackPanel Grid.Column="0" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Spacing="20" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
+                    <TextBlock Grid.ColumnSpan="3" Padding="0 0 0 20" Text="{x:Bind ViewModel.Calendars.CurrentMonth,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" Foreground="DarkSlateGray " FontWeight="Bold"></TextBlock>
+                    <StackPanel Grid.Column="0" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Spacing="10" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
                             <SymbolIcon Symbol="Calendar"></SymbolIcon>
                             <TextBlock Text="Today" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.LiterallyTodayString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Pink" Text="{x:Bind ViewModel.Calendars.CurrentPhaseString, Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30" Spacing="20">
+                    <StackPanel Grid.Column="1" Grid.Row="1"  CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30" Spacing="10">
                             <SymbolIcon Symbol="Favorite"></SymbolIcon>
                             <TextBlock Text="Next Period" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.NextPeriodDateString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Pink" Text="{x:Bind ViewModel.Calendars.NextPeriodDistanceString, Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Column="2" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="DarkGray">
-                        <StackPanel Spacing="20" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
+                    <StackPanel Grid.Column="2" Grid.Row="1" CornerRadius ="10" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Spacing="5" Padding="10 10 120 10" Background="SlateGray">
+                        <StackPanel Spacing="10" Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 30">
                             <SymbolIcon Symbol="Share"></SymbolIcon>
                             <TextBlock Text="Ovulation" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Top"></TextBlock>
                         </StackPanel>
-                        <TextBlock Text="Today" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Today" FontSize="16" VerticalAlignment="Bottom"></TextBlock>
-                        <TextBlock Text="Day X of " FontSize="12" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="Black" Text="{x:Bind ViewModel.Calendars.CurrentOvulationDateString,Mode=OneWay}" FontSize="20" FontWeight="Bold" VerticalAlignment="Bottom"></TextBlock>
+                        <TextBlock Foreground="LightYellow"  Text="{x:Bind ViewModel.Calendars.PastOvulationString,Mode=OneWay}" FontSize="12" VerticalAlignment="Bottom"></TextBlock>
                     </StackPanel>
                 </Grid>
             </StackPanel>
 
             <!-- second row: Calendars -->
-            <StackPanel Grid.Row="1"
-                        Orientation="Vertical"
-                        Spacing="20"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}"> <!--OneWay updates the target, TwoWay the source from the target too-->
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="17" Foreground="Pink" FontWeight="Bold" Text="{x:Bind ViewModel.Calendars.PeriodInterval,Mode=OneWay}"></TextBlock>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Visibility="{x:Bind ViewModel.CalendarsVisibility, Mode=OneWay}">
+                <Button Click="OnPreviousCycleMonthClicked" Style="{StaticResource SubtleButtonStyle}" Content="&lt;"  Width="40" Height="40" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 0 0 10"></Button>
+                <StackPanel Grid.Row="1"
+                            Orientation="Vertical"
+                            Spacing="20"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            MinWidth="500">
+                    <!--OneWay updates the target, TwoWay the source from the target too-->
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="Pink" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="17" Foreground="Pink" FontWeight="Bold" Text="{x:Bind ViewModel.Calendars.PeriodInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="LightGreen" Text="{x:Bind ViewModel.Calendars.LowFertilityInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="LightYellow" Text="{x:Bind ViewModel.Calendars.OvulationInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                        <Rectangle Width="10" Height="10" Fill="OrangeRed" Stroke="Black"></Rectangle>
+                        <TextBlock FontSize="16" Foreground="OrangeRed" Text="{x:Bind ViewModel.Calendars.PmsInterval,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="LightGreen" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="LightGreen" Text="{x:Bind ViewModel.Calendars.LowFertilityInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="LightGoldenrodYellow" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="LightYellow" Text="{x:Bind ViewModel.Calendars.OvulationInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="3">
-                    <Rectangle Width="10" Height="10" Fill="OrangeRed" Stroke="Black"></Rectangle>
-                    <TextBlock FontSize="16" Foreground="OrangeRed" Text="{x:Bind ViewModel.Calendars.PmsInterval,Mode=OneWay}"></TextBlock>
-                </StackPanel>
+                <Button Click="OnNextCycleMonthClicked" Style="{StaticResource SubtleButtonStyle}" Content="&gt;"  Width="40" Height="40" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 0 0 10"></Button>
+
 
             </StackPanel>
 
@@ -112,7 +118,7 @@
 
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
-                
+
                 <DatePicker x:Name="StartPeriodDatePicker" Date="{x:Bind viewModels:PeriodTrackerUser.StartPeriodDate}" Header="Start Date of Last Period" DayFormat="{}{day.integer} ({dayofweek.abbreviated})"></DatePicker>
                 <NumberBox
                     x:Name="PeriodLastsNumberBox"
@@ -121,9 +127,13 @@
                     SpinButtonPlacementMode="Inline"
                     SmallChange="1"
                     Height="80"
+                    Minimum="1"
+                    Maximum="9"
                     Width="160"/>
                 <NumberBox 
                     x:Name="CycleDaysNumberBox"
+                    Minimum="20"
+                    Maximum="45"
                     Header="How much does your average cycle last:"
                     Value="{x:Bind viewModels:PeriodTrackerUser.CycleDays}"
                     SpinButtonPlacementMode="Inline"
@@ -147,69 +157,117 @@
             <!-- fourth row: The CALCULATE BUTTON -->
             <Button Grid.Row="3" Click="OnCalculateCycleClicked" HorizontalAlignment="Center" VerticalAlignment="Center">CALCULATE</Button>
             <!-- fifth row: NOTES -->
-            <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <RichEditBox x:Name="PeriodNote1" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote2" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote3" Width="200" Height="300"></RichEditBox>
-                <RichEditBox x:Name="PeriodNote4" Width="200" Height="300"></RichEditBox>
-                <Button x:Name="AddNoteButton" VerticalAlignment="Top" HorizontalAlignment="Left">+</Button> <!-- Gets hidden after all 4 notes are shown -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <GridView SelectionMode="None" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{x:Bind ViewModel.Notes,Mode=OneWay}">
+
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                            <Setter Property="Margin" Value="10, 10, 10, 10"/>
+                            <Setter Property="MaxWidth" Value="250"></Setter>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal"/>
+                            <!-- Wrap it horizontally with 4 max on a row -->
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+
+                    <!-- Now for the individual notes -->
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:NoteViewModel">
+                            <StackPanel Orientation="Horizontal" Spacing="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="100">
+                                <CheckBox IsChecked="{x:Bind NoteIsDone,Mode=TwoWay}" Checked="OnNoteIsDoneChecked" Unchecked="OnNoteIsDoneUnchecked" VerticalAlignment="Top" HorizontalAlignment="Right" MaxWidth="20" Margin="0 -5 -98 0"></CheckBox>
+                                <TextBox x:Name="NoteBodyTextBox"  Text="{x:Bind NoteBody,Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Width="150" Height="100" MaxLength="100"></TextBox>
+                                <Button Command="{x:Bind DeleteNoteCommand}" Click="OnRemoveNoteClicked" Content="x" VerticalAlignment="Top"  Style="{StaticResource SubtleButtonStyle}" Margin="-8 0 0 0"  Width="30"></Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <Button Click="OnAddNoteClicked" Margin="0 10 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="50" MaxHeight="50">+</Button>
             </StackPanel>
 
             <!-- Sixth row: Products recommendation -->
-            <StackPanel Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="50">
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Width="70" Source="/Assets/placeholder.png" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></Image>
-                    <TextBlock Text="Product Title" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
-                    <TextBlock Text="100 RON" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
-                </Grid>
-            </StackPanel>
+
+            <FlipView SelectedIndex="0" Visibility="{x:Bind ViewModel.ShopVisibility}" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists,Mode=OneWay}" Height="160" Width="800">
+                <!-- TODO see if I can have a gridview inside t-->
+                <FlipView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:ItemListViewModel">
+                        <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[0].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[0].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[0].PriceColor}" Text="{x:Bind Items[0].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[0].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3"  Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="0"></Button>
+                            </Grid>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[1].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[1].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[1].PriceColor}" Text="{x:Bind Items[1].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[1].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"  Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="1"></Button>
+                            </Grid>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[2].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[2].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[2].PriceColor}" Text="{x:Bind Items[2].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[2].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3"  Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="2"></Button>
+                            </Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="70" Source="{x:Bind Items[3].ImagePath}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"></Image>
+                                <TextBlock Text="{x:Bind Items[3].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                                <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[3].PriceColor}" Text="{x:Bind Items[3].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Foreground="White" Text="{x:Bind Items[3].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="3"></Button>
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+            </FlipView>
+
         </Grid>
     </ScrollViewer>
 </Page>

@@ -21,6 +21,8 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
                 new PropertyChangedEventArgs(propertyName));
         }
 
+        public int Id { get; set; }
+
         private string _name;
         public string Name
         {
@@ -81,6 +83,7 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
 
         public ItemViewModel(Item item)
         {
+            Id = item.Id;
             Name = item.Name;
             Price = item.Price * (1.0f - item.DiscountPercentage/100.0f);
             if (PeriodTrackerUser.CurrentUser.UserDiscounts.ContainsKey(item.Id)) //user has discount for this item

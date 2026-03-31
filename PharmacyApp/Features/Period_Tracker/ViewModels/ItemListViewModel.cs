@@ -5,6 +5,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using PharmacyApp.Features.Orders.Logic;
+using Syncfusion.UI.Xaml.Core;
 
 namespace PharmacyApp.Features.Period_Tracker.ViewModels
 {
@@ -17,6 +20,8 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));
         }
+
+        public ICommand AddItemToBasket { get; set; }
 
         private List<ItemViewModel> _items;
 
@@ -31,6 +36,18 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
         public ItemListViewModel()
         {
             Items = new List<ItemViewModel>();
+            AddItemToBasket = new DelegateCommand(OnAddItemToBasketCommand);
+        }
+
+        public void OnAddItemToBasketCommand(object obj)
+        {
+            int itemindex = int.Parse((string)obj);
+            int itemId = Items[itemindex].Id;
+            OrderService orderService = new OrderService();
+            orderService.AddToBasket(itemId, 1);
+            
+
+
         }
     }
 }
