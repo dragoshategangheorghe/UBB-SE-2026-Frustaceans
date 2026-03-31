@@ -156,6 +156,7 @@ namespace PharmacyApp.Features.Products_Catalogue
             var categories = new List<string>();
             if (MedicineCheck.IsChecked == true) categories.Add("Medicine");
             if (SupplementsCheck.IsChecked == true) categories.Add("Supplements");
+            if (WellnessCheck.IsChecked == true) categories.Add("Wellness");
             currentCategories = categories.Any() ? categories : null;
 
             // price
