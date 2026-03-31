@@ -30,8 +30,6 @@ namespace PharmacyApp.Features.Accounts.Logic
                 if (!SecurityService.VerifyPassword(password, user.PasswordHash))
                     throw new Exception("Incorrect password");
                 CurrentUser = user;
-                CurrentUser.AddItemToBasket(5, 4);
-                CurrentUser.AddItemToBasket(7, 2);
             }
             catch (ArgumentException)
             {

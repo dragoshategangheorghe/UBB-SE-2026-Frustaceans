@@ -320,11 +320,16 @@ namespace PharmacyApp.Features.Orders.Logic
                     }
                 }
 
-                items.Add(bestItemId, bestItemQuantity);
-                return items;
+                Item bestItem = ItemsRepo.GetItem(bestItemId);
+
+                if (bestItem.Quantity >= bestItemQuantity)
+                {
+                    items.Add(bestItemId, bestItemQuantity);
+                    return items;
+                }
             }
 
-            throw new ArgumentException("No adequate medicine found");
+            throw new ArgumentException("No adequate medicine found in stock");
         }
     }
 }
