@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Features.Accounts.Views;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace PharmacyApp.Features.Products_Catalogue
     {
         private Item currentItem;
         private User currentUser;
+        private OrderService orderService;
         public ProductDetailsPage()
         {
             InitializeComponent();
@@ -37,10 +39,12 @@ namespace PharmacyApp.Features.Products_Catalogue
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is ValueTuple<Item, User> tuple)
+            if (e.Parameter is ValueTuple<Item, User, OrderService> tuple)
             {
                 currentItem = tuple.Item1;
                 currentUser = tuple.Item2;
+                orderService = tuple.Item3;
+
             }
 
             LoadData();
@@ -124,7 +128,12 @@ namespace PharmacyApp.Features.Products_Catalogue
                     ErrorText.Text = "Invalid quantity selected";
                     return;
                 }
+                else
+                {
+                    orderService.AddToBasket(currentItem.Id, qty);
+                }
             }
+
         }
     }
 }

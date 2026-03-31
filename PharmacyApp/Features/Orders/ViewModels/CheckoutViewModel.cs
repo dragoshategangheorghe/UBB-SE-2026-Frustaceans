@@ -36,10 +36,20 @@ namespace PharmacyApp.Features.Orders.ViewModels
 
                 // TODO figure out, why does the image in XAML take FORWARD slashes
                 // instead of BACKWARD slashes, like everything else in Windows
-                int startingIndexOfImagePathSubstring = currentItem.ImagePath.IndexOf("\\Assets");
-                string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
-                string alteredImagePath = backwardSlashedImagePath.Replace("\\", "/");
-
+                string alteredImagePath;
+                if (currentItem.ImagePath.StartsWith("ms-appx://"))
+                {
+                    // Already correct format
+                    alteredImagePath = currentItem.ImagePath;
+                }
+                else
+                {
+                    // Convert from Windows path to ms-appx:// (juste added ms-appx:// in the alteredImagePath)
+                    int startingIndexOfImagePathSubstring = currentItem.ImagePath.IndexOf("\\Assets");
+                    string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
+                    alteredImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
+                }
+                //modified by Isac
                 BasketItem basketItem = new(
                     currentItem.Id,
                     alteredImagePath,

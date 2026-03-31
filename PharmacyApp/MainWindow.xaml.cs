@@ -37,6 +37,7 @@ namespace PharmacyApp
             IItemsRepository repo = new SQLItemsRepository();
             IUsersRepository usersRepo = new SQLUsersRepository();
             productService = new ProductCatalogueService(repo);
+            orderService = new OrderService();
             Features.Accounts.Views.LoginView.UserLoggedIn += () =>
             {
                 UpdateUI();
@@ -59,7 +60,7 @@ namespace PharmacyApp
         private void OnProductsClicked(object sender, RoutedEventArgs e)
         {
             User? currentuser = ServiceWrapper.UserAccountService.CurrentUser;
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), (productService, currentuser));
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), (productService, currentuser, orderService));
         }
 
         private void OnCartClicked(object sender, RoutedEventArgs e)

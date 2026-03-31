@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Features.Accounts.Logic;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -69,14 +70,16 @@ namespace PharmacyApp.Features.Products_Catalogue
             ApplyFilters();
         }
         User currentUser;
+        OrderService orderService;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is ValueTuple<ProductCatalogueService, User> tuple)
+            if (e.Parameter is ValueTuple<ProductCatalogueService, User, OrderService> tuple)
             {
                 productService = tuple.Item1;
                 currentUser = tuple.Item2;
+                orderService = tuple.Item3;
             }
 
 
@@ -233,13 +236,20 @@ namespace PharmacyApp.Features.Products_Catalogue
 
             if (uiItem?.OriginalItem == null) return;
 
-            Frame.Navigate(typeof(ProductDetailsPage), (uiItem.OriginalItem, currentUser));
+            Frame.Navigate(typeof(ProductDetailsPage), (uiItem.OriginalItem, currentUser, orderService));
         }
 
         private void OnAddToCartClicked(object sender, RoutedEventArgs e)
         {
-            if (currentUser == null) 
+            var button = sender as Button;
+            var uiItem = button?.DataContext as UIItem;
+
+            if (uiItem?.OriginalItem == null) return;
+            if (currentUser == null)
                 Frame.Navigate(typeof(Features.Accounts.Views.LoginView));
+            else {
+                orderService.AddToBasket(uiItem.OriginalItem.Id, 1);
+            }
         }
     }
 }
