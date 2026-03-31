@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -67,11 +68,17 @@ namespace PharmacyApp.Features.Products_Catalogue
             currentPage = 0;
             ApplyFilters();
         }
+        User currentUser;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            productService = (ProductCatalogueService)e.Parameter;
+            if (e.Parameter is ValueTuple<ProductCatalogueService, User> tuple)
+            {
+                productService = tuple.Item1;
+                currentUser = tuple.Item2;
+            }
+
 
             LoadProducts();
         }
@@ -226,7 +233,13 @@ namespace PharmacyApp.Features.Products_Catalogue
 
             if (uiItem?.OriginalItem == null) return;
 
-            Frame.Navigate(typeof(ProductDetailsPage), uiItem.OriginalItem);
+            Frame.Navigate(typeof(ProductDetailsPage), (uiItem.OriginalItem, currentUser));
+        }
+
+        private void OnAddToCartClicked(object sender, RoutedEventArgs e)
+        {
+            if (currentUser == null) 
+                Frame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
     }
 }

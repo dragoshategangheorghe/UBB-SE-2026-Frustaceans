@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using PharmacyApp.Features.Accounts.Views;
 using PharmacyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace PharmacyApp.Features.Products_Catalogue
     public sealed partial class ProductDetailsPage : Page
     {
         private Item currentItem;
+        private User currentUser;
         public ProductDetailsPage()
         {
             InitializeComponent();
@@ -35,7 +37,11 @@ namespace PharmacyApp.Features.Products_Catalogue
         {
             base.OnNavigatedTo(e);
 
-            currentItem = (Item)e.Parameter;
+            if (e.Parameter is ValueTuple<Item, User> tuple)
+            {
+                currentItem = tuple.Item1;
+                currentUser = tuple.Item2;
+            }
 
             LoadData();
         }
@@ -97,20 +103,27 @@ namespace PharmacyApp.Features.Products_Catalogue
         private void OnAddToBasket(object sender, RoutedEventArgs e)
         {
             ErrorText.Text = "";
-            if (!int.TryParse(QuantityBox.Text, out int qty))
+            if (currentUser == null)
             {
-                ErrorText.Text = "Invalid quantity selected";
-                return;
+                Frame.Navigate(typeof(LoginView));
             }
-            if (qty <= 0)
+            else
             {
-                ErrorText.Text = "Invalid quantity selected";
-                return;
-            }
-            if (qty > currentItem.Quantity || qty > 50)
-            {
-                ErrorText.Text = "Invalid quantity selected";
-                return;
+                if (!int.TryParse(QuantityBox.Text, out int qty))
+                {
+                    ErrorText.Text = "Invalid quantity selected";
+                    return;
+                }
+                if (qty <= 0)
+                {
+                    ErrorText.Text = "Invalid quantity selected";
+                    return;
+                }
+                if (qty > currentItem.Quantity || qty > 50)
+                {
+                    ErrorText.Text = "Invalid quantity selected";
+                    return;
+                }
             }
         }
     }

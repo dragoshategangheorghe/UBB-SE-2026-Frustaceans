@@ -25,6 +25,7 @@ namespace PharmacyApp.Features.Accounts.Views
 
     public sealed partial class LoginView : Page
     {
+        public static event Action UserLoggedIn;
         public LoginView()
         {
             this.InitializeComponent();
@@ -45,6 +46,7 @@ namespace PharmacyApp.Features.Accounts.Views
         }
         private void OnLoginSucceeded()
         {
+            UserLoggedIn?.Invoke();
             (this.Parent as Frame)?.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
         }
     }

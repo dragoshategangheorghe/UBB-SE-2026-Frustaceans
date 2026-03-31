@@ -199,7 +199,13 @@
                                             <Button Content="Add to Cart"
                                                     Background="#389e7c"
                                                     Foreground="White"
-                                                    IsEnabled="{Binding CanAddToCart}"/>
+                                                    Click="OnAddToCartClicked"
+                                                    IsEnabled="{Binding CanAddToCart}">
+                                                <Button.Resources>
+                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#389e7c"/>
+                                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#2c7d62"/>
+                                                </Button.Resources>
+                                            </Button>
 
                                         </StackPanel>
                                     </Border>

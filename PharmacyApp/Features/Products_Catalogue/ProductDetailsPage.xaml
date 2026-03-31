@@ -70,7 +70,12 @@
                                         Content="Add to Basket"
                                         Click="OnAddToBasket"
                                         Background="#389e7c"
-                                        Foreground="White"/>
+                                        Foreground="White">
+                                    <Button.Resources>
+                                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#389e7c"/>
+                                        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#2c7d62"/>
+                                    </Button.Resources>
+                                </Button>
                             </StackPanel>
                             <TextBlock x:Name="ErrorText"
                                        Foreground="Red"/>

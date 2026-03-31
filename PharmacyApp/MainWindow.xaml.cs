@@ -28,17 +28,26 @@ namespace PharmacyApp
     {
         private ProductCatalogueService productService;
 
-        public MainWindow()
+    public MainWindow()
         {
             ServiceWrapper.Initialize();
 
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
             productService = new ProductCatalogueService(repo);
-            
-            
+            Features.Accounts.Views.LoginView.UserLoggedIn += () =>
+            {
+                UpdateUI();
+            };
+            Features.Accounts.Views.RegisterView.UserRegistered += () =>
+            {
+                UpdateUI();
+            };
+
+
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
+
 
         private void OnHomeClicked(object sender, RoutedEventArgs e)
         {
@@ -47,7 +56,8 @@ namespace PharmacyApp
 
         private void OnProductsClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), productService);
+            User? currentuser = ServiceWrapper.UserAccountService.CurrentUser;
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), (productService, currentuser));
         }
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
@@ -81,11 +91,52 @@ namespace PharmacyApp
         {
             if (ServiceWrapper.UserAccountService.CurrentUser == null)
             {
-                //MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
-                //return;
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
             }
+            else
+                MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
+        }
+        private void UpdateUI()
+        {
+            var user = ServiceWrapper.UserAccountService.CurrentUser;
 
-            MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
+            if (user != null && user.IsAdmin)
+            {
+                AdminButton.Visibility = Visibility.Visible;
+                AdminUsersButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                AdminButton.Visibility = Visibility.Collapsed;
+                AdminUsersButton.Visibility = Visibility.Collapsed;
+            }
+            if (user != null)
+            {
+                RegisterButton.Visibility = Visibility.Collapsed;
+                LoginButton.Visibility = Visibility.Collapsed;
+                AccountButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RegisterButton.Visibility = Visibility.Visible;
+                LoginButton.Visibility = Visibility.Visible;
+                AccountButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAdminUsersClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.AdminAccountsManagementView));
+        }
+
+        private void OnRegisterClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.RegisterView));
+        }
+
+        private void OnLoginClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
     }
 }
