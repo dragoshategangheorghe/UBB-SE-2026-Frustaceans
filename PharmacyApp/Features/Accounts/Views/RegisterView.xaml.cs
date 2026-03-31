@@ -23,6 +23,7 @@ namespace PharmacyApp.Features.Accounts.Views
 
     public sealed partial class RegisterView : Page
     {
+        public static event Action UserRegistered;
         public RegisterView()
         {
             this.InitializeComponent();
@@ -46,6 +47,8 @@ namespace PharmacyApp.Features.Accounts.Views
         }
         private void OnRegisterSucceded()
         {
+
+            UserRegistered?.Invoke();
             (this.Parent as Frame)?.Navigate(typeof(Features.Accounts.Views.ProfileManagementView));
         }
     }

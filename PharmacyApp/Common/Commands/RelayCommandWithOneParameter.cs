@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace PharmacyApp.Common.Commands
+{
+    public class RelayCommandWithOneParameter<T> : ICommand
+    {
+        private Action<T> func;
+
+        public RelayCommandWithOneParameter(Action<T> execute)
+        {
+            func = execute;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {
+            if (parameter is T) 
+                return true;
+            return false;
+        }
+
+        public void Execute(object parameter) { func((T)parameter); }
+    }
+}

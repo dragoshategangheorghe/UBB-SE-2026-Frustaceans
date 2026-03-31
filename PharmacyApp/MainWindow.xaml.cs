@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Common.Repositories;
 using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.Views;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Products_Catalogue;
 using PharmacyApp.Models;
 using System;
@@ -27,18 +28,29 @@ namespace PharmacyApp
     public sealed partial class MainWindow : Window
     {
         private ProductCatalogueService productService;
-
+        private OrderService orderService;
         public MainWindow()
         {
             ServiceWrapper.Initialize();
 
             InitializeComponent();
             IItemsRepository repo = new SQLItemsRepository();
+            IUsersRepository usersRepo = new SQLUsersRepository();
             productService = new ProductCatalogueService(repo);
-            
-            
+            orderService = new OrderService();
+            Features.Accounts.Views.LoginView.UserLoggedIn += () =>
+            {
+                UpdateUI();
+            };
+            Features.Accounts.Views.RegisterView.UserRegistered += () =>
+            {
+                UpdateUI();
+            };
+
+
             MainFrame.Navigate(typeof(Features.Products_Catalogue.HomePage));
         }
+
 
         private void OnHomeClicked(object sender, RoutedEventArgs e)
         {
@@ -47,11 +59,22 @@ namespace PharmacyApp
 
         private void OnProductsClicked(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage));
+            User? currentuser = ServiceWrapper.UserAccountService.CurrentUser;
+            MainFrame.Navigate(typeof(Features.Products_Catalogue.CatalogPage), (productService, currentuser, orderService));
         }
 
         private void OnCartClicked(object sender, RoutedEventArgs e)
         {
+            if (ServiceWrapper.UserAccountService.CurrentUser == null)
+            {
+                // Not logged in -> go to login page
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
+            }
+            else
+            {
+                // Logged in -> show profile dialog
+                MainFrame.Navigate(typeof(Features.Orders.Views.BasketPage), orderService);
+            }
         }
 
         private async void OnAccountClicked(object sender, RoutedEventArgs e)
@@ -81,11 +104,52 @@ namespace PharmacyApp
         {
             if (ServiceWrapper.UserAccountService.CurrentUser == null)
             {
-                //MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
-                //return;
+                MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
             }
+            else
+                MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
+        }
+        private void UpdateUI()
+        {
+            var user = ServiceWrapper.UserAccountService.CurrentUser;
 
-            MainFrame.Navigate(typeof(Features.Period_Tracker.Views.PeriodTrackerPage));
+            if (user != null && user.IsAdmin)
+            {
+                AdminButton.Visibility = Visibility.Visible;
+                AdminUsersButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                AdminButton.Visibility = Visibility.Collapsed;
+                AdminUsersButton.Visibility = Visibility.Collapsed;
+            }
+            if (user != null)
+            {
+                RegisterButton.Visibility = Visibility.Collapsed;
+                LoginButton.Visibility = Visibility.Collapsed;
+                AccountButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RegisterButton.Visibility = Visibility.Visible;
+                LoginButton.Visibility = Visibility.Visible;
+                AccountButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAdminUsersClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.AdminAccountsManagementView));
+        }
+
+        private void OnRegisterClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.RegisterView));
+        }
+
+        private void OnLoginClicked(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(Features.Accounts.Views.LoginView));
         }
     }
 }

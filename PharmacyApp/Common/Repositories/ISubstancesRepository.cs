@@ -7,7 +7,7 @@ using PharmacyApp.Models;
 
 namespace PharmacyApp.Common.Repositories
 {
-    internal interface ISubstancesRepository
+    public interface ISubstancesRepository
     {
         void AddSubstance(string name, float lethalDose, string description);
         void RemoveSubstance(string name);
@@ -15,5 +15,7 @@ namespace PharmacyApp.Common.Repositories
         List<Substance> GetAllSubstances();
         void UpdateSubstance(Substance substance);
         bool SubstanceExists(string name);
+
+        public Dictionary<string, int> GetTop20Substances();
     }
 }

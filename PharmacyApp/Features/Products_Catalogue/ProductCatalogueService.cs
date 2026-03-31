@@ -26,7 +26,8 @@ namespace PharmacyApp.Features.Products_Catalogue
             List<string> substances = null,
             bool ascending = true,
             int page = 0,
-            int pageSize = 10)
+            int pageSize = 10,
+            string sortBy = null)
             { 
                 var items = searchItems(search);
                 items = categoryFilter(items, categories);
@@ -34,9 +35,8 @@ namespace PharmacyApp.Features.Products_Catalogue
                 items = StockFilter(items, stockFilter);
                 items = discountFilter(items, discounted);
                 items = substanceFilter(items, substances);
-                items = priceSort(items, ascending);
-                items = newestSort(items, ascending); //TODO change priceSort and newestSort to have only one function
-                items = paginate(items, page, pageSize);
+                items = itemSort(items, sortBy, ascending);
+            items = paginate(items, page, pageSize);
                 return items;    
             }
         private List<Item> searchItems(string productName)
@@ -81,7 +81,7 @@ namespace PharmacyApp.Features.Products_Catalogue
                 }
             }
             return items.Where(item => ranges.Any(range => 
-            item.Price >= range.min && item.Price <= range.max)).ToList();
+            item.Price * (1 - item.DiscountPercentage) >= range.min && item.Price * (1 - item.DiscountPercentage) <= range.max)).ToList();
         }
         private List<Item> StockFilter(List<Item> items, string? stockFilter)
         {
@@ -112,6 +112,14 @@ namespace PharmacyApp.Features.Products_Catalogue
             if (producers == null || !producers.Any())
                 return items;
             return items.Where(item => producers.Contains(item.Producer)).ToList();
+        }
+        private List<Item> itemSort(List<Item> items, string? sortBy, bool ascending)
+        {
+            if (sortBy == "price")
+                return priceSort(items, ascending);
+            if (sortBy == "newest")
+                return newestSort(items, ascending);
+            return items;
         }
         private List<Item> priceSort(List<Item> items, bool ascending)
         {

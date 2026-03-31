@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 namespace PharmacyApp.Models
 {
-    public class Order
+    public class Order : IEquatable<Order>
     {
 
         public int Id { get; private set; }
+        public string IdString { get { return "Order#" + Id;  } }
         public int ClientId { get; set; }
         public DateOnly PickUpDate { get; set; }
+        public string PickUpDateString { get { return PickUpDate.ToString("yyyy.MM.dd"); } }
+        public string ExpirationDateString { get { return PickUpDate.AddDays(7).ToString("yyyy.MM.dd"); } }
         public bool IsCompleted { get; set; }
         public bool IsExpired { get; set; }
 
@@ -25,6 +28,12 @@ namespace PharmacyApp.Models
             IsCompleted = isCompleted;
             IsExpired = isExpired;
             ItemQuantitiesWithFinalPrice = new Dictionary<int, Tuple<int, float>>();
+        }
+
+        public bool Equals(Order other)
+        {
+            if (other is null) return false;
+            return this.Id == other.Id;
         }
 
         public void AddItemToOrder(int newItemId, int itemQuantity, float finalPrice)

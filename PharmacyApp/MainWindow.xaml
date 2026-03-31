@@ -50,10 +50,21 @@
                 </Button>
 
                 <Button x:Name="AdminButton"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    Click="OnAdminClicked">
+                        Visibility="Collapsed"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnAdminClicked">
                     <TextBlock Text="Admin Dashboard"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
+                <Button x:Name="AdminUsersButton"
+                        Visibility="Collapsed"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnAdminUsersClicked">
+                    <TextBlock Text="User Accounts"
                         Foreground="#389e7c"
                         FontSize="16"
                         FontWeight="SemiBold"/>
@@ -90,14 +101,36 @@
                 Foreground="#4CAF50"
                 BorderBrush="Transparent"/>
 
-                <Button Content="👤"
+                <Button Content="👤" x:Name="AccountButton"
                 FontSize="16"
+                Visibility="Collapsed"
                 FontWeight="SemiBold"
                 FontFamily="Segoe UI"
                 Click="OnAccountClicked"
                 Background="Transparent"
                 Foreground="#4CAF50"
                 BorderBrush="Transparent"/>
+                
+                <Button x:Name="LoginButton"
+                        Visibility="Visible"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnLoginClicked">
+                    <TextBlock Text="Login"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
+                <Button x:Name="RegisterButton"
+                        Visibility="Visible"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnRegisterClicked">
+                    <TextBlock Text="Register"
+                        Foreground="#389e7c"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+                </Button>
 
             </StackPanel>
         </Grid>

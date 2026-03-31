@@ -217,7 +217,9 @@ namespace PharmacyApp.Common.Repositories
                     (string)itemRow["label"],
                     (string)itemRow["description"],
                     (string)itemRow["imagePath"],
-                    (float)(decimal)itemRow["discountPercentage"]);
+                    (float)(decimal)itemRow["discountPercentage"],
+                    (int)itemRow["quantity"]);
+                    
 
 
                 // for every item we need to get its substances and batches
@@ -398,6 +400,27 @@ namespace PharmacyApp.Common.Repositories
                 return true;
 
             return false;
+        }
+
+        public List<Tuple<int, string, int>> GetTop30Items()
+        {
+            string connString = SQLUtility.GetConnectionString();
+            List<Tuple<int, string, int>> resultItems = new List<Tuple<int, string, int>>();
+            string selectItemString = $"SELECT TOP 30 i.itemId, i.name, COUNT(orderId) as nbOrders FROM Items i INNER JOIN OrderItems oi ON i.itemId=oi.itemId GROUP BY i.itemId, i.name ORDER BY COUNT(orderId) DESC";
+            using SqlConnection conn = new SqlConnection(connString);
+            SqlDataAdapter itemAdapter = new SqlDataAdapter(selectItemString, conn);
+            DataSet itemDataFromDb = new DataSet();
+            conn.Open();
+            itemAdapter.Fill(itemDataFromDb, "Items");
+            foreach (DataRow itemRow in itemDataFromDb.Tables["Items"].Rows)
+            {
+                int itemId = (int)itemRow["itemId"];
+                string name = (string)itemRow["name"];
+                int nbOrders = (int)itemRow["nbOrders"];
+
+                resultItems.Add(new Tuple<int, string, int>(itemId, name, nbOrders));
+            }
+            return resultItems;
         }
     }
 }
