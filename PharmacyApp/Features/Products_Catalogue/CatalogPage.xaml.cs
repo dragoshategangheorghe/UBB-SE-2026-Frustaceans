@@ -249,7 +249,12 @@ namespace PharmacyApp.Features.Products_Catalogue
             if (currentUser == null)
                 Frame.Navigate(typeof(Features.Accounts.Views.LoginView));
             else {
-                orderService.AddToBasket(uiItem.OriginalItem.Id, 1);
+                try
+                {
+                    orderService.AddToBasket(uiItem.OriginalItem.Id, 1);
+                }
+                catch (ArgumentException ex)
+                {}
             }
         }
     }

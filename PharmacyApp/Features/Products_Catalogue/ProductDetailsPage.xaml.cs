@@ -130,7 +130,13 @@ namespace PharmacyApp.Features.Products_Catalogue
                 }
                 else
                 {
-                    orderService.AddToBasket(currentItem.Id, qty);
+                    try
+                    {
+                        orderService.AddToBasket(currentItem.Id, qty);
+                    }
+                    catch (Exception ex) {
+                        ErrorText.Text = "Item already in basket";
+                    }
                 }
             }
 
