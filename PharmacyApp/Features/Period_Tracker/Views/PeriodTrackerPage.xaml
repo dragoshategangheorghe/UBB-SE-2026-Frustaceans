@@ -190,13 +190,14 @@
 
             <!-- Sixth row: Products recommendation -->
 
-            <FlipView SelectedIndex="0" Visibility="{x:Bind ViewModel.ShopVisibility}" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists,Mode=OneWay}" Height="120" Width="800">
+            <FlipView SelectedIndex="0" Visibility="{x:Bind ViewModel.ShopVisibility}" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists,Mode=OneWay}" Height="160" Width="800">
                 <!-- TODO see if I can have a gridview inside t-->
                 <FlipView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:ItemListViewModel">
                         <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
                             <Grid >
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -209,9 +210,11 @@
                                 <TextBlock Text="{x:Bind Items[0].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
                                 <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[0].PriceColor}" Text="{x:Bind Items[0].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
                                 <TextBlock Foreground="White" Text="{x:Bind Items[0].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3"  Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="0"></Button>
                             </Grid>
                             <Grid >
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -224,9 +227,11 @@
                                 <TextBlock Text="{x:Bind Items[1].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
                                 <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[1].PriceColor}" Text="{x:Bind Items[1].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
                                 <TextBlock Foreground="White" Text="{x:Bind Items[1].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"  Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="1"></Button>
                             </Grid>
                             <Grid >
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -239,9 +244,11 @@
                                 <TextBlock Text="{x:Bind Items[2].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
                                 <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[2].PriceColor}" Text="{x:Bind Items[2].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
                                 <TextBlock Foreground="White" Text="{x:Bind Items[2].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3"  Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="2"></Button>
                             </Grid>
-                            <Grid >
+                            <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -254,9 +261,9 @@
                                 <TextBlock Text="{x:Bind Items[3].Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
                                 <TextBlock TextDecorations="Strikethrough" Foreground="{x:Bind Items[3].PriceColor}" Text="{x:Bind Items[3].PriceDiscountedString}" Grid.Row="1" Grid.Column="1" Margin="0 0 0 -10" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
                                 <TextBlock Foreground="White" Text="{x:Bind Items[3].PriceString}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 0 10"></TextBlock>
+                                <Button Width="150" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Add to basket" Command="{x:Bind AddItemToBasket}" CommandParameter="3"></Button>
                             </Grid>
                         </StackPanel>
-
                     </DataTemplate>
                 </FlipView.ItemTemplate>
             </FlipView>

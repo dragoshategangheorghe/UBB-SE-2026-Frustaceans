@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PharmacyApp.Features.Accounts.Logic;
 using PharmacyApp.Features.Accounts.Views;
+using PharmacyApp.Features.Orders.Logic;
 using PharmacyApp.Features.Period_Tracker.ViewModels;
 using PharmacyApp.Models;
 using Syncfusion.UI.Xaml.Core;
@@ -72,5 +73,6 @@ namespace PharmacyApp.Features.Period_Tracker.Views
             StackPanel parent = (StackPanel)((CheckBox)sender).Parent;
             ((TextBox)parent.FindChildByName("NoteBodyTextBox")).FontStyle = FontStyle.Normal;
         }
+
     }
 }
