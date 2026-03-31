@@ -212,7 +212,7 @@ namespace PharmacyApp.Features.Orders.ViewModels
                     // Convert from Windows path to ms-appx:// (juste added ms-appx:// in the alteredImagePath)
                     int startingIndexOfImagePathSubstring = currentItem.ImagePath.IndexOf("\\Assets");
                     string backwardSlashedImagePath = currentItem.ImagePath.Substring(startingIndexOfImagePathSubstring);
-                    alteredImagePath = "";
+                    alteredImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
                 }
                 //modified by Isac
 

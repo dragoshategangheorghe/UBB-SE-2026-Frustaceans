@@ -98,6 +98,11 @@
     <None Remove="Features\Pharmacy_Management\StatisticsPage.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Features\Pharmacy_Management\Notifications.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Features\Orders\Views\ResubmitOrderPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

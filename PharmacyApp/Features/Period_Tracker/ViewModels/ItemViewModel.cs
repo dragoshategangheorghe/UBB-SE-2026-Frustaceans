@@ -103,11 +103,10 @@ namespace PharmacyApp.Features.Period_Tracker.ViewModels
 
             PriceString = $"{Price.ToString("C", CultureInfo.CurrentCulture)}";
 
-            int startingIndexOfImagePathSubstring = item.ImagePath.IndexOf("\\Assets");
-            string backwardSlashedImagePath = item.ImagePath.Substring(startingIndexOfImagePathSubstring);
-            ImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
-            ImagePath = "";
-            if (!File.Exists(ImagePath))
+            //int startingIndexOfImagePathSubstring = item.ImagePath.IndexOf("\\Assets");
+           // string backwardSlashedImagePath = item.ImagePath.Substring(startingIndexOfImagePathSubstring);
+            //ImagePath = "ms-appx://" + backwardSlashedImagePath.Replace("\\", "/");
+            //if (!File.Exists(ImagePath))
                 ImagePath = "\\Assets\\placeholder.png";
 
         }
