@@ -42,7 +42,7 @@ namespace PharmacyApp.Features.Accounts.Logic
             if (!UserValidationService.isCorrectEmailFormat(email))
                 throw new Exception("Not a valid email format\nmust be <text>@<text>.<text>");
             if (!UserValidationService.isCorrectPasswordFormat(password))
-                throw new Exception("Incorrect format, must have: min 8 chars\n -1 symbol from {!,@,#,%,^,*}\n -1 capital and 1 small letter");
+                throw new Exception("Incorrect format, must have: min 8 chars\n -1 symbol from {!,@,#,%,^,*}\n -1 capital and 1 small letter\n -1 digit");
             if (password != confirmPassword)
                 throw new Exception("Passwords don't match");
 
