@@ -81,8 +81,7 @@ create table PeriodTrackers(
 	startPeriodDate date,
 	cycleDays int,
 	periodLasts int,
-	PMSOption int,
-	wantsToBePregnant bit not null
+	PMSOption int
 )
 
 create table Orders(

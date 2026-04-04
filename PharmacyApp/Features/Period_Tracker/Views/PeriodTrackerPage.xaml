@@ -190,7 +190,7 @@
 
             <!-- Sixth row: Products recommendation -->
 
-            <FlipView SelectedIndex="0" Visibility="{x:Bind ViewModel.ShopVisibility}" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists,Mode=OneWay}" Height="160" Width="800">
+            <FlipView SelectedIndex="0" Visibility="Visible" x:Name="RecommendedItemsFlipView" Grid.Row="5" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.ItemsLists,Mode=OneWay}" Height="160" Width="800">
                 <!-- TODO see if I can have a gridview inside t-->
                 <FlipView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:ItemListViewModel">
